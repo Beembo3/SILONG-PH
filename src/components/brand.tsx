@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Brand({ className, compact = false }: { className?: string; compact?: boolean }) {
@@ -9,8 +8,13 @@ export function Brand({ className, compact = false }: { className?: string; comp
       className={cn("inline-flex items-center gap-2.5 rounded-lg focus-visible:ring-2 focus-visible:ring-ring", className)}
       aria-label="SILONG PH home"
     >
-      <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-sm">
-        <Sun className="h-6 w-6" aria-hidden="true" />
+      <span className={cn("relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-white shadow-sm", !compact && "overflow-hidden")}>
+        <img
+          src="/logo.png"
+          alt="SILONG PH"
+          className="h-10 w-10 object-contain"
+          style={{ filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.15))" }}
+        />
       </span>
       {!compact ? (
         <span className="leading-none">
