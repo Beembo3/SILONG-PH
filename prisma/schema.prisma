@@ -1,0 +1,142 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String                @id @default(cuid())
+  email                   String                @unique @db.VarChar(191)
+  name                    String                @db.VarChar(191)
+  passwordHash            String                @db.VarChar(191)
+  role                    String                @default("CONTENT_ADMIN") @db.VarChar(32)
+  isActive                Boolean               @default(true)
+  preferredLocationCode   String?               @db.VarChar(10)
+  notificationPreferences String?               @db.Text
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  createdPlaces           CoolingPlace[]        @relation("PlaceCreator")
+  reviewedPlaces          CoolingPlace[]        @relation("PlaceReviewer")
+  reportsReviewed         FacilityReport[]      @relation("ReportReviewer")
+  auditLogs               AuditLog[]
+  alertsCreated           OfficialAlert[]       @relation("AlertCreator")
+  articlesCreated         PreparednessArticle[] @relation("ArticleCreator")
+}
+
+model CoolingPlace {
+  id                   String           @id @default(cuid())
+  osmId                String?          @unique @db.VarChar(191)
+  name                 String           @db.VarChar(191)
+  category             String           @db.VarChar(80)
+  address              String           @db.VarChar(300)
+  provinceCode         String           @db.VarChar(10)
+  localityCode         String           @db.VarChar(10)
+  latitude             Float
+  longitude            Float
+  operatingHours       String?          @db.VarChar(200)
+  accessibilityDetails String?          @db.Text
+  amenities            String           @default("[]") @db.Text
+  publicAccessDetails  String?          @db.Text
+  verificationStatus   String           @default("UNVERIFIED") @db.VarChar(32)
+  verificationNote     String?          @db.Text
+  verifiedAt           DateTime?
+  lastReviewedAt       DateTime?
+  sourceUrl            String?          @db.VarChar(500)
+  contactInformation   String?          @db.VarChar(300)
+  photoUrl             String?          @db.VarChar(500)
+  photoCredit          String?          @db.VarChar(200)
+  archivedAt           DateTime?
+  createdById          String?
+  verifiedById         String?
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  createdBy            User?            @relation("PlaceCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  verifiedBy           User?            @relation("PlaceReviewer", fields: [verifiedById], references: [id], onDelete: SetNull)
+  reports              FacilityReport[]
+
+  @@index([provinceCode])
+  @@index([localityCode])
+  @@index([verificationStatus])
+  @@index([category])
+  @@index([archivedAt])
+}
+
+model FacilityReport {
+  id                   String        @id @default(cuid())
+  coolingPlaceId       String?
+  reportType           String        @db.VarChar(40)
+  description          String        @db.Text
+  proposedName         String?       @db.VarChar(160)
+  proposedAddress      String?       @db.VarChar(300)
+  proposedLocalityCode String?       @db.VarChar(10)
+  status               String        @default("PENDING") @db.VarChar(20)
+  moderatorNote        String?       @db.Text
+  submittedAt          DateTime      @default(now())
+  reviewedAt           DateTime?
+  reviewedById         String?
+  coolingPlace         CoolingPlace? @relation(fields: [coolingPlaceId], references: [id], onDelete: SetNull)
+  reviewedBy           User?         @relation("ReportReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([submittedAt])
+  @@index([coolingPlaceId])
+}
+
+model OfficialAlert {
+  id           String   @id @default(cuid())
+  title        String   @db.VarChar(200)
+  description  String   @db.Text
+  affectedArea String   @db.VarChar(300)
+  severity     String   @db.VarChar(20)
+  issuer       String   @db.VarChar(200)
+  issuedAt     DateTime
+  expiresAt    DateTime?
+  sourceUrl    String   @db.VarChar(500)
+  status       String   @default("ACTIVE") @db.VarChar(20)
+  createdById  String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  createdBy    User?    @relation("AlertCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([issuedAt])
+  @@index([expiresAt])
+}
+
+model PreparednessArticle {
+  id               String   @id @default(cuid())
+  title            String   @db.VarChar(200)
+  slug             String   @unique @db.VarChar(191)
+  content          String   @db.LongText
+  category         String   @db.VarChar(50)
+  language         String   @default("en") @db.VarChar(10)
+  sourceReferences String   @default("[]") @db.Text
+  status           String   @default("DRAFT") @db.VarChar(20)
+  publishedAt      DateTime?
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  createdBy        User?    @relation("ArticleCreator", fields: [createdById], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([category])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String   @db.VarChar(80)
+  entityType String   @db.VarChar(80)
+  entityId   String?  @db.VarChar(191)
+  metadata   String   @default("{}") @db.Text
+  ipHash     String?  @db.VarChar(64)
+  createdAt  DateTime @default(now())
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([createdAt])
+  @@index([actorId])
+  @@index([entityType, entityId])
+}

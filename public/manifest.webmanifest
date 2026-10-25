@@ -1,0 +1,66 @@
+{
+  "name": "SILONG PH — Heat Awareness for Central Luzon",
+  "short_name": "SILONG PH",
+  "description": "Model weather, estimated heat index, cool-place discovery, and heat preparedness for Central Luzon, Philippines.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#f7f9fc",
+  "theme_color": "#0b1426",
+  "lang": "en-PH",
+  "dir": "ltr",
+  "categories": ["weather", "health", "utilities", "education"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Heat dashboard",
+      "short_name": "Dashboard",
+      "description": "Current model conditions and estimated heat index",
+      "url": "/",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cool places",
+      "short_name": "Cool places",
+      "description": "Search public-facility records with verification labels",
+      "url": "/cool-places",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Preparedness",
+      "short_name": "Preparedness",
+      "description": "Before, during, and after extreme-heat guidance",
+      "url": "/preparedness",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Alerts",
+      "short_name": "Alerts",
+      "description": "Official advisories and application heat notices",
+      "url": "/alerts",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
