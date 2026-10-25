@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Brand } from "@/components/brand";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { LocationPicker } from "@/components/location/location-picker";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -49,7 +48,6 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <div className="hidden sm:block">
             <LocationPicker />
           </div>
