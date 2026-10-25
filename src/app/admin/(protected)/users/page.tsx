@@ -7,7 +7,7 @@ import { Users, Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select } from "@/components/ui/select";
@@ -100,7 +100,7 @@ export default function AdminUsersPage() {
 
       <Dialog open={openCreate} onOpenChange={setOpenCreate}>
         <DialogContent className="max-w-md">
-          <DialogHeader><DialogTitle>Create account</DialogTitle></DialogHeader>
+          <DialogTitle></DialogTitle>
           <form method="post" action="/api/admin/users" className="space-y-3" onSubmit={async (e) => {
             e.preventDefault();
             setMsg(null);
@@ -139,7 +139,7 @@ export default function AdminUsersPage() {
       {editId && (
         <Dialog open onOpenChange={() => setEditId(null)}>
           <DialogContent className="max-w-md">
-            <DialogHeader><DialogTitle>Edit account</DialogTitle></DialogHeader>
+            <DialogTitle></DialogTitle>
             <form onSubmit={async (e) => {
               e.preventDefault();
               const res = await fetch("/api/admin/users/edit", {
@@ -177,9 +177,7 @@ export default function AdminUsersPage() {
       {deleteId && (
         <Dialog open onOpenChange={() => setDeleteId(null)}>
           <DialogContent className="max-w-sm">
-            <DialogHeader>
-              <DialogTitle>Delete account</DialogTitle>
-            </DialogHeader>
+            <DialogTitle></DialogTitle>
             <p className="text-sm text-muted-foreground">Are you sure? This will deactivate the account. The last SUPER_ADMIN cannot be deleted.</p>
             <div className="flex gap-2 pt-2">
               <Button variant="outline" onClick={() => setDeleteId(null)}>Cancel</Button>
