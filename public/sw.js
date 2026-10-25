@@ -8,7 +8,7 @@
  *    without any Next.js runtime chunks.
  */
 
-const VERSION = "silong-v1";
+const VERSION = "silong-v2";
 const STATIC_CACHE = `${VERSION}-static`;
 const PAGE_CACHE = `${VERSION}-pages`;
 const OFFLINE_URL = "/offline.html";
