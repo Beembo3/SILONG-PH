@@ -53,24 +53,6 @@ export default async function AdminUsersPage() {
             method="post"
             action="/api/admin/users"
             className="space-y-3"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              const form = e.currentTarget as HTMLFormElement;
-              const data = new FormData(form);
-              const res = await fetch("/api/admin/users", {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({
-                  email: data.get("email"),
-                  name: data.get("name"),
-                  role: data.get("role"),
-                  password: data.get("password"),
-                }),
-              });
-              const body = await res.json();
-              alert(body.ok ? ("Created: " + body.user?.email) : ("Error: " + body.error));
-              if (body.ok) form.reset();
-            }}
           >
             <div className="grid gap-3 sm:grid-cols-2">
               <input name="email" type="email" required placeholder="Email" className="rounded-lg border border-border bg-card px-3 py-2 text-sm" />
