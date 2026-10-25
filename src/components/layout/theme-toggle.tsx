@@ -29,7 +29,8 @@ export function ThemeToggle() {
       size="icon"
       onClick={toggle}
       aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-      className="rounded-full"
+      className="rounded-full shadow-sm hover:shadow transition-all duration-200"
+      title={dark ? "Light mode" : "Dark mode"}
     >
       {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </Button>
