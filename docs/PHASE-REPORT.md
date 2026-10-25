@@ -55,6 +55,7 @@
 | `npm run build` | Passed with Next.js 16.4.3 |
 | Supabase Postgres migration + seed | Passed: 46 places, 4 articles, 1 administrator |
 | Production server smoke test | Passed against Supabase Postgres |
+| Public deployment | <https://silong-ph.vercel.app> (Vercel + Supabase Postgres) |
 
 ### Automated test coverage
 

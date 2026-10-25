@@ -4,6 +4,8 @@ Heat awareness, cooling-place discovery, and preparedness for **Central Luzon (R
 
 SILONG PH is a mobile-first Progressive Web App. It shows model weather and an **application-estimated** heat index for the seven provinces of Region III, maps public facilities that may offer relief from the heat, publishes preparedness guidance, and gives administrators a reviewed workflow for places, reports, and official advisories.
 
+**Live:** <https://silong-ph.vercel.app> — deployed on Vercel with Supabase Postgres.
+
 > **Important:** SILONG PH does not publish official PAGASA heat-index readings. The heat index shown in the app is calculated from Open-Meteo model data using the US National Weather Service / Rothfusz regression and is classified with PAGASA's published heat-index categories. Always check PAGASA, DOH, NDRRMC, and your LGU for official warnings and instructions.
 
 ---

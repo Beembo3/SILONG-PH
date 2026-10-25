@@ -571,6 +571,7 @@ npx prisma generate
 | `prisma migrate deploy` says migration already applied / table exists | The database was created with `db push` or an older schema. Inspect with `npx prisma migrate status`; do not delete tables in production without a backup. |
 | Supabase connection works locally but the deployed app fails | Check that `DATABASE_URL` is the transaction pooler (port `6543`) and includes `?pgbouncer=true&connection_limit=1`. |
 | Prisma reports `SSL required` or a TLS error | Append `&sslmode=require` to `DATABASE_URL` and `?sslmode=require` to `DIRECT_URL`. |
+| `EMAXCONNSESSION` / `max clients reached in session mode` | The Supabase session pooler is limited (often 15 clients). Use the **transaction pooler** on port `6543` for `DATABASE_URL` on Vercel; keep the session pooler for `DIRECT_URL` migrations. |
 | Admin login returns 200 but `/admin` redirects to login | Cookie is `Secure` while you are on HTTP. Use HTTPS, or for localhost ensure `NEXT_PUBLIC_APP_URL` is `http://localhost:3000`. |
 | Weather shows an error instead of a number | Provider unreachable or returned an error. The app does not substitute synthetic readings. Check server egress and `/api/weather`. |
 | Weather is labelled stale | The last successful snapshot is being used because a refresh failed. It is not shown beyond 3 hours. |
