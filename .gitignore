@@ -15,3 +15,7 @@ test-results
 data/raw
 .DS_Store
 *.tsbuildinfo
+
+.vercel
+.env.production
+.env.development
