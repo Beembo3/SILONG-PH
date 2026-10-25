@@ -33,14 +33,14 @@
 - Live Open-Meteo model weather with a 10-minute fresh cache and a maximum 3-hour stale fallback.
 - NWS/Rothfusz heat-index estimate classified with official PAGASA categories. It is never labelled an official PAGASA reading.
 - Optional Redis shared cache and distributed rate limiting with automatic in-process fallback.
-- MySQL/MariaDB Prisma schema, baseline migration, seed data, and `db:deploy`/`db:migrate` scripts.
+- PostgreSQL/Supabase Prisma schema, baseline migration, seed data, and `db:deploy`/`db:migrate` scripts.
 - 46 OSM-derived public facilities, all `UNVERIFIED`; official alerts seeded empty.
 
 ### Documentation
 
 - `README.md` — overview, data transparency, local setup, scripts, testing, security, limitations.
 - `docs/DEPLOYMENT.md` — production checklist, database/Redis setup, environment variables, migrations, systemd, Nginx/HTTPS, cron, health checks, backups/recovery, PWA production testing, troubleshooting.
-- `prisma/migrations/20261025120000_init/migration.sql` and `prisma/migrations/migration_lock.toml`.
+- `prisma/migrations/20261025130000_init/migration.sql` and `prisma/migrations/migration_lock.toml`.
 - `.env.example` updated with production and optional hardening variables.
 
 ---
@@ -53,7 +53,8 @@
 | `npm run typecheck` | Passed |
 | `npm run lint` | Passed, no warnings |
 | `npm run build` | Passed with Next.js 16.4.3 |
-| Production server smoke test | Passed |
+| Supabase Postgres migration + seed | Passed: 46 places, 4 articles, 1 administrator |
+| Production server smoke test | Passed against Supabase Postgres |
 
 ### Automated test coverage
 
@@ -107,9 +108,9 @@ Local development administrator: `admin@silong.local` / `SilongPH2026!`. These c
 3. **All 46 seeded facilities are unverified OSM records.** They need field or phone verification before being presented as cooling destinations.
 4. **Official alerts are manual records.** The app does not automatically ingest PAGASA, NDRRMC, or LGU advisories.
 5. **Playwright is installed but no browser test suite is committed.** The service worker/offline flow and full WCAG 2.2 AA audit still need browser and assistive-technology testing.
-6. **Database deviation:** the project uses Prisma with MySQL/MariaDB (the user’s local SQL stack), not PostgreSQL/PostGIS. No spatial database queries are used; geography is served as GeoJSON.
-7. **No Git repository is initialised** in this workspace.
-8. **Redis is optional.** Without it, rate limits and weather caches are per process; use Redis before scaling horizontally.
+6. **Database:** the project uses Prisma with PostgreSQL (Supabase-compatible). No spatial database queries are used; geography is served as GeoJSON.
+7. **Redis is optional.** Without it, rate limits and weather caches are per process; use Redis before scaling horizontally.
+8. **Public deployment:** the primary path is Supabase Postgres + Vercel. See `docs/DEPLOYMENT.md`.
 
 ---
 
@@ -130,4 +131,4 @@ npm run build
 npm start
 ```
 
-MariaDB and, optionally, Redis must be running. See `README.md` and `docs/DEPLOYMENT.md` for configuration, migrations, backups, cron, HTTPS, and PWA testing.
+Supabase Postgres (or another PostgreSQL database) and, optionally, Redis must be reachable. See `README.md` and `docs/DEPLOYMENT.md` for configuration, migrations, backups, cron, HTTPS, and PWA testing.

@@ -288,7 +288,7 @@ export default async function AdminHealthPage() {
             <CheckItem ok={Boolean(appUrl) && appUrl.startsWith("https://")} label="Serve over HTTPS and set NEXT_PUBLIC_APP_URL to the public HTTPS origin." />
             <CheckItem ok={!process.env.ADMIN_PASSWORD} label="Remove ADMIN_PASSWORD from the production environment after seeding." />
             <CheckItem ok={Boolean(process.env.CRON_SECRET)} label="Set CRON_SECRET and schedule /api/cron/weather every 10 minutes." />
-            <CheckItem ok={dbOk} label="Use a managed MySQL/MariaDB database with backups and restricted credentials." />
+            <CheckItem ok={dbOk} label="Use a managed PostgreSQL/Supabase database with backups and restricted credentials." />
             <CheckItem ok={!isRedisConfigured() || cache.reachable} label="Configure Redis for shared caching and rate limiting, or accept single-instance fallback." />
             <CheckItem ok={verified > 0} label="Review and verify facility records before presenting them as cooling places." />
             <CheckItem

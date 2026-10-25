@@ -1,27 +1,27 @@
 # Deployment and operations
 
-This guide covers a production deployment of SILONG PH on a single Linux host, plus the local production smoke test used in this workspace. The app is a standard Next.js server, so it can also run on a container platform or a managed Node host.
+This guide covers the primary production path for SILONG PH: **Supabase Postgres** for data and **Vercel** for the Next.js app. It also includes a single Linux host alternative, local production smoke testing, and operational checks. The app is a standard Next.js server, so it can also run on a container platform or a managed Node host.
 
-> **Safety first:** production must use HTTPS, a dedicated database user, strong secrets, and a verified backup/restore process. The local administrator credentials in the README are for development only.
+> **Safety first:** production must use HTTPS, strong secrets, and a verified backup/restore process. The local administrator credentials in the README are for development only.
 
 ---
 
 ## 1. Production checklist
 
-- [ ] Node.js 20.9+ (Node 22 LTS recommended)
-- [ ] MySQL 8+ or MariaDB 10.4+ database with `utf8mb4`
-- [ ] Dedicated database user and strong password
-- [ ] Redis 6+ if running more than one app instance (optional otherwise)
+- [ ] Node.js 20.9+ (Node 22 LTS recommended) for local builds and tooling
+- [ ] Supabase project with a Postgres database
+- [ ] Supabase transaction-pooler and session-pooler/direct connection strings
+- [ ] Vercel project connected to the GitHub repository (or another managed Node host)
 - [ ] `AUTH_SECRET` of at least 32 random characters
 - [ ] `NEXT_PUBLIC_APP_URL` set to the final **https://** origin
 - [ ] `CRON_SECRET` set if scheduled cache warming is enabled
-- [ ] `.env` not committed and not readable by other users
-- [ ] HTTPS reverse proxy or managed TLS
-- [ ] `npm run db:deploy` applied
+- [ ] `.env` and `.env.local` not committed and not readable by other users
+- [ ] HTTPS (Vercel provides this automatically)
+- [ ] `npm run db:deploy` applied to Supabase
 - [ ] Bootstrap administrator seeded, then `ADMIN_PASSWORD` removed from runtime env
-- [ ] `npm run build` and `npm start` verified
+- [ ] `npm run build` and `npm start` verified locally
 - [ ] `/api/health` monitored
-- [ ] Database backup and restore tested
+- [ ] Supabase backup and restore tested
 - [ ] PWA/service worker tested against the production build
 - [ ] Content and official-source links reviewed
 
@@ -34,53 +34,47 @@ Browser / installed PWA
         |
         | HTTPS
         v
-Reverse proxy (Nginx, Caddy, or platform ingress)
-        |
-        v
-Next.js server (`next start`, Node.js)
+Vercel (Next.js)  or  self-hosted Next.js + reverse proxy
    |                 |
    | Prisma          | optional
    v                 v
-MySQL/MariaDB      Redis
+Supabase Postgres   Redis
 ```
 
-- MySQL/MariaDB is the source of truth for users, places, reports, alerts, articles, and audit logs.
+- Supabase Postgres is the source of truth for users, places, reports, alerts, articles, and audit logs.
 - Redis is a cache and distributed rate-limit store. It is **not** a source of truth. If Redis is absent or unreachable, the app falls back to process memory. That fallback is only correct for a single app instance.
 - Weather data comes from Open-Meteo over the public internet. The server must be able to reach `api.open-meteo.com`.
 
 ---
 
-## 3. Database setup
+## 3. Database setup (Supabase)
 
-### 3.1 Create the database and user
+### 3.1 Create the project
 
-MySQL 8 and MariaDB 10.4 both accept the following:
+1. Create a project at <https://supabase.com/dashboard>.
+2. Wait until the database is ready.
+3. Open **Project Settings → Database → Connection string** (or the **Connect** button).
+4. Copy two URIs:
+   - **Transaction pooler** (port `6543`) for the running app.
+   - **Session pooler** or **Direct connection** (port `5432`) for migrations and seeding.
 
-```sql
-CREATE DATABASE silong CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+The app uses Prisma over the Postgres connection string. A Supabase API key (`sb_publishable_…` or `sb_secret_…`) is **not** required and should not be committed.
 
-CREATE USER 'silong'@'localhost' IDENTIFIED BY 'replace-with-a-long-random-password';
-GRANT ALL PRIVILEGES ON silong.* TO 'silong'@'localhost';
-FLUSH PRIVILEGES;
-```
-
-If the app server is on a different host, use the appropriate host part (for example `'silong'@'10.0.0.%'`) and restrict it to the app network. Do not grant global privileges.
-
-### 3.2 Connection string
+### 3.2 Connection strings
 
 ```dotenv
-DATABASE_URL="mysql://silong:URL_ENCODED_PASSWORD@127.0.0.1:3306/silong"
+# Running app: transaction pooler
+DATABASE_URL="postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-REGION.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+
+# Migrations and seeding: session pooler or direct connection
+DIRECT_URL="postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-REGION.pooler.supabase.com:5432/postgres"
 ```
 
-URL-encode special characters in the password (for example `@` becomes `%40`). For managed databases, add the provider's recommended TLS parameters to the connection string.
+Use the exact host and region shown in the Supabase dashboard. URL-encode special characters in the password (for example `@` becomes `%40`). Keep `DIRECT_URL` private; it is only used for migrations and seeding.
 
-Optional pool tuning:
+If your Supabase project uses the direct connection on port `5432` and your host has IPv6, you can use that instead of the session pooler. Vercel and many CI runners are IPv4-only, so the session pooler is the safer choice.
 
-```dotenv
-DATABASE_URL="mysql://silong:password@127.0.0.1:3306/silong?connection_limit=10&pool_timeout=20"
-```
-
-Size the pool for the number of app processes and the database's `max_connections`.
+If the transaction pooler on port `6543` is unreachable from your network, use the **session pooler** URI for both `DATABASE_URL` and `DIRECT_URL`. Prisma works correctly in session mode; the trade-off is one database connection per app session, which is fine for a small deployment.
 
 ### 3.3 Time zone
 
@@ -88,19 +82,13 @@ Prisma stores `DateTime` values in UTC. The app formats dates for Asia/Manila ex
 
 ### 3.4 Migrations
 
-The repository contains a baseline migration in `prisma/migrations/`.
+The repository contains a PostgreSQL baseline migration in `prisma/migrations/`.
 
-Fresh database:
+Fresh Supabase database:
 
 ```bash
 npx prisma generate
 npm run db:deploy
-```
-
-Existing database that was created with `prisma db push` before migrations were added:
-
-```bash
-npx prisma migrate resolve --applied 20261025120000_init
 ```
 
 Check status:
@@ -110,6 +98,8 @@ npx prisma migrate status
 ```
 
 Do not use `prisma db push` against a production database. It can make destructive changes without a migration history. Use `npm run db:migrate` during development to create a new migration, review the SQL, commit it, and apply it with `npm run db:deploy`.
+
+The baseline migration also revokes Supabase `anon`/`authenticated` access and enables Row Level Security on the application tables. Prisma connects as the table owner, so the app is unaffected; the Supabase Data API cannot read or write these tables with a public API key.
 
 ### 3.5 Seed the bootstrap administrator
 
@@ -128,6 +118,25 @@ The password must be at least 12 characters. The seed:
 Re-running the seed with a new `ADMIN_PASSWORD` rotates the bootstrap administrator's password. **Remove `ADMIN_PASSWORD` from the runtime environment after seeding.** The app does not need it at runtime.
 
 The seed does not create official advisories. An administrator must add those with a real issuer and source URL.
+
+### 3.6 Deploy the app to Vercel
+
+1. Push the repository to GitHub.
+2. In Vercel, **Add New → Project** and import the repository.
+3. Keep the framework preset **Next.js**. The repository's `.npmrc` enables `legacy-peer-deps`; use the default install command and `npm run build` as the build command.
+4. Add these environment variables in **Project Settings → Environment Variables**:
+   - `DATABASE_URL` — Supabase transaction pooler
+   - `DIRECT_URL` — Supabase session pooler/direct connection
+   - `AUTH_SECRET` — a unique random value of at least 32 characters
+   - `NEXT_PUBLIC_APP_URL` — the final Vercel/custom HTTPS origin
+   - `CRON_SECRET` — a long random bearer token
+   - `REDIS_URL` — optional; leave unset for single-instance in-process fallback
+5. Deploy. Vercel runs `npm run build`, which generates Prisma Client.
+6. Run migrations and seed from your machine against Supabase (using `DIRECT_URL`) before or immediately after the first deploy.
+7. Set `NEXT_PUBLIC_APP_URL` to the final domain and redeploy so secure cookies and same-origin checks use the correct origin.
+8. Optionally schedule `GET /api/cron/weather` every 10 minutes with a bearer token. Vercel Hobby cron limits may prevent a 10-minute schedule; the app still fetches weather on demand, so cron is an optimisation.
+
+**Important:** Vercel serverless functions should use the Supabase transaction pooler for `DATABASE_URL`. Do not point `DATABASE_URL` at the direct connection for a serverless deployment.
 
 ---
 
@@ -159,7 +168,8 @@ If Redis is unreachable, the app logs no reconnect storm, uses the in-process ca
 
 | Variable | Required | Notes |
 | --- | --- | --- |
-| `DATABASE_URL` | Yes | MySQL/MariaDB connection string. |
+| `DATABASE_URL` | Yes | Supabase transaction-pooler connection string (port `6543`) used by the app. |
+| `DIRECT_URL` | Yes for migrations | Supabase session-pooler/direct connection string (port `5432`) used by `prisma migrate` and the seed. |
 | `AUTH_SECRET` | Yes | At least 32 random characters. Signs session JWTs. Rotating it invalidates all sessions. |
 | `NEXT_PUBLIC_APP_URL` | Yes in production | Final public origin, e.g. `https://heat.example.ph`. Must match the browser origin for same-origin checks and secure cookies. |
 | `CRON_SECRET` | For cron | Bearer token for `/api/cron/weather`. If unset, the endpoint returns 503. |
@@ -195,7 +205,9 @@ A production app URL of `http://...` deliberately disables the `Secure` flag so 
 
 ---
 
-## 6. Install, build, and run
+## 6. Self-hosted install, build, and run
+
+This section is for the single-Linux-host alternative. The primary Supabase + Vercel path is in section 3.6.
 
 ### 6.1 Install
 
@@ -239,8 +251,8 @@ Binding to `127.0.0.1` is appropriate when a reverse proxy is on the same host. 
 ```ini
 [Unit]
 Description=SILONG PH
-After=network.target mysql.service redis.service
-Wants=mysql.service
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
@@ -390,30 +402,34 @@ Do not log request bodies, passwords, session cookies, or full client IPs. The a
 
 ### 10.1 Database backup
 
-Use a consistent, single-transaction dump:
+Supabase paid plans include automated backups. On the free plan, take your own logical backups with `pg_dump` using the session-pooler/direct connection string:
 
 ```bash
-mysqldump \
-  --single-transaction \
-  --routines \
-  --triggers \
-  --default-character-set=utf8mb4 \
-  silong > /var/backups/silong-$(date +%F-%H%M).sql
+pg_dump "$DIRECT_URL" \
+  --no-owner \
+  --no-privileges \
+  --format=custom \
+  --file=/var/backups/silong-$(date +%F-%H%M).dump
 ```
 
-Compress and encrypt backups according to your policy. Store at least one copy off the host. Restrict permissions:
+Compress and encrypt backups according to your policy. Store at least one copy off the host and outside Supabase. Restrict permissions:
 
 ```bash
-chmod 600 /var/backups/silong-*.sql
+chmod 600 /var/backups/silong-*.dump
 ```
 
 ### 10.2 Restore test
 
-Restore into a separate database first:
+Restore into a separate Supabase project or a staging database first:
 
 ```bash
-mysql -u root -p -e "CREATE DATABASE silong_restore CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p silong_restore < /var/backups/silong-2026-10-25-1200.sql
+pg_restore \
+  --clean \
+  --if-exists \
+  --no-owner \
+  --no-privileges \
+  --dbname="$DIRECT_URL" \
+  /var/backups/silong-2026-10-25-1200.dump
 ```
 
 Then point a staging instance at the restored database and verify:
@@ -501,10 +517,10 @@ Open the production origin. For local testing, `http://localhost:3000` is treate
 
 ## 13. Local production smoke test (Windows)
 
-This workspace uses MariaDB (XAMPP) and Redis (DBngin) locally. The exact service paths are machine-specific; the ports and commands are what matter.
+This workspace uses Supabase Postgres remotely and optionally Redis (DBngin) locally. The exact service paths are machine-specific; the ports and commands are what matter.
 
-1. Start MariaDB on `127.0.0.1:3306` and Redis on `127.0.0.1:6379`.
-2. Confirm `.env` has `DATABASE_URL`, `AUTH_SECRET`, `NEXT_PUBLIC_APP_URL=http://localhost:3000`, and optionally `REDIS_URL`.
+1. Confirm the Supabase project is reachable and the connection strings are valid. Redis on `127.0.0.1:6379` is optional.
+2. Confirm `.env` has `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, `NEXT_PUBLIC_APP_URL=http://localhost:3000`, and optionally `REDIS_URL`.
 3. Apply migrations and seed if needed:
 
    ```powershell
@@ -550,8 +566,11 @@ npx prisma generate
 | Symptom | Check |
 | --- | --- |
 | `npm install` fails with peer-dependency errors | Use `npm install --legacy-peer-deps` or `npm ci --legacy-peer-deps`. |
-| Prisma `P1001` / can't reach database | Database running, host/port, user grants, `DATABASE_URL`, TLS parameters. |
-| `prisma migrate deploy` says migration already applied / table exists | The database was created with `db push`. Baseline it with `prisma migrate resolve --applied 20261025120000_init`, then re-check `migrate status`. |
+| Prisma `P1001` / can't reach database | Supabase project running, exact pooler host/region, URL-encoded password, `DATABASE_URL`, and `DIRECT_URL`. |
+| Prisma `P1001` from Vercel but local migrations work | Vercel is IPv4-only. Use the Supabase **transaction pooler** for `DATABASE_URL` and the **session pooler** for `DIRECT_URL`. |
+| `prisma migrate deploy` says migration already applied / table exists | The database was created with `db push` or an older schema. Inspect with `npx prisma migrate status`; do not delete tables in production without a backup. |
+| Supabase connection works locally but the deployed app fails | Check that `DATABASE_URL` is the transaction pooler (port `6543`) and includes `?pgbouncer=true&connection_limit=1`. |
+| Prisma reports `SSL required` or a TLS error | Append `&sslmode=require` to `DATABASE_URL` and `?sslmode=require` to `DIRECT_URL`. |
 | Admin login returns 200 but `/admin` redirects to login | Cookie is `Secure` while you are on HTTP. Use HTTPS, or for localhost ensure `NEXT_PUBLIC_APP_URL` is `http://localhost:3000`. |
 | Weather shows an error instead of a number | Provider unreachable or returned an error. The app does not substitute synthetic readings. Check server egress and `/api/weather`. |
 | Weather is labelled stale | The last successful snapshot is being used because a refresh failed. It is not shown beyond 3 hours. |

@@ -77,7 +77,7 @@ PAGASA publishes integer ranges. For continuous values, the app uses the lower b
 - **Lucide** icons
 - **React Hook Form + Zod** for forms and server-side validation
 - **Leaflet + React Leaflet** with OpenStreetMap-compatible tiles
-- **Prisma 6** with **MySQL 8+ / MariaDB 10.4+**
+- **Prisma 6** with **PostgreSQL** (Supabase-compatible)
 - **Redis (optional)** for shared weather caching and distributed rate limiting; automatic in-process fallback
 - **jose** JWT sessions, **bcryptjs** password hashing
 - **Vitest** unit/integration tests
@@ -91,7 +91,7 @@ PAGASA publishes integer ranges. For continuous values, the app uses the lower b
 
 - Node.js 20.9 or newer (Node 22 LTS recommended)
 - npm
-- MySQL 8+ or MariaDB 10.4+ (utf8mb4)
+- A PostgreSQL database (Supabase is the recommended managed option)
 - Redis 6+ is optional
 - A modern browser
 
@@ -101,17 +101,15 @@ PAGASA publishes integer ranges. For continuous values, the app uses the lower b
 npm install --legacy-peer-deps
 ```
 
-`--legacy-peer-deps` is currently required because of an npm peer-dependency resolution bug in the installed Next/React combination. It does not change runtime behaviour.
+The repository includes `.npmrc` with `legacy-peer-deps=true` because of an npm peer-dependency resolution bug in the installed Next/React combination. It does not change runtime behaviour, and Vercel picks it up automatically.
 
-### 2. Create the database
+### 2. Create the Supabase database
 
-Using MySQL/MariaDB:
+1. Create a project at <https://supabase.com/dashboard>.
+2. Open **Project Settings → Database → Connection string** (or the **Connect** button).
+3. Copy the **transaction pooler** URI (port `6543`) and the **session pooler/direct** URI (port `5432`).
 
-```sql
-CREATE DATABASE silong CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-Create a dedicated application user rather than using `root` outside local development.
+This app uses Prisma over the Postgres connection string. You do **not** need a Supabase API key (`sb_publishable_…` or `sb_secret_…`) for the app to work.
 
 ### 3. Configure environment variables
 
@@ -122,7 +120,10 @@ cp .env.example .env
 Then edit `.env`:
 
 ```dotenv
-DATABASE_URL="mysql://silong:your-password@127.0.0.1:3306/silong"
+# Transaction pooler: used by the running app (port 6543)
+DATABASE_URL="postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-REGION.pooler.supabase.com:6543/postgres?pgbouncer=true&connection_limit=1"
+# Session pooler/direct: used by Prisma migrations (port 5432)
+DIRECT_URL="postgresql://postgres.PROJECT_REF:PASSWORD@aws-0-REGION.pooler.supabase.com:5432/postgres"
 REDIS_URL="redis://127.0.0.1:6379"
 AUTH_SECRET="at-least-32-random-characters"
 ADMIN_EMAIL="admin@example.com"
@@ -130,6 +131,8 @@ ADMIN_PASSWORD="a-unique-password-of-at-least-12-characters"
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 CRON_SECRET="a-long-random-token"
 ```
+
+URL-encode special characters in the database password (for example `@` becomes `%40`). Keep `DIRECT_URL` private; it is only used for migrations and seeding.
 
 Generate secrets with:
 
@@ -147,12 +150,6 @@ For a new database:
 npx prisma generate
 npm run db:deploy
 npm run db:seed
-```
-
-If you created an existing database with `prisma db push` before migrations were added, baseline it once:
-
-```bash
-npx prisma migrate resolve --applied 20261025120000_init
 ```
 
 The seed creates the first `SUPER_ADMIN`, imports the OSM-derived place file, and seeds preparedness articles. It does **not** create official alerts. It is safe to run again: the administrator is upserted and existing places are skipped by OSM ID.
@@ -175,6 +172,30 @@ The local seed in this workspace uses:
 - Password: `SilongPH2026!`
 
 These are **development credentials only**. Change or remove them before any shared or production deployment. Never commit a real `.env` file.
+
+---
+
+## Deploy publicly (Supabase + Vercel)
+
+1. Create a Supabase project and copy the **transaction pooler** URI (port `6543`) and the **session pooler/direct** URI (port `5432`) from **Project Settings → Database → Connection string**.
+2. Set `DATABASE_URL` to the transaction pooler and `DIRECT_URL` to the session pooler/direct URI in your local `.env`.
+3. Apply the schema and seed against Supabase:
+
+   ```bash
+   npx prisma generate
+   npm run db:deploy
+   npm run db:seed
+   ```
+
+4. Push this repository to GitHub.
+5. Import the repository into Vercel. Keep the **Next.js** preset, use `npm install --legacy-peer-deps`, and build with `npm run build`.
+6. Add the environment variables from `.env.example` in Vercel. Set `NEXT_PUBLIC_APP_URL` to the final HTTPS origin. `ADMIN_PASSWORD` is only needed for seeding and should not be added to the runtime environment.
+7. Deploy. Vercel provides HTTPS automatically.
+8. Open `/api/health` and confirm `database.reachable` is `true`. Log in at `/admin/login` with the administrator you seeded.
+
+A Supabase API key is **not** used by this app. Prisma connects directly over the Postgres connection string. Keep `DATABASE_URL`, `DIRECT_URL`, `AUTH_SECRET`, and `CRON_SECRET` out of Git.
+
+For the full checklist, backups, cron, self-hosting, and troubleshooting, see [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ---
 
@@ -216,7 +237,8 @@ Current verified result (25 October 2026):
 - `npm run typecheck` passed.
 - `npm run lint` passed with no warnings.
 - `npm run build` completed successfully with Next.js 16.4.3.
-- Production smoke test: home, map, directory, province, locality, alerts, preparedness, policy pages, sitemap, robots, manifest, service worker, places API, health API, live weather API, and authenticated admin pages all returned HTTP 200.
+- Supabase Postgres migration and seed applied successfully: 46 places, 4 articles, and 1 administrator.
+- Production smoke test against Supabase: home, map, directory, province, locality, alerts, preparedness, policy pages, sitemap, robots, manifest, service worker, places API, health API, live weather API, cron API, and authenticated admin pages all returned HTTP 200. `/api/health` reported the database and Redis reachable.
 
 The suite covers heat-index boundaries and domain guards, Zod validation, Open-Meteo normalisation, cache freshness and stale fallback, operating-hours parsing, geography, authentication primitives, place helpers, alert activity rules, rate limiting, and admin route actions with mocked Prisma/audit dependencies.
 
@@ -250,7 +272,7 @@ src/
     redis.ts                Optional Redis with fail-open behaviour
     rate-limit.ts           Redis or in-process limiter
 prisma/
-  schema.prisma             MySQL schema
+  schema.prisma             PostgreSQL schema
   migrations/               Baseline migration
   seed.ts                   Administrator, places, articles
 public/
@@ -275,6 +297,7 @@ docs/DEPLOYMENT.md          Production deployment, operations, backups
 - Weather and health responses are `no-store`. The service worker never caches `/api/` requests.
 - Security headers are set in `next.config.ts` (`nosniff`, `DENY` framing, referrer policy, permissions policy).
 - Secrets belong in environment variables, never in source control. `.env` is ignored by Git.
+- The Supabase migration revokes `anon`/`authenticated` access and enables RLS on application tables. The app uses Prisma as the table owner; the Supabase Data API cannot access these tables with a public key.
 
 A Content Security Policy is not set by the app because Leaflet tiles and Next.js asset loading need careful per-deployment tuning. Add and test a CSP at the reverse proxy or in `next.config.ts` before production if your threat model requires one.
 
