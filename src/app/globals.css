@@ -48,13 +48,6 @@
   --primary: #3a6ec7;
   --primary-foreground: #ffffff;
 }
-  --border: #dce3ec;
-  --input: #cbd5e1;
-  --ring: #ff7a1a;
-  --primary: #ff7a1a;
-  --primary-foreground: #ffffff;
-  --radius: 0.75rem;
-}
 
 * {
   border-color: var(--border);
