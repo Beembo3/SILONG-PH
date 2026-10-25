@@ -57,7 +57,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <ThemeToggle />
         {children}
         <ServiceWorkerRegistration />
       </body>
