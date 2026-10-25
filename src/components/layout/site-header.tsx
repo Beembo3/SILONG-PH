@@ -28,7 +28,7 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90">
+    <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90 dark:bg-[#111c33]/95 dark:supports-[backdrop-filter]:bg-[#111c33]/90">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         <Brand />
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
@@ -40,8 +40,8 @@ export function SiteHeader() {
               className={cn(
                 "rounded-lg px-3 py-2 text-sm font-semibold transition-colors",
                 isActive(pathname, item.href)
-                  ? "bg-orange-50 text-orange-800"
-                  : "text-slate-600 hover:bg-muted hover:text-foreground",
+                  ? "bg-orange-50 text-orange-800 dark:bg-orange-900/30 dark:text-orange-200"
+                  : "text-slate-600 hover:bg-muted hover:text-foreground dark:text-slate-300 dark:hover:bg-[#1a2744] dark:hover:text-[#e8edf3]",
               )}
             >
               {item.label}
