@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
-import { ThemeToggle } from "@/components/layout/theme-toggle";
 
 const inter = Inter({
   subsets: ["latin"],
