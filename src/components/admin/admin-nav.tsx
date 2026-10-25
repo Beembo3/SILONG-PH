@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Activity, Building2, ClipboardList, FileWarning, Gauge, ScrollText, ShieldAlert } from "lucide-react";
+import { Activity, Building2, ClipboardList, FileWarning, Gauge, ScrollText, ShieldAlert, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const items = [
@@ -10,6 +10,7 @@ const items = [
   { href: "/admin/places", label: "Cool places", icon: Building2 },
   { href: "/admin/reports", label: "Reports", icon: FileWarning },
   { href: "/admin/alerts", label: "Official alerts", icon: ShieldAlert },
+  { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/health", label: "System health", icon: Activity },
   { href: "/admin/audit", label: "Audit log", icon: ScrollText },
 ];
