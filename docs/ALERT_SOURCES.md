@@ -18,7 +18,7 @@ This registry documents which official sources have been researched and what int
 
 | Province / Agency | URL / Channel | Method | Status | Notes |
 |---|---|---|---|---|
-| OCD Region III | Search via OCD / DILG Region III | Manual / linked | Not yet integrated | Requires direct LGU/DRRMO verification. |
+| DILG Region III — Regional News / Advisories | https://centralluzon.region3.dilg.gov.ph/feed/ (RSS) | RSS feed verified; basic server-side fetch possible | **Real feed found — can poll** | WordPress RSS; actual feed retrieved (lastBuild 2026-10-22, hourly update). Contains regional news/events, not structured disaster bulletins. Use for regional awareness; manual admin review required for emergency classification. No auth required. |
 | Provincial DRRMO (all 7) | Each provincial government site | Manual / linked | Not yet integrated | No uniform API; must be checked per province. |
 
 ### Tier 3: City / Municipal
