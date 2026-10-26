@@ -25,5 +25,5 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
-  "exclude": ["node_modules", "prisma/seed-verified.ts", "prisma/seed-all-verified.ts", "prisma/seed-alert-dilg.ts", "prisma/seed-verified-2.ts"]
+  "exclude": ["node_modules", "prisma/seed-verified.ts", "prisma/seed-all-verified.ts", "prisma/seed-verified-2.ts"]
 }

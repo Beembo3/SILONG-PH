@@ -38,6 +38,13 @@ export const PLACE_CATEGORIES = [
   "Health facility",
   "Water-refill station",
   "Shaded public rest area",
+  "Shopping Malls",
+  "Public park",
+  "Nature park",
+  "National park",
+  "Waterfall",
+  "Public museum",
+  "Sports and recreation park",
   "Other public facility",
 ] as const;
 

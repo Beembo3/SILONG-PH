@@ -55,7 +55,10 @@ export async function searchCoolingPlaces(params: PlaceSearchParams) {
   const candidates = await prisma.coolingPlace.findMany({
     where,
     orderBy: [{ name: "asc" }],
-    take: params.openNow ? 500 : pageSize * page,
+    // The directory sorts by verification rank (and optionally distance) in memory,
+    // so fetch the matching set before paginating. The current region-wide dataset
+    // is well below this cap; the cap keeps an accidental unbounded query in check.
+    take: 1000,
   });
 
   const now = new Date();

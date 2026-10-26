@@ -19,6 +19,7 @@
     "db:migrate": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx --env-file=.env prisma/seed.ts",
+    "db:import-cool-places": "tsx --env-file=.env prisma/import-cool-places.ts",
     "db:studio": "prisma studio",
     "geo:build": "node scripts/build-geodata.mjs",
     "osm:import": "node scripts/import-osm-places.mjs",
