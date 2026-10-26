@@ -427,7 +427,7 @@ export function RegionHeatMap() {
         ) : null}
 
         <Card className="overflow-hidden">
-          <div className="relative">
+          <div className="relative isolate">
             <div
               ref={mapContainer}
               className="h-[26rem] w-full sm:h-[32rem] lg:h-[38rem]"
@@ -435,7 +435,7 @@ export function RegionHeatMap() {
               aria-label="Interactive map of Central Luzon provinces coloured by estimated heat index"
             />
             {loading ? (
-              <div className="absolute inset-0 z-[500] flex items-center justify-center bg-white/70">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
                 <div className="space-y-2 text-center">
                   <Skeleton className="mx-auto h-6 w-40" />
                   <p className="text-sm text-muted-foreground">Loading map and model weather…</p>

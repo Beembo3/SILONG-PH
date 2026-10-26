@@ -125,8 +125,8 @@ export default async function CoolPlacesPage({
         </div>
       )}
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[19rem_1fr]">
-        <aside>
+      <div className="mt-6 grid gap-6 lg:grid-cols-[19rem_minmax(0,1fr)]">
+        <aside className="min-w-0">
           <Card>
             <CardContent className="pt-5 sm:pt-6">
               <h2 className="flex items-center gap-2 text-base font-bold text-navy">
@@ -253,7 +253,7 @@ export default async function CoolPlacesPage({
           </Card>
         </aside>
 
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h2 className="text-xl font-extrabold tracking-tight text-navy">

@@ -19,10 +19,12 @@ export function PlaceLocationMap({
   const mapRef = useRef<LeafletMap | null>(null);
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [needsTap, setNeedsTap] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     let map: LeafletMap | null = null;
+    let resizeObserver: ResizeObserver | null = null;
     (async () => {
       const L = (await import("leaflet")).default;
       if (cancelled || !container.current || mapRef.current) return;
@@ -49,10 +51,28 @@ export function PlaceLocationMap({
         .bindPopup(`<strong>${name}</strong><br/>${address}`)
         .addTo(map)
         .openPopup();
+
+      // Touch screens: dragging is opt-in so the page keeps scrolling normally.
+      const coarsePointer = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+      if (coarsePointer) {
+        map.dragging.disable();
+        setNeedsTap(true);
+        map.on("click", () => {
+          map?.dragging.enable();
+          setNeedsTap(false);
+        });
+      }
+
+      if (typeof ResizeObserver !== "undefined") {
+        resizeObserver = new ResizeObserver(() => map?.invalidateSize());
+        resizeObserver.observe(container.current);
+      }
+
       setReady(true);
     })();
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
       if (map) {
         map.remove();
         mapRef.current = null;
@@ -61,20 +81,25 @@ export function PlaceLocationMap({
   }, [latitude, longitude, name, address]);
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-border">
+    <div className="relative isolate z-0 overflow-hidden rounded-xl border border-border">
       <div
         ref={container}
-        className="h-64 w-full"
+        className="h-56 w-full sm:h-64"
         role="application"
         aria-label={`Map showing the approximate location of ${name}`}
       />
       {!ready ? (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/70">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
           <Skeleton className="h-6 w-40" />
         </div>
       ) : null}
+      {needsTap ? (
+        <p className="pointer-events-none absolute inset-x-3 top-3 z-10 rounded-lg bg-white/90 px-3 py-2 text-center text-xs font-semibold text-slate-700 shadow-sm">
+          Tap the map to pan it. The page scrolls normally until then.
+        </p>
+      ) : null}
       {failed ? (
-        <p className="absolute inset-x-3 bottom-3 rounded-lg bg-amber-50 p-2 text-xs text-amber-950">
+        <p className="absolute inset-x-3 bottom-3 z-10 rounded-lg bg-amber-50 p-2 text-xs text-amber-950">
           Base map tiles failed to load. Use the directions link for navigation.
         </p>
       ) : null}

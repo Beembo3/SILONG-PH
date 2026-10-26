@@ -16,7 +16,7 @@ export function SiteFooter() {
     <footer className="mt-16 border-t border-slate-800 bg-navy text-slate-300">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
         <div>
-          <Brand className="[&_span:first-child]:bg-white/10" />
+          <Brand onDark />
           <p className="mt-4 max-w-md text-sm leading-relaxed text-slate-400">
             Heat awareness and community preparedness for Central Luzon. Understand the heat. Find relief. Stay
             prepared.

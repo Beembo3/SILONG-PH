@@ -91,6 +91,14 @@ body {
 .leaflet-container {
   font-family: inherit;
   background: #dfe8f3;
+  /*
+   * Leaflet's panes and controls use internal z-indexes (400-1000). Without a
+   * stacking context they escape the map container and paint above the sticky
+   * site header (z-40) and dialogs while the page scrolls. Keeping the map in
+   * its own stacking context confines those values to the map.
+   */
+  isolation: isolate;
+  z-index: 0;
 }
 
 .leaflet-control-attribution {

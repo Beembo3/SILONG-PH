@@ -21,7 +21,7 @@ export default async function AdminLoginPage() {
   return (
     <div className="flex min-h-screen flex-col bg-navy">
       <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-6 sm:px-6">
-        <Brand className="[&_span:first-child]:bg-white/10 [&_span:last-child]:text-white" />
+        <Brand onDark />
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-300 hover:text-white">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Public site
         </Link>
