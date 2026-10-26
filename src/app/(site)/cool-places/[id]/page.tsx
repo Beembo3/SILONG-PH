@@ -26,12 +26,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatPST, formatPSTDate } from "@/lib/format";
 import { getLocality, getProvince } from "@/lib/geography";
 import {
+  amenityLabel,
   directionsUrl,
   evaluateOpenNow,
+  openStateLabel,
   osmUrl,
   parseAmenities,
-  VERIFICATION_DESCRIPTIONS,
-  VERIFICATION_LABELS,
+  placeCategoryLabel,
+  VERIFICATION_DISPLAY_DESCRIPTIONS,
+  VERIFICATION_DISPLAY_LABELS,
   verificationVariant,
   type VerificationStatus,
 } from "@/lib/places";
@@ -49,11 +52,12 @@ export async function generateMetadata({
     where: { id },
     select: { name: true, category: true, verificationStatus: true, address: true },
   });
-  if (!place) return { title: "Place not found" };
+  if (!place) return { title: "Wala ang lugar" };
+  const status = place.verificationStatus as VerificationStatus;
   return {
-    title: `${place.name} — ${VERIFICATION_LABELS[place.verificationStatus as VerificationStatus] ?? "Unverified"}`,
-    description: `${place.category} at ${place.address}. Verification status: ${
-      VERIFICATION_LABELS[place.verificationStatus as VerificationStatus] ?? "Unverified"
+    title: `${place.name} — ${VERIFICATION_DISPLAY_LABELS[status] ?? "Hindi pa beripikado"}`,
+    description: `${placeCategoryLabel(place.category)} sa ${place.address}. Katayuan ng beripikasyon: ${
+      VERIFICATION_DISPLAY_LABELS[status] ?? "Hindi pa beripikado"
     }.`,
     robots: { index: place.verificationStatus === "VERIFIED", follow: true },
   };
@@ -90,12 +94,12 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
   });
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
       <nav aria-label="Breadcrumb" className="mb-4">
         <ol className="flex flex-wrap items-center gap-1.5 text-xs font-semibold text-muted-foreground">
           <li>
             <Link href="/cool-places" className="hover:text-primary">
-              Cool places
+              Preskong lugar
             </Link>
           </li>
           {province ? (
@@ -126,58 +130,62 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
       </nav>
 
       {place.archivedAt ? (
-        <Alert variant="warning" className="mb-5" title="This record has been archived">
-          It is no longer part of the active directory. Archived records are retained for audit purposes and must not
-          be treated as an available cooling destination.
+        <Alert variant="warning" className="mb-5" title="Naka-archive ang record na ito">
+          Wala na ito sa active directory. Pinapanatili ang archived records para sa audit at hindi dapat ituring na
+          available cooling destination.
         </Alert>
       ) : null}
 
       <div className="grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant={verificationVariant(status)}>{VERIFICATION_LABELS[status] ?? "Unverified"}</Badge>
-            <Badge variant="outline">{place.category}</Badge>
+            <Badge variant={verificationVariant(status)}>
+              {VERIFICATION_DISPLAY_LABELS[status] ?? "Hindi pa beripikado"}
+            </Badge>
+            <Badge variant="outline">{placeCategoryLabel(place.category)}</Badge>
             {hasWater ? (
               <Badge variant="info">
-                <Droplets className="h-3.5 w-3.5" aria-hidden="true" /> Drinking water reported
+                <Droplets className="h-3.5 w-3.5" aria-hidden="true" /> May iniulat na tubig
               </Badge>
             ) : null}
             {hasAccess ? (
               <Badge variant="success">
-                <Accessibility className="h-3.5 w-3.5" aria-hidden="true" /> Wheelchair access reported
+                <Accessibility className="h-3.5 w-3.5" aria-hidden="true" /> May wheelchair access
               </Badge>
             ) : null}
           </div>
 
-          <h1 className="mt-3 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">{place.name}</h1>
-          <p className="mt-2 flex items-start gap-2 text-sm text-slate-600">
+          <h1 className="mt-3 break-words text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">{place.name}</h1>
+          <div className="mt-2 flex items-start gap-2 text-sm text-slate-600">
             <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" aria-hidden="true" />
-            {place.address}
-            {locality ? (
-              <span className="text-muted-foreground">
-                {" "}
-                ·{" "}
-                <Link href={`/localities/${locality.code}`} className="font-semibold text-primary hover:underline">
-                  {locality.name}
-                </Link>
-              </span>
-            ) : null}
-          </p>
+            <p className="min-w-0 break-words">
+              {place.address}
+              {locality ? (
+                <span className="text-muted-foreground">
+                  {" "}
+                  ·{" "}
+                  <Link href={`/localities/${locality.code}`} className="font-semibold text-primary hover:underline">
+                    {locality.name}
+                  </Link>
+                </span>
+              ) : null}
+            </p>
+          </div>
 
           {status !== "VERIFIED" ? (
-            <Alert variant="warning" className="mt-5" title="Not a confirmed cooling centre">
-              <p>{VERIFICATION_DESCRIPTIONS[status]}</p>
+            <Alert variant="warning" className="mt-5" title="Hindi ito kumpirmadong cooling center">
+              <p>{VERIFICATION_DISPLAY_DESCRIPTIONS[status]}</p>
               <p className="mt-2">
-                Public access, air-conditioning, water, seating, and opening hours are not guaranteed. Call the facility
-                or your LGU before travelling. If this record is wrong, use the report form below.
+                Hindi garantiya ang public access, aircon, tubig, upuan, at oras ng pagbubukas. Tawagan ang pasilidad o
+                ang LGU bago pumunta. Kung mali ang record, gamitin ang report form sa ibaba.
               </p>
             </Alert>
           ) : (
-            <Alert variant="success" className="mt-5" title="Verified by an authorised reviewer">
-              <p>{VERIFICATION_DESCRIPTIONS.VERIFIED}</p>
-              {place.verificationNote ? <p className="mt-2">{place.verificationNote}</p> : null}
+            <Alert variant="success" className="mt-5" title="Sinuri ng awtorisadong reviewer">
+              <p>{VERIFICATION_DISPLAY_DESCRIPTIONS.VERIFIED}</p>
+              {place.verificationNote ? <p className="mt-2 break-words">{place.verificationNote}</p> : null}
               <p className="mt-2 text-xs">
-                Last reviewed {formatPST(place.lastReviewedAt)}. Conditions can change; confirm before travelling.
+                Huling sinuri {formatPST(place.lastReviewedAt)}. Puwedeng magbago ang kondisyon; i-confirm bago pumunta.
               </p>
             </Alert>
           )}
@@ -186,33 +194,33 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
             <Card>
               <CardContent className="pt-4 sm:pt-5">
                 <h2 className="flex items-center gap-2 text-sm font-bold text-navy">
-                  <Clock className="h-4 w-4 text-primary" aria-hidden="true" /> Listed operating hours
+                  <Clock className="h-4 w-4 text-primary" aria-hidden="true" /> Nakalistang oras
                 </h2>
                 <p className="mt-2 text-sm text-slate-700">
-                  {place.operatingHours ?? "No operating hours are listed for this record."}
+                  {place.operatingHours ?? "Walang nakalistang oras para sa record na ito."}
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
                   {place.operatingHours
-                    ? `${openState.label}. This label is derived only from the listed hours and is not a real-time availability signal.`
-                    : "Do not assume the facility is open. Call ahead or check with the LGU."}
+                    ? `${openStateLabel(openState.label)}. Base lang ito sa nakalistang oras at hindi real-time availability signal.`
+                    : "Huwag ipagpalagay na bukas ang pasilidad. Tawagan muna o i-check sa LGU."}
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardContent className="pt-4 sm:pt-5">
                 <h2 className="flex items-center gap-2 text-sm font-bold text-navy">
-                  <ShieldQuestion className="h-4 w-4 text-primary" aria-hidden="true" /> What was checked?
+                  <ShieldQuestion className="h-4 w-4 text-primary" aria-hidden="true" /> Ano ang sinuri?
                 </h2>
-                <p className="mt-2 text-sm text-slate-700">{VERIFICATION_DESCRIPTIONS[status]}</p>
+                <p className="mt-2 text-sm text-slate-700">{VERIFICATION_DISPLAY_DESCRIPTIONS[status]}</p>
                 <dl className="mt-2 space-y-1 text-xs text-muted-foreground">
                   <div className="flex justify-between gap-2">
-                    <dt>Verified</dt>
-                    <dd className="font-semibold">{place.verifiedAt ? formatPSTDate(place.verifiedAt) : "Not verified"}</dd>
+                    <dt>Beripikado</dt>
+                    <dd className="font-semibold">{place.verifiedAt ? formatPSTDate(place.verifiedAt) : "Hindi pa beripikado"}</dd>
                   </div>
                   <div className="flex justify-between gap-2">
-                    <dt>Last reviewed</dt>
+                    <dt>Huling sinuri</dt>
                     <dd className="font-semibold">
-                      {place.lastReviewedAt ? formatPSTDate(place.lastReviewedAt) : "Not recorded"}
+                      {place.lastReviewedAt ? formatPSTDate(place.lastReviewedAt) : "Walang record"}
                     </dd>
                   </div>
                 </dl>
@@ -222,10 +230,10 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
 
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Facilities and access</CardTitle>
+              <CardTitle>Pasilidad at access</CardTitle>
               <p className="text-xs text-muted-foreground">
-                Amenities are shown only where the source or reviewer recorded them. An empty list means no amenities
-                were recorded, not that none exist.
+                Ipinapakita lang ang amenities kung naitala ng source o reviewer. Ang walang laman na listahan ay
+                ibig sabihin walang naitala, hindi walang amenity.
               </p>
             </CardHeader>
             <CardContent className="space-y-4 text-sm">
@@ -236,52 +244,48 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
                       key={amenity}
                       className="rounded-full border border-border bg-muted px-2.5 py-1 text-xs font-semibold text-slate-700"
                     >
-                      {amenity}
+                      {amenityLabel(amenity)}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-muted-foreground">No amenities recorded.</p>
+                <p className="text-muted-foreground">Walang naitalang amenity.</p>
               )}
 
               <dl className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Public access
-                  </dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pag-access ng publiko</dt>
                   <dd className="mt-1 text-slate-700">
-                    {place.publicAccessDetails ?? "Not recorded. Confirm public access before travelling."}
+                    {place.publicAccessDetails ?? "Walang record. I-confirm ang public access bago pumunta."}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Accessibility
-                  </dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Accessibility</dt>
                   <dd className="mt-1 text-slate-700">
-                    {place.accessibilityDetails ?? "Not recorded. Contact the facility if you need access details."}
+                    {place.accessibilityDetails ?? "Walang record. Makipag-ugnayan sa pasilidad kung kailangan mo ng access details."}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Contact</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Kontak</dt>
                   <dd className="mt-1 flex items-start gap-1.5 text-slate-700">
                     <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden="true" />
-                    {place.contactInformation ?? "No contact information recorded."}
+                    {place.contactInformation ?? "Walang contact information na naitala."}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Source</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Pinagmulan</dt>
                   <dd className="mt-1 text-slate-700">
                     {place.sourceUrl ? (
                       <a
                         href={place.sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-1 font-semibold text-primary hover:underline"
+                        className="inline-flex min-h-11 items-center gap-1 font-semibold text-primary hover:underline"
                       >
-                        Open source record <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                        Buksan ang source record <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                       </a>
                     ) : (
-                      "No source URL recorded."
+                      "Walang source URL na naitala."
                     )}
                   </dd>
                 </div>
@@ -291,10 +295,9 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
 
           <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Location</CardTitle>
+              <CardTitle>Lokasyon</CardTitle>
               <p className="text-xs text-muted-foreground">
-                The marker is based on the recorded coordinates. It is not a guarantee that the entrance is at this
-                point.
+                Base ang marker sa naitalang coordinates. Hindi garantiya na eksakto sa puntong ito ang entrance.
               </p>
             </CardHeader>
             <CardContent>
@@ -305,14 +308,14 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
                 address={place.address}
               />
               <div className="mt-3 flex flex-wrap gap-2">
-                <Button asChild>
+                <Button asChild className="w-full sm:w-auto">
                   <a href={directionsUrl(place.latitude, place.longitude)} target="_blank" rel="noreferrer">
-                    <Navigation className="h-4 w-4" aria-hidden="true" /> Get directions
+                    <Navigation className="h-4 w-4" aria-hidden="true" /> Kunin ang direksyon
                   </a>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" className="w-full sm:w-auto">
                   <a href={osmUrl(place.latitude, place.longitude)} target="_blank" rel="noreferrer">
-                    View on OpenStreetMap <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                    Tingnan sa OpenStreetMap <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                   </a>
                 </Button>
               </div>
@@ -326,10 +329,10 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
         <aside className="space-y-4">
           <Card>
             <CardContent className="pt-5 sm:pt-6">
-              <h2 className="text-base font-bold text-navy">Is this information wrong?</h2>
+              <h2 className="text-base font-bold text-navy">May mali ba sa impormasyon?</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Send a correction to the moderation queue. Reports are not published automatically and do not change
-                the verification status until a reviewer checks them.
+                Ipadala ang correction sa moderation queue. Hindi awtomatikong napi-publish ang report at hindi nito
+                binabago ang verification status hanggang suriin ng reviewer.
               </p>
               <div className="mt-4">
                 <PlaceReportForm coolingPlaceId={place.id} placeName={place.name} />
@@ -339,24 +342,24 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
 
           <Card>
             <CardContent className="pt-5 sm:pt-6">
-              <h2 className="text-base font-bold text-navy">Before you travel</h2>
+              <h2 className="text-base font-bold text-navy">Bago pumunta</h2>
               <ul className="mt-2 space-y-2 text-sm text-slate-700">
                 <li className="flex gap-2">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                  Call ahead or check the LGU page. Hours and public access can change without notice.
+                  Tawagan muna o i-check ang LGU page. Puwedeng magbago ang oras at public access nang walang abiso.
                 </li>
                 <li className="flex gap-2">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                  Bring drinking water and avoid strenuous travel during the hottest hours.
+                  Magdala ng inuming tubig at iwasan ang mabigat na biyahe sa pinakamainit na oras.
                 </li>
                 <li className="flex gap-2">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                  Do not rely on an unverified record for emergency cooling.
+                  Huwag umasa sa hindi pa beripikadong record para sa emergency cooling.
                 </li>
               </ul>
               <Button asChild variant="outline" size="sm" className="mt-3 w-full">
                 <Link href={`/cool-places?locality=${place.localityCode}`}>
-                  More places in this locality <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  Iba pang lugar sa lokalidad na ito <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
               </Button>
             </CardContent>
@@ -365,18 +368,18 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
           {nearby.length > 0 ? (
             <Card>
               <CardContent className="pt-5 sm:pt-6">
-                <h2 className="text-base font-bold text-navy">Other records nearby</h2>
+                <h2 className="text-base font-bold text-navy">Iba pang record sa malapit</h2>
                 <ul className="mt-3 space-y-2">
                   {nearby.map((item) => (
                     <li key={item.id}>
                       <Link
                         href={`/cool-places/${item.id}`}
-                        className="block rounded-lg border border-border px-3 py-2 hover:border-orange-300"
+                        className="block min-h-11 rounded-lg border border-border px-3 py-2 hover:border-orange-300"
                       >
                         <span className="block text-sm font-semibold text-navy">{item.name}</span>
                         <span className="block text-xs text-muted-foreground">
-                          {item.category} ·{" "}
-                          {VERIFICATION_LABELS[item.verificationStatus as VerificationStatus] ?? "Unverified"}
+                          {placeCategoryLabel(item.category)} ·{" "}
+                          {VERIFICATION_DISPLAY_LABELS[item.verificationStatus as VerificationStatus] ?? "Hindi pa beripikado"}
                         </span>
                       </Link>
                     </li>
@@ -389,15 +392,15 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
           <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
             <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             <p>
-              SILONG PH is independent and not an official LGU, PAGASA, or DOH channel. Facility records may come from
-              OpenStreetMap contributors (ODbL) or administrator review. Always confirm details with the facility or
-              your local government.
+              Independent ang SILONG PH at hindi official channel ng LGU, PAGASA, o DOH. Maaaring galing sa
+              OpenStreetMap contributors (ODbL) o admin review ang facility records. I-confirm pa rin sa pasilidad o
+              lokal na pamahalaan.
             </p>
           </div>
 
           <Button asChild variant="ghost" size="sm" className="w-full">
             <Link href="/cool-places">
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Back to directory
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Bumalik sa directory
             </Link>
           </Button>
         </aside>
@@ -406,25 +409,26 @@ export default async function PlaceDetailPage({ params }: { params: Promise<{ id
       <div className="mt-8 grid gap-3 sm:grid-cols-3">
         <div className="rounded-lg border border-border bg-white p-4">
           <ShieldCheck className="h-5 w-5 text-success" aria-hidden="true" />
-          <h2 className="mt-2 text-sm font-bold text-navy">Verified means reviewed</h2>
+          <h2 className="mt-2 text-sm font-bold text-navy">Ang beripikado ay nasuri</h2>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            A reviewer checked the facility details, public access, and cooling suitability. It is still not a
+            Sinuri ng reviewer ang detalye, public access, at pagiging angkop bilang cooling place. Hindi pa rin ito
             real-time occupancy guarantee.
           </p>
         </div>
         <div className="rounded-lg border border-border bg-white p-4">
           <AlertTriangle className="h-5 w-5 text-amber-600" aria-hidden="true" />
-          <h2 className="mt-2 text-sm font-bold text-navy">Unverified is not a recommendation</h2>
+          <h2 className="mt-2 text-sm font-bold text-navy">Hindi rekomendasyon ang unverified</h2>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            An unverified record is a public facility from an external source. It may lack air-conditioning, water,
-            seating, or public access.
+            Ang hindi pa beripikadong record ay pampublikong lugar mula sa external source. Maaaring walang aircon,
+            tubig, upuan, o public access.
           </p>
         </div>
         <div className="rounded-lg border border-border bg-white p-4">
           <CalendarClock className="h-5 w-5 text-primary" aria-hidden="true" />
-          <h2 className="mt-2 text-sm font-bold text-navy">Check the date</h2>
+          <h2 className="mt-2 text-sm font-bold text-navy">Tingnan ang petsa</h2>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Verification and review dates are shown above. Older reviews are more likely to be out of date.
+            Nakita sa itaas ang verification at review dates. Mas malaki ang posibilidad na luma na ang mas lumang
+            review.
           </p>
         </div>
       </div>

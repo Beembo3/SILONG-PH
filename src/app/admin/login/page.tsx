@@ -19,15 +19,15 @@ export default async function AdminLoginPage() {
   if (user) redirect("/admin");
 
   return (
-    <div className="flex min-h-screen flex-col bg-navy">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-4 py-6 sm:px-6">
-        <Brand onDark />
+    <div className="flex min-h-[100dvh] flex-col bg-navy">
+      <div className="mx-auto flex w-full max-w-5xl items-center justify-between gap-3 px-4 py-6 sm:px-6">
+        <Brand onDark hideTaglineOnMobile />
         <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-300 hover:text-white">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Public site
         </Link>
       </div>
 
-      <div className="flex flex-1 items-center justify-center px-4 pb-16 pt-6 sm:px-6">
+      <div className="flex flex-1 items-center justify-center px-4 pb-[calc(4rem+env(safe-area-inset-bottom))] pt-6 sm:px-6">
         <div className="w-full max-w-md">
           <div className="mb-5 text-center">
             <div className="mx-auto inline-flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/15 text-orange-300">

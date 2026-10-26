@@ -15,7 +15,10 @@ export async function GET() {
       });
     }
     return Response.json({ ok: true, count: items.length, fetchedAt: new Date().toISOString(), source: "https://centralluzon.region3.dilg.gov.ph/feed/", first: items.slice(0, 3) });
-  } catch (e: any) {
-    return Response.json({ ok: false, error: e.message, fetchedAt: new Date().toISOString() }, { status: 500 });
+  } catch (e) {
+    return Response.json(
+      { ok: false, error: e instanceof Error ? e.message : "Hindi makuha ang DILG feed.", fetchedAt: new Date().toISOString() },
+      { status: 500 },
+    );
   }
 }

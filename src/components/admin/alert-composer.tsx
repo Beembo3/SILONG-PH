@@ -196,7 +196,7 @@ export function AlertComposer() {
             {errors.description ? <p className="text-xs text-red-700" role="alert">{errors.description.message}</p> : null}
           </div>
 
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
             {isSubmitting ? (
               "Recording…"
             ) : (

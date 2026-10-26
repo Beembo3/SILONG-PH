@@ -3,7 +3,24 @@
 import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { Skeleton } from "@/components/ui/skeleton";
-import { VERIFICATION_LABELS, type VerificationStatus } from "@/lib/places";
+import { VERIFICATION_DISPLAY_LABELS, type VerificationStatus } from "@/lib/places";
+
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case "&":
+        return "&amp;";
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case '"':
+        return "&quot;";
+      default:
+        return "&#39;";
+    }
+  });
+}
 
 export interface PlaceMapItem {
   id: string;
@@ -56,9 +73,9 @@ export function PlacesMap({ places }: { places: PlaceMapItem[] }) {
           fillOpacity: 1,
         })
           .bindPopup(
-            `<strong>${place.name}</strong><br/>${place.address}<br/><span style="font-size:11px">${
-              VERIFICATION_LABELS[place.verificationStatus as VerificationStatus] ?? "Unverified"
-            }</span><br/><a href="/cool-places/${place.id}">View details</a>`,
+            `<strong>${escapeHtml(place.name)}</strong><br/>${escapeHtml(place.address)}<br/><span style="font-size:11px">${escapeHtml(
+              VERIFICATION_DISPLAY_LABELS[place.verificationStatus as VerificationStatus] ?? "Hindi pa beripikado",
+            )}</span><br/><a href="/cool-places/${encodeURIComponent(place.id)}">Tingnan ang detalye</a>`,
           )
           .addTo(map);
       }
@@ -100,9 +117,9 @@ export function PlacesMap({ places }: { places: PlaceMapItem[] }) {
     <div className="relative isolate z-0 overflow-hidden rounded-xl border border-border">
       <div
         ref={container}
-        className="h-64 w-full sm:h-[22rem]"
+        className="h-56 w-full sm:h-[22rem]"
         role="application"
-        aria-label="Map of listed public facilities. Use the list below as an accessible alternative."
+        aria-label="Mapa ng mga nakalistang pampublikong lugar. Gamitin ang listahan bilang accessible na alternatibo."
       />
       {!ready ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
@@ -111,12 +128,12 @@ export function PlacesMap({ places }: { places: PlaceMapItem[] }) {
       ) : null}
       {needsTap ? (
         <p className="pointer-events-none absolute inset-x-3 top-3 z-10 rounded-lg bg-white/90 px-3 py-2 text-center text-xs font-semibold text-slate-700 shadow-sm">
-          Tap the map to pan it. The page scrolls normally until then.
+          I-tap ang mapa para i-pan. Normal pa ring nag-scroll ang page hanggang doon.
         </p>
       ) : null}
       {failed ? (
         <p className="absolute inset-x-3 bottom-3 z-10 rounded-lg bg-amber-50 p-2 text-xs text-amber-950">
-          Base map tiles failed to load. The facility list below remains available.
+          Hindi nag-load ang base map tiles. Available pa rin ang listahan sa ibaba.
         </p>
       ) : null}
     </div>

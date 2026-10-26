@@ -29,8 +29,8 @@ export const reportSchema = z.object({
   description: z
     .string()
     .trim()
-    .min(15, "Please give at least 15 characters of detail so a reviewer can investigate.")
-    .max(2000, "Keep the report under 2,000 characters."),
+    .min(15, "Magbigay ng hindi bababa sa 15 character na detalye para masuri ng reviewer.")
+    .max(2000, "Panatilihing wala pang 2,000 character ang report."),
   proposedName: optionalText(160),
   proposedAddress: optionalText(300),
   proposedLocalityCode: optionalText(20),

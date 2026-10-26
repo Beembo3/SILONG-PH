@@ -4,6 +4,23 @@ import { useEffect, useRef, useState } from "react";
 import type { Map as LeafletMap } from "leaflet";
 import { Skeleton } from "@/components/ui/skeleton";
 
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => {
+    switch (character) {
+      case "&":
+        return "&amp;";
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case '"':
+        return "&quot;";
+      default:
+        return "&#39;";
+    }
+  });
+}
+
 export function PlaceLocationMap({
   latitude,
   longitude,
@@ -48,7 +65,7 @@ export function PlaceLocationMap({
         fillColor: "#ff7a1a",
         fillOpacity: 1,
       })
-        .bindPopup(`<strong>${name}</strong><br/>${address}`)
+        .bindPopup(`<strong>${escapeHtml(name)}</strong><br/>${escapeHtml(address)}`)
         .addTo(map)
         .openPopup();
 
@@ -86,7 +103,7 @@ export function PlaceLocationMap({
         ref={container}
         className="h-56 w-full sm:h-64"
         role="application"
-        aria-label={`Map showing the approximate location of ${name}`}
+        aria-label={`Mapa na nagpapakita ng tinatayang lokasyon ng ${name}`}
       />
       {!ready ? (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
@@ -95,12 +112,12 @@ export function PlaceLocationMap({
       ) : null}
       {needsTap ? (
         <p className="pointer-events-none absolute inset-x-3 top-3 z-10 rounded-lg bg-white/90 px-3 py-2 text-center text-xs font-semibold text-slate-700 shadow-sm">
-          Tap the map to pan it. The page scrolls normally until then.
+          I-tap ang mapa para i-pan. Normal pa ring nag-scroll ang page hanggang doon.
         </p>
       ) : null}
       {failed ? (
         <p className="absolute inset-x-3 bottom-3 z-10 rounded-lg bg-amber-50 p-2 text-xs text-amber-950">
-          Base map tiles failed to load. Use the directions link for navigation.
+          Hindi nag-load ang base map tiles. Gamitin ang link ng direksyon para sa navigation.
         </p>
       ) : null}
     </div>

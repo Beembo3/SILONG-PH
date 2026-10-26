@@ -32,7 +32,7 @@ export function AdminNav({ variant = "sidebar" }: { variant?: "sidebar" | "mobil
             href={href}
             aria-current={active(href) ? "page" : undefined}
             className={cn(
-              "inline-flex min-h-9 shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors",
+              "inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-colors",
               active(href)
                 ? "bg-orange-50 text-orange-900"
                 : "text-slate-600 hover:bg-muted hover:text-foreground",

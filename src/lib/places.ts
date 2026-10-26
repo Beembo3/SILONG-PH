@@ -48,6 +48,70 @@ export const PLACE_CATEGORIES = [
   "Other public facility",
 ] as const;
 
+/**
+ * Public Taglish labels. Database values stay in English so filtering,
+ * imports, and existing records keep working.
+ */
+export const PLACE_CATEGORY_LABELS: Record<string, string> = {
+  "Public library": "Pampublikong aklatan",
+  "Community centre": "Sentro ng komunidad",
+  "Designated cooling centre": "Itinalagang cooling center",
+  "Government building": "Gusali ng gobyerno",
+  "Health facility": "Pasilidad pangkalusugan",
+  "Water-refill station": "Istasyon ng water refilling",
+  "Shaded public rest area": "May lilim na pahingahan",
+  "Shopping Malls": "Mall na may aircon",
+  "Public park": "Pampublikong parke",
+  "Nature park": "Parke ng kalikasan",
+  "National park": "Pambansang parke",
+  "Waterfall": "Talon",
+  "Public museum": "Pampublikong museo",
+  "Sports and recreation park": "Parke para sa sports at recreation",
+  "Other public facility": "Iba pang pampublikong lugar",
+};
+
+export const PLACE_CATEGORY_GROUPS: Array<{ label: string; categories: string[] }> = [
+  {
+    label: "Preskong lugar sa loob",
+    categories: [
+      "Shopping Malls",
+      "Public library",
+      "Public museum",
+      "Community centre",
+      "Designated cooling centre",
+      "Government building",
+      "Health facility",
+    ],
+  },
+  {
+    label: "Parks at nature",
+    categories: ["Public park", "Nature park", "National park", "Waterfall", "Sports and recreation park", "Shaded public rest area"],
+  },
+  {
+    label: "Iba pang pampublikong lugar",
+    categories: ["Water-refill station", "Other public facility"],
+  },
+];
+
+export const VERIFICATION_DISPLAY_LABELS: Record<VerificationStatus, string> = {
+  VERIFIED: "Beripikado",
+  PENDING: "Sinusuri pa",
+  TEMPORARILY_UNAVAILABLE: "Pansamantalang hindi available",
+  CLOSED: "Sarado",
+  UNVERIFIED: "Hindi pa beripikado",
+};
+
+export const VERIFICATION_DISPLAY_DESCRIPTIONS: Record<VerificationStatus, string> = {
+  VERIFIED:
+    "Sinuri ng awtorisadong reviewer ang detalye ng pasilidad, public access, at pagiging angkop nito bilang cooling place. I-confirm pa rin ang kondisyon bago pumunta.",
+  PENDING: "Sinimulan pa lang suriin ang lugar na ito. Hindi pa ito kumpirmadong cooling place.",
+  TEMPORARILY_UNAVAILABLE:
+    "Nasuri na dati, pero iniulat na hindi available ngayon. Huwag umasa nang hindi nagche-check.",
+  CLOSED: "Iniulat o kumpirmadong sarado. Huwag itong gamitin bilang cooling destination.",
+  UNVERIFIED:
+    "Public facility record ito mula sa external source. Hindi pa sinuri ng SILONG PH ang public access at pagiging angkop nito bilang cooling place.",
+};
+
 export const REPORT_TYPES = [
   "INCORRECT_DETAILS",
   "OUTDATED_HOURS",
@@ -76,6 +140,50 @@ export const REPORT_STATUS_LABELS: Record<string, string> = {
   ACTIONED: "Actioned",
   DISMISSED: "Dismissed",
 };
+
+export const REPORT_TYPE_DISPLAY_LABELS: Record<string, string> = {
+  INCORRECT_DETAILS: "Mali ang pangalan, address, o detalye",
+  OUTDATED_HOURS: "Luma na ang oras ng pagbubukas",
+  PERMANENTLY_CLOSED: "Permanenteng sarado",
+  INACCURATE_DIRECTIONS: "Mali ang lokasyon o direksyon",
+  MISSING_ACCESSIBILITY: "Kulang o mali ang impormasyon sa accessibility",
+  NEW_LOCATION: "Magmungkahi ng bagong lugar",
+  OTHER: "Iba pang bagay",
+};
+
+export const REPORT_STATUS_DISPLAY_LABELS: Record<string, string> = {
+  PENDING: "Nakabinbin",
+  REVIEWED: "Nasuri",
+  ACTIONED: "Naaksyunan",
+  DISMISSED: "Hindi pinansin",
+};
+
+export function amenityLabel(amenity: string): string {
+  const normalized = amenity.trim().toLowerCase();
+  if (normalized.includes("drinking water")) return "Inuming tubig";
+  if (normalized.includes("wheelchair")) return "Wheelchair access";
+  if (normalized.includes("toilet") || normalized.includes("restroom")) return "Banyo";
+  if (normalized.includes("air condition") || normalized.includes("air-condition")) return "Aircon";
+  if (normalized.includes("seating") || normalized.includes("seat")) return "Upuan";
+  if (normalized.includes("parking")) return "Parking";
+  if (normalized.includes("wifi") || normalized.includes("wi-fi")) return "Wi-Fi";
+  return amenity;
+}
+
+export function openStateLabel(label: string): string {
+  switch (label) {
+    case "Open 24/7":
+      return "Bukas 24/7";
+    case "Open now (according to listed hours)":
+      return "Bukas ngayon (ayon sa nakalistang oras)";
+    case "Closed according to listed hours":
+      return "Sarado ayon sa nakalistang oras";
+    case "Operating hours not verified":
+      return "Hindi pa beripikado ang oras";
+    default:
+      return label;
+  }
+}
 
 export function parseAmenities(raw: string | null | undefined): string[] {
   if (!raw) return [];
@@ -232,5 +340,5 @@ export function osmUrl(lat: number, lon: number): string {
 }
 
 export function placeCategoryLabel(category: string): string {
-  return category;
+  return PLACE_CATEGORY_LABELS[category] ?? category;
 }

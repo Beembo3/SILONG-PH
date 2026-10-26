@@ -18,8 +18,9 @@ export async function fetchDILGRegionIII() {
       items.push({ title, link, pubDate, category, guid, description: null });
     }
     return { items, fetchedAt: new Date().toISOString(), source: "https://centralluzon.region3.dilg.gov.ph/feed/" };
-  } catch (e: any) {
-    console.error("DILG RSS fetch failed:", e.message);
-    return { error: e.message, fetchedAt: new Date().toISOString(), source: "https://centralluzon.region3.dilg.gov.ph/feed/" };
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Hindi makuha ang DILG feed.";
+    console.error("DILG RSS fetch failed:", message);
+    return { error: message, fetchedAt: new Date().toISOString(), source: "https://centralluzon.region3.dilg.gov.ph/feed/" };
   }
 }

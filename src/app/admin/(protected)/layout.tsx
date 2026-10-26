@@ -21,11 +21,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const user = await requirePageUser();
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-[100dvh] bg-surface">
       <header className="border-b border-border bg-white">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3">
-            <Brand />
+          <div className="flex min-w-0 items-center gap-3">
+            <Brand hideTaglineOnMobile />
             <Badge variant="outline">Admin</Badge>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -35,7 +35,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             </div>
             <Link
               href="/"
-              className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1.5 text-xs font-semibold text-slate-600 hover:bg-muted"
+              className="inline-flex min-h-11 items-center gap-1 rounded-lg border border-border px-2.5 text-xs font-semibold text-slate-600 hover:bg-muted"
             >
               Public site <ExternalLink className="h-3 w-3" aria-hidden="true" />
             </Link>

@@ -52,26 +52,26 @@ export function LocationPicker() {
 
   function useMyLocation() {
     if (!navigator.geolocation) {
-      setGeoStatus("Your browser does not support location access. Please select a city or municipality manually.");
+      setGeoStatus("Hindi sinusuportahan ng browser mo ang location access. Pumili na lang ng lungsod o munisipyo.");
       return;
     }
     setLocating(true);
-    setGeoStatus("Requesting your location…");
+    setGeoStatus("Hinihiling ang lokasyon mo…");
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const nearest = nearestLocality(position.coords.latitude, position.coords.longitude);
         setLocalityCode(nearest.code);
         setProvinceCode(nearest.provinceCode);
         setGeoStatus(
-          `Nearest listed locality: ${nearest.name}, ${nearest.provinceName}. Weather is shown for this locality's model grid point, not your exact GPS position.`,
+          `Pinakamalapit na nakalista: ${nearest.name}, ${nearest.provinceName}. Ang weather ay para sa model grid point ng lugar na ito, hindi sa eksaktong GPS position mo.`,
         );
         setLocating(false);
       },
       (error) => {
         const message =
           error.code === error.PERMISSION_DENIED
-            ? "Location permission was denied. Select a province and city or municipality instead."
-            : "We could not determine your location. Please select a location manually.";
+            ? "Hindi pinayagan ang location access. Pumili na lang ng probinsya at lungsod o munisipyo."
+            : "Hindi namin matukoy ang lokasyon mo. Pumili na lang ng lugar nang manu-mano.";
         setGeoStatus(message);
         setLocating(false);
       },
@@ -88,14 +88,14 @@ export function LocationPicker() {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-xl">
-        <DialogTitle>Choose your location</DialogTitle>
+        <DialogTitle>Piliin ang lugar mo</DialogTitle>
         <DialogDescription>
-          Select a province and city or municipality. Your choice is saved on this device.
+          Pumili ng probinsya at lungsod o munisipyo. Naka-save sa device mo ang napili mo.
         </DialogDescription>
 
         <div className="mt-5 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="province-picker">Province</Label>
+            <Label htmlFor="province-picker">Probinsya</Label>
             <Select
               id="province-picker"
               value={provinceCode}
@@ -113,23 +113,23 @@ export function LocationPicker() {
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="locality-search">Search city or municipality</Label>
+            <Label htmlFor="locality-search">Hanapin ang lungsod o munisipyo</Label>
             <div className="relative">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <Input
                 id="locality-search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="e.g. San Fernando, Malolos, Baler"
+                placeholder="Hal. San Fernando, Malolos, Baler"
                 className="pl-9"
                 autoComplete="off"
               />
             </div>
           </div>
 
-          <div className="max-h-64 overflow-y-auto rounded-lg border border-border" role="listbox" aria-label="Cities and municipalities">
+          <div className="max-h-64 overflow-y-auto rounded-lg border border-border" role="listbox" aria-label="Mga lungsod at munisipyo">
             {results.length === 0 ? (
-              <p className="p-4 text-sm text-muted-foreground">No matching locality. Try another spelling or province.</p>
+              <p className="p-4 text-sm text-muted-foreground">Walang tugmang lugar. Subukan ang ibang spelling o probinsya.</p>
             ) : (
               results.map((item) => {
                 const selected = item.code === locality.code;
@@ -145,11 +145,11 @@ export function LocationPicker() {
                     <span>
                       <span className="font-semibold text-foreground">{item.name}</span>
                       <span className="block text-xs text-muted-foreground">
-                        {item.provinceName} · {item.type}
+                        {item.provinceName} · {item.type === "City" ? "Lungsod" : "Munisipyo"}
                         {item.isIndependent ? " · independent city" : ""}
                       </span>
                     </span>
-                    {selected ? <Check className="h-4 w-4 text-success" aria-label="Selected" /> : null}
+                    {selected ? <Check className="h-4 w-4 text-success" aria-label="Napili" /> : null}
                   </button>
                 );
               })
@@ -159,14 +159,14 @@ export function LocationPicker() {
           <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
             <p className="flex items-start gap-2">
               <Crosshair className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
-              Weather is sampled at the locality&apos;s geometric centre. It is model data and not a barangay-level
-              measurement. Barangay observations are not available in this release.
+              Ang weather ay kinukuha sa geometric center ng lugar. Model data ito, hindi barangay-level na
+              measurement. Wala pang barangay observations sa release na ito.
             </p>
           </div>
 
           <Button type="button" variant="secondary" className="w-full" onClick={useMyLocation} disabled={locating}>
             <LocateFixed className="h-4 w-4" aria-hidden="true" />
-            {locating ? "Finding nearest locality…" : "Use my location to find the nearest locality"}
+            {locating ? "Hinahanap ang pinakamalapit na lugar…" : "Gamitin ang lokasyon ko para sa pinakamalapit na lugar"}
           </Button>
           {geoStatus ? (
             <p className="text-xs leading-relaxed text-muted-foreground" role="status">

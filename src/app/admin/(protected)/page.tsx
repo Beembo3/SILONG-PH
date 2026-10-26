@@ -145,7 +145,10 @@ export default async function AdminDashboardPage() {
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
               <CardTitle>Reports needing attention</CardTitle>
-              <Link href="/admin/reports" className="text-xs font-semibold text-primary hover:underline">
+              <Link
+                href="/admin/reports"
+                className="inline-flex min-h-11 items-center text-xs font-semibold text-primary hover:underline"
+              >
                 View all
               </Link>
             </div>
@@ -184,7 +187,10 @@ export default async function AdminDashboardPage() {
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
               <CardTitle>Recent administrative activity</CardTitle>
-              <Link href="/admin/audit" className="text-xs font-semibold text-primary hover:underline">
+              <Link
+                href="/admin/audit"
+                className="inline-flex min-h-11 items-center text-xs font-semibold text-primary hover:underline"
+              >
                 Audit log
               </Link>
             </div>
@@ -234,7 +240,10 @@ export default async function AdminDashboardPage() {
 
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-border bg-white p-3 text-xs text-muted-foreground">
         <span>Overview generated {formatPST(new Date())}.</span>
-        <Link href="/admin/health" className="inline-flex items-center gap-1 font-semibold text-primary hover:underline">
+        <Link
+          href="/admin/health"
+          className="inline-flex min-h-11 items-center gap-1 font-semibold text-primary hover:underline"
+        >
           System health <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
         </Link>
       </div>

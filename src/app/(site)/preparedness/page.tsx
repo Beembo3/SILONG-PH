@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { AlertTriangle, BookOpen, ExternalLink, Phone, ShieldCheck, Sun } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  BookOpen,
+  ChevronDown,
+  ExternalLink,
+  Phone,
+  ShieldCheck,
+  Sun,
+} from "lucide-react";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,103 +17,158 @@ import { Card, CardContent } from "@/components/ui/card";
 import { MEDICAL_DISCLAIMER, preparednessSections, preparednessSources } from "@/data/preparedness";
 
 export const metadata: Metadata = {
-  title: "Heat preparedness centre",
+  title: "Ano ang dapat gawin kapag mainit?",
   description:
-    "Practical before, during, and after guidance for extreme heat in Central Luzon, including heat-illness warning signs and official sources.",
+    "Simpleng gabay bago, habang, at pagkatapos ng matinding init sa Central Luzon, pati sintomas ng heat illness at opisyal na sources.",
 };
 
-export default function PreparednessPage() {
+const quickGuide = [
+  {
+    title: "Uminom ng tubig bago ka mauhaw",
+    body: "Uminom nang regular. Sundin ang payo ng doktor kung may limitasyon ka sa fluids.",
+  },
+  {
+    title: "Magpahinga sa lilim o malamig na lugar",
+    body: "Gumamit ng bentilasyon, fan, aircon, o beripikadong cooling place. Huwag hintayin sumama ang pakiramdam.",
+  },
+  {
+    title: "Iwasan ang mabigat na gawain sa pinakamainit na oras",
+    body: "Ilayo ang trabaho at exercise sa labas sa late morning hanggang hapon kung kaya.",
+  },
+  {
+    title: "Tumawag agad ng 911 kapag emergency",
+    body: "Pagkalito, pagkawala ng malay, seizures, o pagbagsak: huwag ipagpaliban ang tulong.",
+  },
+];
+
+function SectionCard({ section, defaultOpen = false }: { section: (typeof preparednessSections)[number]; defaultOpen?: boolean }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <details
+      open={defaultOpen}
+      className="group rounded-xl border border-border bg-white open:shadow-sm"
+    >
+      <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 sm:px-5 [&::-webkit-details-marker]:hidden">
+        <span className="min-w-0">
+          <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-primary">
+            {section.taglishTitle}
+          </span>
+          <span className="mt-0.5 block text-lg font-extrabold leading-snug text-navy">{section.title}</span>
+        </span>
+        <span className="flex shrink-0 items-center gap-2">
+          <Badge variant="outline">{section.items.length} hakbang</Badge>
+          <ChevronDown className="h-5 w-5 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden="true" />
+        </span>
+      </summary>
+      <div className="border-t border-border px-4 py-4 sm:px-5">
+        <p className="text-sm leading-relaxed text-muted-foreground">{section.summary}</p>
+        <div className="mt-3 grid gap-3 md:grid-cols-2">
+          {section.items.map((item) => (
+            <div key={item.title} className="rounded-lg border border-border bg-muted/30 p-4">
+              <h3 className="text-sm font-bold text-navy">{item.title}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.detail}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </details>
+  );
+}
+
+export default function PreparednessPage() {
+  const during = preparednessSections.find((section) => section.id === "during");
+  const illness = preparednessSections.find((section) => section.id === "illness");
+  const before = preparednessSections.find((section) => section.id === "before");
+  const after = preparednessSections.find((section) => section.id === "after");
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
       <div className="max-w-3xl">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Preparedness centre</p>
+        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Paghahanda sa init</p>
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">
-          Prepare for the heat before it peaks
+          Ano ang dapat gawin kapag mainit?
         </h1>
-        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-          Practical guidance for households, workers, schools, and communities in Central Luzon. This page is general
-          heat-safety education, not medical advice or an official advisory.
+        <p className="mt-2 text-base leading-relaxed text-slate-600">
+          Simpleng gabay para sa pamilya, trabaho, paaralan, at komunidad sa Central Luzon. Pangkalahatang
+          heat-safety education ito, hindi medical advice o opisyal na abiso.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Badge variant="orange">
-            <Sun className="h-3.5 w-3.5" aria-hidden="true" /> Before · During · After
+            <Sun className="h-3.5 w-3.5" aria-hidden="true" /> Bago · Habang · Pagkatapos
           </Badge>
           <Badge variant="outline">
-            <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> English and Taglish
+            <BookOpen className="h-3.5 w-3.5" aria-hidden="true" /> Taglish na gabay
           </Badge>
         </div>
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-        <Alert variant="danger" title="Suspected heat stroke is an emergency">
+        <Alert variant="danger" title="Emergency ang pinaghihinalaang heat stroke">
           <p>
-            Call <strong>911</strong> or your local emergency service immediately if someone has confusion, slurred
-            speech, seizures, loss of consciousness, collapse, or a very high body temperature. Begin cooling the person
-            while waiting for help. Do not give fluids to someone who is confused or unconscious.
+            Tumawag agad sa <strong>911</strong> o lokal na emergency service kung may pagkalito, hindi malinaw na
+            pagsasalita, seizures, pagkawala ng malay, pagbagsak, o sobrang taas na body temperature. Simulan ang
+            pagpapalamig habang naghihintay ng tulong. Huwag bigyan ng fluids ang taong nalilito o walang malay.
           </p>
         </Alert>
         <Card>
           <CardContent className="pt-5 sm:pt-6">
             <h2 className="flex items-center gap-2 text-base font-bold text-navy">
-              <Phone className="h-4 w-4 text-primary" aria-hidden="true" /> Emergency contacts
+              <Phone className="h-4 w-4 text-primary" aria-hidden="true" /> Mga emergency contact
             </h2>
             <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
               <li>National emergency hotline: 911</li>
-              <li>Local DRRMO or city/municipal hall</li>
-              <li>Nearest hospital or health centre</li>
+              <li>Local DRRMO o city/municipal hall</li>
+              <li>Pinakamalapit na ospital o health center</li>
             </ul>
             <p className="mt-2 text-xs text-muted-foreground">
-              SILONG PH does not dispatch emergency services and cannot confirm local hotline numbers.
+              Hindi nagpapadala ng emergency services ang SILONG PH at hindi nito makukumpirma ang lokal na hotline
+              numbers.
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="mt-8 space-y-6">
-        {preparednessSections.map((section) => (
-          <section key={section.id} id={section.id} aria-labelledby={`${section.id}-heading`}>
-            <Card>
-              <CardContent className="pt-5 sm:pt-6">
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">
-                      {section.taglishTitle}
-                    </p>
-                    <h2 id={`${section.id}-heading`} className="mt-1 text-2xl font-extrabold tracking-tight text-navy">
-                      {section.title}
-                    </h2>
-                    <p className="mt-1 max-w-3xl text-sm leading-relaxed text-muted-foreground">{section.summary}</p>
-                  </div>
-                  <Badge variant="outline">{section.items.length} actions</Badge>
-                </div>
-
-                <div className="mt-4 grid gap-3 md:grid-cols-2">
-                  {section.items.map((item) => (
-                    <div key={item.title} className="rounded-lg border border-border bg-muted/30 p-4">
-                      <h3 className="text-sm font-bold text-navy">{item.title}</h3>
-                      <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.detail}</p>
-                    </div>
-                  ))}
-                </div>
+      <section className="mt-8" aria-labelledby="quick-guide-heading">
+        <div className="max-w-2xl">
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Mabilis na sagot</p>
+          <h2 id="quick-guide-heading" className="mt-1 text-2xl font-extrabold tracking-tight text-navy">
+            Apat na dapat tandaan
+          </h2>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {quickGuide.map((item, index) => (
+            <Card key={item.title} className="h-full">
+              <CardContent className="p-4">
+                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-orange-50 text-sm font-extrabold text-orange-800">
+                  {index + 1}
+                </span>
+                <h3 className="mt-2 text-sm font-extrabold leading-snug text-navy">{item.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.body}</p>
               </CardContent>
             </Card>
-          </section>
-        ))}
+          ))}
+        </div>
+      </section>
+
+      <div className="mt-8 space-y-3">
+        {during ? <SectionCard section={during} defaultOpen /> : null}
+        {illness ? <SectionCard section={illness} defaultOpen /> : null}
+        {before ? <SectionCard section={before} /> : null}
+        {after ? <SectionCard section={after} /> : null}
       </div>
 
       <section className="mt-10" aria-labelledby="sources-heading">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Evidence and links</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Mga source at link</p>
             <h2 id="sources-heading" className="mt-1 text-2xl font-extrabold tracking-tight text-navy">
-              Official sources
+              Opisyal na sources
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              SILONG PH links to these sources; it does not automatically republish their advisories.
+              Naka-link ang SILONG PH sa mga source na ito; hindi nito awtomatikong nire-republish ang kanilang abiso.
             </p>
           </div>
           <Button asChild variant="outline" size="sm">
-            <Link href="/alerts">See official alerts</Link>
+            <Link href="/alerts">Tingnan ang opisyal na babala</Link>
           </Button>
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
@@ -128,37 +192,37 @@ export default function PreparednessPage() {
       </section>
 
       <div className="mt-8 grid gap-4 lg:grid-cols-2">
-        <Alert variant="warning" title="Medical disclaimer">
+        <Alert variant="warning" title="Paalala tungkol sa kalusugan">
           {MEDICAL_DISCLAIMER}
         </Alert>
         <Card>
           <CardContent className="pt-5 sm:pt-6">
             <h2 className="flex items-center gap-2 text-base font-bold text-navy">
-              <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" /> Make a personal plan
+              <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" /> Gumawa ng personal na plano
             </h2>
             <ul className="mt-2 space-y-2 text-sm text-slate-700">
               <li className="flex gap-2">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                Identify a cool place you can reach safely and confirm it is open.
+                Alamin ang preskong lugar na kaya mong puntahan at i-confirm kung bukas ito.
               </li>
               <li className="flex gap-2">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                Keep water, medicine, and a phone charger ready.
+                Ihanda ang tubig, gamot, at phone charger.
               </li>
               <li className="flex gap-2">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
-                Agree on a check-in plan for older relatives, neighbours living alone, and anyone with a disability.
+                Magkasundo sa check-in plan para sa matatanda, kapitbahay na mag-isa, at may disability.
               </li>
             </ul>
-            <div className="mt-3 flex flex-wrap gap-3 text-sm font-semibold">
-              <Link href="/cool-places" className="text-primary hover:underline">
-                Find a cool place
+            <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
+              <Link href="/cool-places" className="inline-flex min-h-11 items-center gap-1 text-primary">
+                Humanap ng preskong lugar <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
-              <Link href="/map" className="text-primary hover:underline">
-                Check the heat map
+              <Link href="/map" className="inline-flex min-h-11 items-center gap-1 text-primary">
+                Tingnan ang mapa ng init
               </Link>
-              <Link href="/methodology" className="text-primary hover:underline">
-                Read the methodology
+              <Link href="/methodology" className="inline-flex min-h-11 items-center gap-1 text-primary">
+                Paano namin kinukuha ang datos
               </Link>
             </div>
           </CardContent>
@@ -168,9 +232,9 @@ export default function PreparednessPage() {
       <div className="mt-8 flex items-start gap-2 rounded-lg border border-border bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
         <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
         <p>
-          Heat guidance can change with local conditions and official directives. Follow the latest instructions from
-          PAGASA, DOH, your LGU, and your workplace or school. If this page conflicts with an official emergency
-          instruction, follow the official instruction.
+          Nagbabago ang heat guidance ayon sa lokal na kondisyon at opisyal na direktiba. Sundin ang pinakabagong
+          instruksyon ng PAGASA, DOH, LGU, at ng trabaho o paaralan mo. Kung may conflict sa official emergency
+          instruction, sundin ang official instruction.
         </p>
       </div>
     </div>

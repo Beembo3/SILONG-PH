@@ -4,9 +4,9 @@ import { Alert } from "@/components/ui/alert";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "Privacy policy",
+  title: "Patakaran sa privacy",
   description:
-    "What SILONG PH stores, what stays on your device, how reports and administrator sessions are handled, and how to exercise your privacy rights.",
+    "Ano ang iniimbak ng SILONG PH, ano ang nananatili sa device mo, paano hinahawakan ang reports at admin sessions, at paano gamitin ang privacy rights mo.",
 };
 
 const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL;
@@ -14,157 +14,159 @@ const updated = "25 October 2026";
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
       <div className="max-w-3xl">
         <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Privacy</p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">Privacy policy</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Last updated: {updated}</p>
+        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">Patakaran sa privacy</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Huling na-update: {updated}</p>
         <p className="mt-3 text-base leading-relaxed text-slate-600">
-          SILONG PH is designed to work without an account. This policy explains what is processed when you browse,
-          choose a location, submit a correction, or sign in as an administrator.
+          Dinisenyo ang SILONG PH para gumana nang walang account. Ipinapaliwanag ng policy na ito kung ano ang
+          pinoproseso kapag nagba-browse ka, pumili ng lugar, nagpadala ng correction, o nag-sign in bilang admin.
         </p>
       </div>
 
-      <Alert variant="info" className="mt-6" title="Short version">
-        No advertising or analytics trackers are installed. Your selected locality is stored in your browser. Precise
-        geolocation is requested only when you press the location button. Reports are stored for moderation. Raw IP
-        addresses are not stored by the application; a keyed, truncated hash is used for abuse prevention.
+      <Alert variant="info" className="mt-6" title="Maikling bersyon">
+        Walang advertising o analytics tracker na naka-install. Nasa browser mo ang napiling lugar. Hihingin lang ang
+        precise geolocation kapag pinindot mo ang location button. Iniimbak ang reports para sa moderation. Hindi
+        iniimbak ng app ang raw IP address; keyed at truncated hash ang ginagamit para sa abuse prevention.
       </Alert>
 
       <div className="prose-silong mt-8">
-        <h2>1. Information stored on your device</h2>
+        <h2>1. Impormasyong iniimbak sa device mo</h2>
         <p>
-          When you choose a province, city, or municipality, the application stores the locality code in your
-          browser&apos;s local storage so the dashboard remembers your choice. You can clear it by clearing site data
-          in your browser. The application does not store your name, email address, or account details for ordinary
-          browsing.
+          Kapag pumili ka ng probinsya, lungsod, o munisipyo, iniimbak ng app ang locality code sa local storage ng
+          browser mo para matandaan ang napili mo. Puwede mong burahin ito sa site data ng browser. Hindi iniimbak ng
+          app ang pangalan, email address, o account details mo para sa ordinaryong pag-browse.
         </p>
         <p>
-          The progressive web app uses a service worker to cache pages, static assets, and an offline page. Cached
-          content stays on your device until the cache is replaced or cleared. Weather API responses are not cached by
-          the service worker; the interface labels stale server-side snapshots explicitly.
+          Gumagamit ang progressive web app ng service worker para i-cache ang pages, static assets, at offline page.
+          Nananatili sa device mo ang cached content hanggang mapalitan o mabura ang cache. Hindi naka-cache sa service
+          worker ang weather API responses; malinaw na nilalagyan ng label ng interface ang stale server-side snapshots.
         </p>
 
         <h2>2. Geolocation</h2>
         <p>
-          The &ldquo;use my location&rdquo; control requests browser geolocation only after you press it. The
-          coordinates are used in your browser to find the nearest listed locality and to sort facilities by distance.
-          SILONG PH does not send your precise coordinates to its own servers for storage. The weather request uses the
-          selected locality&apos;s representative coordinates, not your exact GPS position. Your browser or operating
-          system may ask for permission and may record the request according to its own policies.
+          Humihingi lang ng browser geolocation ang “gamitin ang lokasyon ko” control kapag pinindot mo ito. Ginagamit
+          ang coordinates sa browser mo para hanapin ang pinakamalapit na nakalista na lugar at i-sort ang pasilidad
+          ayon sa layo. Hindi ipinapadala ng SILONG PH ang precise coordinates mo sa sarili nitong servers para iimbak.
+          Ang representative coordinates ng napiling lugar, hindi ang exact GPS position mo, ang ginagamit sa weather
+          request. Puwedeng humingi ng permission ang browser o operating system mo at i-record ang request ayon sa
+          sarili nilang policy.
         </p>
 
-        <h2>3. Reports and corrections</h2>
+        <h2>3. Mga report at correction</h2>
         <p>
-          If you submit a facility report, the application stores the report type, your description, any proposed place
-          name, address, and locality code, the time of submission, and moderation status. Do not include personal
-          information about other people. Reports are visible to authorised administrators and are not published
-          automatically. The report form does not require an account or an email address.
+          Kapag nagpadala ka ng facility report, iniimbak ng app ang report type, description mo, anumang proposed place
+          name, address, at locality code, oras ng pagsumite, at moderation status. Huwag maglagay ng personal na
+          impormasyon ng ibang tao. Nakikita ng awtorisadong admin ang reports at hindi ito awtomatikong napi-publish.
+          Hindi kailangan ng account o email address ang report form.
         </p>
 
-        <h2>4. Abuse prevention and technical logs</h2>
+        <h2>4. Pagpigil sa abuse at technical logs</h2>
         <p>
-          To limit automated abuse, sign-in and report endpoints use rate limiting. The application derives a
-          keyed, truncated hash from the request&apos;s IP address and uses that hash as the rate-limit key. Raw IP
-          addresses are not written to the application database or to Redis by this code. If Redis is configured, the
-          hash and a short-lived counter are stored there; otherwise they are held in process memory.
+          Para limitahan ang automated abuse, may rate limiting ang sign-in at report endpoints. Gumagawa ang app ng
+          keyed at truncated hash mula sa IP address ng request at ginagamit ito bilang rate-limit key. Hindi isinusulat
+          ng code na ito ang raw IP address sa application database o Redis. Kapag naka-configure ang Redis, doon
+          iniimbak ang hash at short-lived counter; kung wala, nasa process memory sila.
         </p>
         <p>
-          The hosting provider or reverse proxy may keep standard access logs (including IP address, user agent, and
-          requested URL) under its own policy. The operator of this deployment is responsible for those logs and for
-          configuring an appropriate retention period.
-        </p>
-
-        <h2>5. Administrator accounts and audit logs</h2>
-        <p>
-          Administrator sign-in uses an email address and password. Passwords are stored as bcrypt hashes, never as
-          plaintext. A successful sign-in sets an HttpOnly, SameSite=Lax session cookie that expires after eight hours;
-          in production it is also marked Secure. Administrative actions such as creating or verifying a facility,
-          moderating a report, or recording an official advisory are written to an audit log with the actor, action,
-          entity, and time. The audit log may include a hashed IP value if one is supplied by the deployment.
+          Puwedeng magtabi ang hosting provider o reverse proxy ng standard access logs (kasama ang IP address, user
+          agent, at requested URL) sa ilalim ng sarili nilang policy. Responsable ang operator ng deployment na ito sa
+          mga log na iyon at sa pag-configure ng angkop na retention period.
         </p>
 
-        <h2>6. Third-party requests</h2>
+        <h2>5. Mga admin account at audit log</h2>
         <p>
-          The application makes requests to third parties to provide its core functions. Those providers receive
-          technical information such as your IP address and user agent as part of a normal web request:
+          Gumagamit ng email address at password ang admin sign-in. bcrypt hash ang iniimbak na password, hindi
+          plaintext. Kapag successful ang sign-in, nagse-set ito ng HttpOnly, SameSite=Lax session cookie na mag-e-expire
+          pagkatapos ng walong oras; sa production, naka-Secure din ito. Ang administrative actions tulad ng paggawa o
+          pag-verify ng pasilidad, pag-moderate ng report, o pag-record ng official advisory ay isinusulat sa audit log
+          kasama ang actor, action, entity, at oras. Puwedeng may hashed IP value sa audit log kung may ibinigay ang
+          deployment.
+        </p>
+
+        <h2>6. Mga request sa third party</h2>
+        <p>
+          May requests ang app sa third parties para sa core functions nito. Natatanggap ng providers na ito ang
+          technical information tulad ng IP address at user agent mo bilang bahagi ng normal na web request:
         </p>
         <ul>
           <li>
-            <strong>Open-Meteo</strong> for model weather and forecast data. See{" "}
+            <strong>Open-Meteo</strong> para sa model weather at forecast data. Tingnan ang{" "}
             <a href="https://open-meteo.com/en/terms" target="_blank" rel="noreferrer">
-              Open-Meteo&apos;s terms
+              terms ng Open-Meteo
             </a>
             .
           </li>
           <li>
-            <strong>OpenStreetMap tile servers</strong> for base maps. See the{" "}
+            <strong>OpenStreetMap tile servers</strong> para sa base maps. Tingnan ang{" "}
             <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noreferrer">
-              OpenStreetMap Foundation privacy policy
+              privacy policy ng OpenStreetMap Foundation
             </a>
             .
           </li>
           <li>
-            <strong>Official source links</strong> such as PAGASA, DOH, and NDRRMC open only when you choose them.
+            <strong>Official source links</strong> tulad ng PAGASA, DOH, at NDRRMC ay bubukas lang kapag pinili mo.
           </li>
         </ul>
         <p>
-          The application does not include third-party advertising, social-media pixels, or analytics scripts in this
-          release.
+          Walang third-party advertising, social-media pixel, o analytics script sa release na ito.
         </p>
 
-        <h2>7. Retention</h2>
+        <h2>7. Gaano katagal iniimbak</h2>
         <p>
-          Facility reports are retained while they are needed for moderation, correction, and audit. Audit records are
-          retained to support accountability and security. Administrator sessions expire automatically. The operator of
-          this deployment should configure a documented retention schedule and delete records that are no longer
-          needed. This code does not automatically delete reports or audit entries.
+          Iniimbak ang facility reports habang kailangan para sa moderation, correction, at audit. Iniimbak ang audit
+          records para sa accountability at security. Awtomatikong nag-e-expire ang admin sessions. Dapat mag-configure
+          ang operator ng deployment na ito ng documented retention schedule at magbura ng records na hindi na kailangan.
+          Hindi awtomatikong nagbubura ng reports o audit entries ang code na ito.
         </p>
 
-        <h2>8. Security</h2>
+        <h2>8. Seguridad</h2>
         <p>
-          Administrative routes require a valid session and server-side role check. Mutating requests verify the request
-          origin. Security headers restrict framing, MIME sniffing, and unnecessary browser permissions. No system is
-          perfectly secure; do not submit sensitive personal information through the correction form.
+          Kailangan ng valid session at server-side role check ang administrative routes. Chine-check ng mutating requests
+          ang request origin. Nililimitahan ng security headers ang framing, MIME sniffing, at hindi kailangang browser
+          permissions. Walang perpektong secure na system; huwag magpadala ng sensitibong personal information sa
+          correction form.
         </p>
 
-        <h2>9. Your rights</h2>
+        <h2>9. Mga karapatan mo</h2>
         <p>
-          The Philippine Data Privacy Act of 2012 (Republic Act No. 10173) provides rights in relation to personal data,
-          including the right to be informed, to object, to access, to rectify, to erase or block, to damages, and to
-          lodge a complaint with the National Privacy Commission. Because ordinary browsing does not create an account,
-          the application may not be able to identify you from a report unless you provide contact details voluntarily.
+          Nagbibigay ang Philippine Data Privacy Act of 2012 (Republic Act No. 10173) ng mga karapatan sa personal data,
+          kasama ang right to be informed, to object, to access, to rectify, to erase or block, to damages, at to lodge a
+          complaint sa National Privacy Commission. Dahil walang account na nagagawa sa ordinaryong pag-browse, maaaring
+          hindi ka makilala ng app mula sa isang report maliban kung boluntaryo kang nagbigay ng contact details.
         </p>
         <p>
-          To ask about a report or an audit record, contact the operator. If no contact address is configured, use the
-          report form on a facility page and state that your message is a privacy request. Do not include unnecessary
-          identity documents.
-        </p>
-
-        <h2>10. Children</h2>
-        <p>
-          The application is intended for a general audience and is not directed at children under 13. Do not submit a
-          child&apos;s personal information through the correction form. If a child needs help, an adult should contact
-          the local government or emergency service.
+          Para magtanong tungkol sa report o audit record, makipag-ugnayan sa operator. Kung walang naka-configure na
+          contact address, gamitin ang report form sa facility page at sabihing privacy request ang mensahe mo. Huwag
+          magsama ng hindi kailangang identity documents.
         </p>
 
-        <h2>11. Changes</h2>
+        <h2>10. Mga bata</h2>
         <p>
-          This policy may be updated when the application changes. The &ldquo;last updated&rdquo; date at the top of
-          this page shows the current version. Material changes should be announced by the operator.
+          Para sa general audience ang app at hindi ito para sa batang wala pang 13 taong gulang. Huwag magpadala ng
+          personal information ng bata sa correction form. Kung kailangan ng bata ng tulong, dapat makipag-ugnayan ang
+          adult sa lokal na pamahalaan o emergency service.
         </p>
 
-        <h2>12. Contact</h2>
+        <h2>11. Mga pagbabago</h2>
+        <p>
+          Puwedeng ma-update ang policy na ito kapag nagbago ang app. Ipinapakita ng “huling na-update” na petsa sa itaas
+          ng page ang kasalukuyang bersyon. Dapat ipaalam ng operator ang material changes.
+        </p>
+
+        <h2>12. Kontak</h2>
         <p>
           {contactEmail ? (
             <>
-              Privacy questions: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. This address is configured by
-              the operator of this deployment.
+              Mga tanong sa privacy: <a href={`mailto:${contactEmail}`}>{contactEmail}</a>. Naka-configure ang address
+              na ito ng operator ng deployment.
             </>
           ) : (
             <>
-              No public operator contact address is configured for this deployment. For data corrections, use the report
-              form on a facility page. For emergencies, contact 911 or your local DRRMO.
+              Walang naka-configure na public operator contact address para sa deployment na ito. Para sa data
+              corrections, gamitin ang report form sa facility page. Para sa emergency, tumawag sa 911 o sa lokal na
+              DRRMO.
             </>
           )}
         </p>
@@ -172,16 +174,16 @@ export default function PrivacyPage() {
 
       <Card className="mt-8">
         <CardContent className="pt-5 sm:pt-6">
-          <h2 className="text-base font-bold text-navy">Related pages</h2>
-          <div className="mt-2 flex flex-wrap gap-3 text-sm font-semibold">
-            <Link href="/about" className="text-primary hover:underline">
-              About the project
+          <h2 className="text-base font-bold text-navy">Kaugnay na mga page</h2>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
+            <Link href="/about" className="inline-flex min-h-11 items-center text-primary hover:underline">
+              Tungkol sa proyekto
             </Link>
-            <Link href="/methodology" className="text-primary hover:underline">
-              Data sources and methodology
+            <Link href="/methodology" className="inline-flex min-h-11 items-center text-primary hover:underline">
+              Saan galing ang datos
             </Link>
-            <Link href="/preparedness" className="text-primary hover:underline">
-              Preparedness centre
+            <Link href="/preparedness" className="inline-flex min-h-11 items-center text-primary hover:underline">
+              Paghahanda sa init
             </Link>
           </div>
         </CardContent>

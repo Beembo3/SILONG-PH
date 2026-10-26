@@ -69,8 +69,8 @@ export default async function AdminAuditPage({
           href="/admin/audit"
           className={
             action
-              ? "rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-orange-300"
-              : "rounded-full border border-orange-300 bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-900"
+              ? "inline-flex min-h-11 items-center rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:border-orange-300"
+              : "inline-flex min-h-11 items-center rounded-full border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-bold text-orange-900"
           }
         >
           All actions
@@ -81,8 +81,8 @@ export default async function AdminAuditPage({
             href={`/admin/audit?action=${encodeURIComponent(item.action)}`}
             className={
               action === item.action
-                ? "rounded-full border border-orange-300 bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-900"
-                : "rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-orange-300"
+                ? "inline-flex min-h-11 items-center rounded-full border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-bold text-orange-900"
+                : "inline-flex min-h-11 items-center rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:border-orange-300"
             }
           >
             {item.action.replaceAll("_", " ")} ({item._count._all})

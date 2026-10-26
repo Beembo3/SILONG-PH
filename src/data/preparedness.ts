@@ -9,127 +9,127 @@ export interface PreparednessSection {
 export const preparednessSections: PreparednessSection[] = [
   {
     id: "before",
-    title: "Before extreme heat",
-    taglishTitle: "Bago ang matinding init",
+    title: "Bago ang matinding init",
+    taglishTitle: "Bago lumala ang init",
     summary:
-      "Prepare water, shade, medicine, and a plan for the people most at risk before the hottest part of the day.",
+      "Maghanda ng tubig, lilim, gamot, at plano para sa mga pinaka-madaling maapektuhan bago pa uminit nang todo.",
     items: [
       {
-        title: "Prepare drinking water",
+        title: "Maghanda ng inuming tubig",
         detail:
-          "Keep clean drinking water available at home, at work, and while travelling. Follow any fluid limits given by your doctor.",
+          "Panatilihing may malinis na inuming tubig sa bahay, trabaho, at kapag naglalakbay. Sundin ang limitasyon sa fluids na ibinigay ng doktor mo.",
       },
       {
-        title: "Plan outdoor activity around heat guidance",
+        title: "Iplano ang gawain sa labas ayon sa init",
         detail:
-          "Move strenuous work, exercise, and long trips away from the hottest hours. Check the current heat category and official advisories first.",
+          "Ilayo ang mabigat na trabaho, exercise, at mahabang biyahe sa pinakamainit na oras. Tingnan muna ang heat category at opisyal na abiso.",
       },
       {
-        title: "Prepare clothing and sun protection",
+        title: "Maghanda ng damit at proteksyon sa araw",
         detail:
-          "Use light, loose clothing, a wide-brimmed hat, sunglasses, and shade. Sunscreen helps with sunburn but does not replace cooling and hydration.",
+          "Gumamit ng maluwag at magaan na damit, wide-brimmed hat, sunglasses, at lilim. Nakakatulong ang sunscreen sa sunburn pero hindi ito kapalit ng paglamig at pag-inom ng tubig.",
       },
       {
-        title: "Check on vulnerable household members",
+        title: "Kamustahin ang mga mas madaling maapektuhan",
         detail:
-          "Older adults, infants and young children, pregnant people, outdoor workers, and people with chronic illness or disability may need extra help.",
+          "Maaaring kailangan ng dagdag na tulong ang matatanda, sanggol at bata, buntis, outdoor workers, at may sakit o disability.",
       },
       {
-        title: "Identify a cool place and review local guidance",
+        title: "Alamin ang preskong lugar at lokal na payo",
         detail:
-          "Know where you can safely cool down. Use only cooling places whose public access and facilities have been verified, or contact your LGU for official options.",
+          "Alamin kung saan ka ligtas na puwedeng magpalamig. Gamitin lang ang mga lugar na beripikado ang public access at pasilidad, o makipag-ugnayan sa LGU para sa opisyal na opsyon.",
       },
     ],
   },
   {
     id: "during",
-    title: "During extreme heat",
-    taglishTitle: "Habang matinding init",
+    title: "Habang matinding init",
+    taglishTitle: "Habang mainit",
     summary:
-      "Reduce exposure, rest often, and act quickly if someone shows signs of heat illness.",
+      "Bawasan ang pagbibilad, magpahinga nang madalas, at kumilos agad kapag may sintomas ng heat illness.",
     items: [
       {
-        title: "Reduce strenuous outdoor activity",
+        title: "Bawasan ang mabigat na gawain sa labas",
         detail:
-          "When the heat category is dangerous, avoid unnecessary outdoor work and exercise. Follow workplace, school, and local government safety procedures.",
+          "Kapag mapanganib ang heat category, iwasan ang hindi kailangang trabaho at exercise sa labas. Sundin ang safety procedure ng trabaho, paaralan, at LGU.",
       },
       {
-        title: "Rest in a cool or shaded place",
+        title: "Magpahinga sa malamig o may lilim na lugar",
         detail:
-          "Use shade, ventilation, fans, air-conditioning, or a verified cooling place. Take frequent breaks instead of waiting until you feel unwell.",
+          "Gumamit ng lilim, bentilasyon, electric fan, air-conditioning, o beripikadong cooling place. Magpahinga nang madalas bago pa makaramdam ng sama ng pakiramdam.",
       },
       {
-        title: "Drink water regularly",
+        title: "Uminom ng tubig nang regular",
         detail:
-          "Drink before you feel thirsty. Avoid relying on alcohol or sugary drinks for hydration. People with medical fluid restrictions should follow clinical advice.",
+          "Uminom bago ka mauhaw. Huwag umasa sa alak o matatamis na inumin para sa hydration. Sundin ang payo ng doktor kung may limitasyon ka sa fluids.",
       },
       {
-        title: "Never leave children or pets in parked vehicles",
+        title: "Huwag iwanan ang bata o alagang hayop sa sasakyan",
         detail:
-          "A parked vehicle can become dangerously hot within minutes, even with windows partly open.",
+          "Puwedeng uminit nang mapanganib ang nakaparadang sasakyan sa loob ng ilang minuto, kahit bahagyang nakabukas ang bintana.",
       },
       {
-        title: "Look out for one another",
+        title: "Mag-alalayan",
         detail:
-          "Check on neighbours and family members who live alone or may not be able to reach a cool place.",
+          "Kamustahin ang kapitbahay at kapamilyang mag-isa o maaaring hindi makarating sa malamig na lugar.",
       },
     ],
   },
   {
     id: "illness",
-    title: "Recognising possible heat illness",
-    taglishTitle: "Pagkilala sa posibleng heat illness",
+    title: "Pagkilala sa posibleng heat illness",
+    taglishTitle: "Mga sintomas na dapat abangan",
     summary:
-      "Heat exhaustion and heat stroke are not the same. Suspected heat stroke is a medical emergency — call for help immediately.",
+      "Magkaiba ang heat exhaustion at heat stroke. Emergency ang pinaghihinalaang heat stroke — tumawag agad ng tulong.",
     items: [
       {
-        title: "Possible heat exhaustion",
+        title: "Posibleng heat exhaustion",
         detail:
-          "Heavy sweating, weakness, dizziness, headache, nausea, muscle cramps, or fainting. Move the person to a cooler place, loosen clothing, cool the skin, and give water if they are alert and able to swallow. Seek medical advice if symptoms do not improve quickly.",
+          "Sobrang pagpapawis, panghihina, pagkahilo, sakit ng ulo, pagduduwal, muscle cramps, o pagkahimatay. Ilipat sa mas malamig na lugar, luwagan ang damit, palamigin ang balat, at bigyan ng tubig kung gising at kaya niyang lumunok. Humingi ng medical advice kung hindi agad gumanda ang pakiramdam.",
       },
       {
-        title: "Emergency signs of heat stroke",
+        title: "Emergency signs ng heat stroke",
         detail:
-          "High body temperature, confusion, slurred speech, agitation, seizures, loss of consciousness, or collapse. The skin may be hot and dry or still sweating. This is life-threatening.",
+          "Mataas na body temperature, pagkalito, hindi malinaw ang pagsasalita, pagkabalisa, seizures, pagkawala ng malay, o pagbagsak. Puwedeng mainit at tuyo ang balat o pawisan pa rin. Delikado ito sa buhay.",
       },
       {
-        title: "Call emergency services",
+        title: "Tumawag ng emergency services",
         detail:
-          "Call 911 or your local emergency service immediately. Begin cooling the person while waiting: move them to shade, remove excess clothing, apply cool water, and fan them. Do not give fluids to someone who is confused or unconscious.",
+          "Tumawag agad sa 911 o lokal na emergency service. Habang naghihintay, simulan ang pagpapalamig: ilipat sa lilim, alisin ang sobrang damit, basain ng malamig na tubig, at pamaypayan. Huwag bigyan ng fluids ang taong nalilito o walang malay.",
       },
       {
-        title: "Do not delay care",
+        title: "Huwag ipagpaliban ang tulong",
         detail:
-          "Do not wait for an in-app questionnaire, a reply from a moderator, or for symptoms to pass before seeking emergency help.",
+          "Huwag hintayin ang sagot sa app, reply ng moderator, o paglipas ng sintomas bago humingi ng emergency help.",
       },
     ],
   },
   {
     id: "after",
-    title: "After extreme heat",
-    taglishTitle: "Pagkatapos ng matinding init",
+    title: "Pagkatapos ng matinding init",
+    taglishTitle: "Pagkatapos ng init",
     summary:
-      "Recovery takes time. Continue hydration and seek medical assessment if symptoms persist or return.",
+      "Kailangan ng panahon ang pag-recover. Magpatuloy sa hydration at magpatingin sa doktor kung bumabalik o tumatagal ang sintomas.",
     items: [
       {
-        title: "Continue hydration and rest",
+        title: "Magpatuloy sa hydration at pahinga",
         detail:
-          "Rehydrate steadily and avoid strenuous activity until you feel fully recovered. Eat regular meals if you can.",
+          "Uminom ng tubig nang tuloy-tuloy at iwasan ang mabigat na gawain hanggang sa maramdaman mong fully recovered ka na. Kumain ng regular kung kaya.",
       },
       {
-        title: "Seek medical assessment when needed",
+        title: "Magpatingin kung kailangan",
         detail:
-          "Get checked if symptoms persist, worsen, or return, especially after fainting, confusion, or heat stroke. Some effects can appear after the immediate exposure.",
+          "Magpatingin kung tumatagal, lumalala, o bumabalik ang sintomas, lalo na pagkatapos ng pagkahimatay, pagkalito, o heat stroke. May epekto na puwedeng lumabas pagkatapos ng exposure.",
       },
       {
-        title: "Review official advisories before resuming activity",
+        title: "Tingnan muli ang opisyal na abiso bago bumalik sa gawain",
         detail:
-          "Check updated heat forecasts and local guidance before returning to outdoor work, sport, or travel.",
+          "I-check ang updated heat forecast at lokal na payo bago bumalik sa outdoor work, sports, o biyahe.",
       },
       {
-        title: "Report unsafe or inaccurate information",
+        title: "I-report ang mali o lumang impormasyon",
         detail:
-          "If a cooling place listing is wrong or out of date, use the report form on its page so an authorised reviewer can check it.",
+          "Kung mali o luma na ang detalye ng isang cooling place, gamitin ang report form sa page nito para masuri ng awtorisadong reviewer.",
       },
     ],
   },
@@ -147,33 +147,33 @@ export const preparednessSources: SourceReference[] = [
     title: "Heat Index",
     publisher: "DOST-PAGASA",
     url: "https://www.pagasa.dost.gov.ph/weather/heat-index",
-    note: "Official heat-index categories and heat-index monitoring page.",
+    note: "Opisyal na heat-index categories at monitoring page ng PAGASA.",
   },
   {
     title: "Heat-Related Illnesses",
     publisher: "Department of Health — Cordillera Administrative Region",
     url: "https://caro.doh.gov.ph/heat-related-illnesses/",
-    note: "Public-health guidance on heat exhaustion, heat stroke, and prevention.",
+    note: "Public-health guidance tungkol sa heat exhaustion, heat stroke, at prevention.",
   },
   {
     title: "Heat and health",
     publisher: "World Health Organization",
     url: "https://www.who.int/news-room/fact-sheets/detail/climate-change-heat-and-health",
-    note: "General information on heat exposure and health risks.",
+    note: "Pangkalahatang impormasyon tungkol sa init at mga panganib sa kalusugan.",
   },
   {
     title: "PAGASA iHeatMAP",
     publisher: "DOST-PAGASA",
     url: "https://src.panahon.gov.ph/pubfiles/cad/iaas/ihif_new.html",
-    note: "Official interactive heat-index reference. SILONG PH does not automatically ingest this map.",
+    note: "Opisyal na interactive heat-index reference. Hindi awtomatikong kinukuha ng SILONG PH ang map na ito.",
   },
   {
     title: "National Disaster Risk Reduction and Management Council",
     publisher: "NDRRMC",
     url: "https://ndrrmc.gov.ph/",
-    note: "National disaster preparedness and response information.",
+    note: "Pambansang impormasyon sa disaster preparedness at response.",
   },
 ];
 
 export const MEDICAL_DISCLAIMER =
-  "SILONG PH provides general heat-safety education, not medical advice or diagnosis. For suspected heat stroke or another life-threatening emergency, call 911 or local emergency services immediately. Do not delay emergency care to use this application.";
+  "Pangkalahatang heat-safety education ang SILONG PH, hindi medical advice o diagnosis. Kung pinaghihinalaang heat stroke o may emergency na delikado sa buhay, tumawag agad sa 911 o lokal na emergency service. Huwag ipagpaliban ang emergency care para gamitin ang app na ito.";

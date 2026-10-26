@@ -17,14 +17,43 @@ export function ServiceWorkerRegistration() {
       return;
     }
 
-    const register = () => {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
-        // A failed service-worker registration must not break the app.
-      });
+    let registration: ServiceWorkerRegistration | null = null;
+    let lastUpdateCheck = 0;
+
+    const checkForUpdate = () => {
+      if (!registration || document.visibilityState !== "visible") return;
+      const now = Date.now();
+      if (now - lastUpdateCheck < 60 * 60 * 1000) return;
+      lastUpdateCheck = now;
+      registration.update().catch(() => undefined);
     };
-    if (document.readyState === "complete") register();
+
+    const register = async () => {
+      try {
+        registration = await navigator.serviceWorker.register("/sw.js", {
+          scope: "/",
+          updateViaCache: "none",
+        });
+        // Check once shortly after load, then at most once an hour when the
+        // installed app returns to the foreground.
+        window.setTimeout(checkForUpdate, 5_000);
+      } catch {
+        // A failed service-worker registration must not break the app.
+      }
+    };
+
+    const onVisible = () => {
+      if (document.visibilityState === "visible") checkForUpdate();
+    };
+
+    if (document.readyState === "complete") void register();
     else window.addEventListener("load", register, { once: true });
-    return () => window.removeEventListener("load", register);
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      window.removeEventListener("load", register);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
   }, []);
   return null;
 }

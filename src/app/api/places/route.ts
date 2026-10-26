@@ -34,7 +34,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Cooling place search failed", error);
     return NextResponse.json(
-      { error: "The cooling-place directory is temporarily unavailable." },
+      { error: "Hindi available ang cooling-place directory sa ngayon." },
       { status: 503 },
     );
   }

@@ -42,14 +42,51 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keep in-page anchors clear of the sticky header (two rows on phones). */
+  scroll-padding-top: 8rem;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
+  min-height: 100dvh;
+  overflow-x: clip;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+img,
+video {
+  max-width: 100%;
+}
+
+/*
+ * iOS Safari zooms the whole page when a form control smaller than 16px is
+ * focused. Keep controls at 16px on phones; the desktop design stays at 14px.
+ */
+@media (max-width: 639px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: 7rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    scroll-padding-top: 4.5rem;
+  }
 }
 
 ::selection {
@@ -108,6 +145,20 @@ body {
 .leaflet-popup-content {
   margin: 12px 14px;
   line-height: 1.4;
+}
+
+.leaflet-popup-content-wrapper {
+  max-width: calc(100vw - 3rem);
+}
+
+/* Leaflet's default controls are 30px; give touch users a larger target. */
+@media (pointer: coarse) {
+  .leaflet-touch .leaflet-bar a {
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
+    font-size: 1.25rem;
+  }
 }
 
 .weather-grid {

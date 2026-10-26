@@ -87,7 +87,7 @@ export function ReportModeration({
             placeholder="What was checked? This note is internal."
           />
         </div>
-        <Button type="button" onClick={save} disabled={saving}>
+        <Button type="button" onClick={save} disabled={saving} className="w-full sm:w-auto">
           <Save className="h-4 w-4" aria-hidden="true" /> {saving ? "Saving…" : "Save"}
         </Button>
       </div>

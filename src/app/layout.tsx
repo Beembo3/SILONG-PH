@@ -13,11 +13,11 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: {
-    default: "SILONG PH — Understand the Heat. Find Relief. Stay Prepared.",
+    default: "SILONG PH — Alamin ang init. Humanap ng silong. Maging handa.",
     template: "%s | SILONG PH",
   },
   description:
-    "Heat awareness, cooling-place discovery, and preparedness for Central Luzon. Live model weather, estimated heat index, and verified information.",
+    "Alamin ang estimated heat index, opisyal na babala, preskong lugar, at mga dapat gawin para manatiling ligtas sa init sa Central Luzon.",
   applicationName: "SILONG PH",
   manifest: "/manifest.webmanifest",
   icons: {
@@ -33,11 +33,16 @@ export const metadata: Metadata = {
     statusBarStyle: "default",
     title: "SILONG PH",
   },
+  other: {
+    // Keep the legacy iOS meta tag alongside Next's mobile-web-app-capable
+    // output so older iPhones launch the saved site in standalone mode.
+    "apple-mobile-web-app-capable": "yes",
+  },
   openGraph: {
     title: "SILONG PH",
-    description: "Understand the Heat. Find Relief. Stay Prepared.",
+    description: "Alamin ang init. Humanap ng silong. Maging handa.",
     type: "website",
-    locale: "en_PH",
+    locale: "fil_PH",
     siteName: "SILONG PH",
   },
   robots: { index: true, follow: true },
@@ -45,16 +50,19 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0B1426",
+  colorScheme: "light",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
+  interactiveWidget: "resizes-content",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en-PH" className={inter.variable}>
+    <html lang="fil-PH" className={inter.variable} data-scroll-behavior="smooth">
       <body>
         <a href="#main-content" className="skip-link">
-          Skip to main content
+          Laktawan papunta sa pangunahing nilalaman
         </a>
         {children}
         <ServiceWorkerRegistration />

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ForecastChart } from "@/components/weather/forecast-chart";
 import { RiskBadge } from "@/components/weather/risk-badge";
 import { WeatherIconView } from "@/components/weather/weather-icon";
-import { formatDay, formatNumber, formatPST, relativeTime } from "@/lib/format";
+import { conditionLabel, formatDay, formatNumber, formatPST, relativeTime } from "@/lib/format";
 import { PAGASA_SOURCE } from "@/lib/heat-index";
 import { getWeather } from "@/lib/weather/open-meteo";
 
@@ -30,22 +30,21 @@ export async function PointWeather({ latitude, longitude, label, context, note }
   } catch (error) {
     console.error(`Weather unavailable for ${label}`, error);
     return (
-      <Alert variant="warning" title={`Weather is temporarily unavailable for ${label}`}>
+      <Alert variant="warning" title={`Walang weather sa ngayon para sa ${label}`}>
         <p>
-          The weather provider could not be reached, and no recent snapshot is available. No synthetic reading has
-          been substituted.
+          Hindi maabot ang weather provider at walang recent snapshot. Walang gawa-gawang reading na ipinalit.
         </p>
         <p className="mt-2">
-          Check the official{" "}
+          Tingnan ang opisyal na{" "}
           <a
             href={PAGASA_SOURCE.url}
             target="_blank"
             rel="noreferrer"
             className="font-semibold underline"
           >
-            DOST-PAGASA heat-index page
+            heat-index page ng DOST-PAGASA
           </a>{" "}
-          or your local government for current guidance.
+          o ang lokal na pamahalaan para sa kasalukuyang payo.
         </p>
       </Alert>
     );
@@ -65,14 +64,14 @@ export async function PointWeather({ latitude, longitude, label, context, note }
           <p className="mt-1 text-sm text-muted-foreground">{context}</p>
         </div>
         <Badge variant={weather.stale ? "warning" : "success"}>
-          {weather.stale ? "Stale snapshot" : "Fresh provider cache"}
+          {weather.stale ? "Luma ang snapshot" : "Bagong provider cache"}
         </Badge>
       </div>
 
       {weather.stale ? (
-        <Alert variant="warning" title="Showing stale weather data">
-          {weather.staleReason ?? "The provider is unavailable."} Last retrieved {relativeTime(weather.fetchedAt)}. Do
-          not treat it as current conditions.
+        <Alert variant="warning" title="Luma na ang weather data">
+          {weather.staleReason ?? "Hindi available ang provider."} Huling nakuha {relativeTime(weather.fetchedAt)}.
+          Huwag ituring na kasalukuyang kondisyon.
         </Alert>
       ) : null}
 
@@ -82,76 +81,77 @@ export async function PointWeather({ latitude, longitude, label, context, note }
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Estimated heat index
+                  Tinatayang heat index
                 </p>
                 <p className="numeric mt-1 text-4xl font-extrabold text-navy sm:text-5xl">
                   {current.heatIndexC != null ? formatNumber(current.heatIndexC, 1) : "—"}
                   <span className="ml-1 align-top text-lg text-muted-foreground">°C</span>
                 </p>
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Application estimate from temperature and relative humidity. Not an official PAGASA reading.
+                  Estimate ng app mula sa temperature at relative humidity. Hindi official PAGASA reading.
                 </p>
               </div>
               <div className="text-right">
                 <WeatherIconView icon={current.icon} className="ml-auto h-9 w-9 text-slate-500" />
-                <p className="mt-1 text-sm font-semibold text-slate-700">{current.condition}</p>
+                <p className="mt-1 text-sm font-semibold text-slate-700">{conditionLabel(current.condition)}</p>
               </div>
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
               <RiskBadge category={category} />
               <span className="text-sm font-semibold text-slate-600">
-                Air temperature{" "}
-                {current.temperatureC != null ? `${formatNumber(current.temperatureC, 1)} °C` : "unavailable"}
+                Temperatura ng hangin{" "}
+                {current.temperatureC != null ? `${formatNumber(current.temperatureC, 1)} °C` : "hindi available"}
               </span>
             </div>
 
             <dl className="mt-5 grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
               <Metric
                 icon={<Droplets className="h-4 w-4" aria-hidden="true" />}
-                label="Humidity"
-                value={current.relativeHumidity != null ? `${current.relativeHumidity}%` : "Unavailable"}
+                label="Halumigmig"
+                value={current.relativeHumidity != null ? `${current.relativeHumidity}%` : "Hindi available"}
               />
               <Metric
                 icon={<Thermometer className="h-4 w-4" aria-hidden="true" />}
-                label="Feels like"
+                label="Pakiramdam"
                 value={
                   current.apparentTemperatureC != null
                     ? `${formatNumber(current.apparentTemperatureC, 1)} °C`
-                    : "Unavailable"
+                    : "Hindi available"
                 }
               />
               <Metric
                 icon={<Wind className="h-4 w-4" aria-hidden="true" />}
-                label="Wind"
+                label="Hangin"
                 value={
                   current.windSpeedKmh != null
                     ? `${formatNumber(current.windSpeedKmh, 1)} km/h`
-                    : "Unavailable"
+                    : "Hindi available"
                 }
               />
               <Metric
                 icon={<Clock className="h-4 w-4" aria-hidden="true" />}
-                label="Model time"
+                label="Oras ng model"
                 value={formatPST(current.time)}
               />
             </dl>
 
             <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-              {note ?? weather.resolutionNote} Retrieved {formatPST(weather.fetchedAt)}.
+              {note ?? "Model-interpolated data ito para sa coordinate na ito, hindi station measurement."} Nakuha{" "}
+              {formatPST(weather.fetchedAt)}.
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>What the category means</CardTitle>
-            <p className="text-xs text-muted-foreground">{category.rangeLabel}</p>
+            <CardTitle>Ano ang ibig sabihin ng category?</CardTitle>
+            <p className="text-xs text-muted-foreground">{category.taglishRangeLabel}</p>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <p className="leading-relaxed text-slate-600">{category.description}</p>
+            <p className="leading-relaxed text-slate-600">{category.taglishDescription}</p>
             <ul className="space-y-2 text-slate-700">
-              {category.guidance.slice(0, 4).map((item) => (
+              {category.taglishGuidance.slice(0, 4).map((item) => (
                 <li key={item} className="flex gap-2">
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                   {item}
@@ -164,17 +164,17 @@ export async function PointWeather({ latitude, longitude, label, context, note }
             <div className="flex flex-wrap gap-2 pt-1">
               <Link
                 href={`/cool-places?lat=${latitude}&lon=${longitude}&sort=nearest`}
-                className="text-sm font-bold text-primary hover:underline"
+                className="inline-flex min-h-11 items-center text-sm font-bold text-primary hover:underline"
               >
-                Find nearby facilities
+                Humanap ng pasilidad sa malapit
               </Link>
               <a
                 href={PAGASA_SOURCE.url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 hover:underline"
+                className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-slate-600 hover:underline"
               >
-                Official PAGASA <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                Opisyal na PAGASA <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </div>
           </CardContent>
@@ -184,7 +184,7 @@ export async function PointWeather({ latitude, longitude, label, context, note }
       <div className="grid gap-4 xl:grid-cols-[1.4fr_0.6fr]">
         <Card>
           <CardHeader>
-            <CardTitle>Next 24 hours</CardTitle>
+            <CardTitle>Susunod na 24 oras</CardTitle>
             <p className="text-xs text-muted-foreground">Model forecast · estimated heat index</p>
           </CardHeader>
           <CardContent>
@@ -194,12 +194,12 @@ export async function PointWeather({ latitude, longitude, label, context, note }
 
         <Card>
           <CardHeader>
-            <CardTitle>7-day outlook</CardTitle>
-            <p className="text-xs text-muted-foreground">Forecast daily extremes and peak heat index</p>
+            <CardTitle>7 araw na tanaw</CardTitle>
+            <p className="text-xs text-muted-foreground">Daily extremes at peak heat index</p>
           </CardHeader>
           <CardContent className="space-y-2">
             {weather.daily.length === 0 ? (
-              <p className="text-sm text-muted-foreground">The provider did not return daily forecast values.</p>
+              <p className="text-sm text-muted-foreground">Walang daily forecast value na naibalik ang provider.</p>
             ) : (
               weather.daily.map((day) => (
                 <div
@@ -210,7 +210,7 @@ export async function PointWeather({ latitude, longitude, label, context, note }
                     <WeatherIconView icon={day.icon} className="h-5 w-5 text-slate-500" />
                     <div>
                       <p className="text-sm font-semibold">{formatDay(`${day.date}T12:00:00+08:00`)}</p>
-                      <p className="text-xs text-muted-foreground">{day.condition}</p>
+                      <p className="text-xs text-muted-foreground">{conditionLabel(day.condition)}</p>
                     </div>
                   </div>
                   <div className="text-right">
@@ -231,9 +231,9 @@ export async function PointWeather({ latitude, longitude, label, context, note }
       <div className="flex items-start gap-2 rounded-lg border border-border bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
         <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
         <p>
-          Current conditions and forecasts are model-interpolated data from Open-Meteo at the selected coordinate.
-          They are not station measurements, not barangay-level readings, and not official PAGASA observations. Heat
-          index is calculated by SILONG PH. Source:{" "}
+          Model-interpolated data mula sa Open-Meteo ang kasalukuyang kondisyon at forecast sa napiling coordinate.
+          Hindi ito station measurement, barangay-level reading, o official PAGASA observation. Kinukuwenta ng SILONG PH
+          ang heat index. Source:{" "}
           <a href={weather.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold underline">
             Open-Meteo
           </a>

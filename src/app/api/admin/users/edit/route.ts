@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       select: { id: true, email: true, name: true, role: true },
     });
     return Response.json({ ok: true });
-  } catch (e: any) {
-    return Response.json({ error: e?.message ?? "Invalid request." }, { status: 400 });
+  } catch (e) {
+    return Response.json({ error: e instanceof Error ? e.message : "Invalid request." }, { status: 400 });
   }
 }

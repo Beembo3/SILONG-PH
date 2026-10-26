@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     }
     await prisma.user.update({ where: { id: data.id }, data: { isActive: false, updatedAt: new Date() } });
     return Response.json({ ok: true });
-  } catch (e: any) {
-    return Response.json({ error: e?.message ?? "Invalid request." }, { status: 400 });
+  } catch (e) {
+    return Response.json({ error: e instanceof Error ? e.message : "Invalid request." }, { status: 400 });
   }
 }

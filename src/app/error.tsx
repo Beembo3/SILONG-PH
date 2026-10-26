@@ -18,17 +18,17 @@ export default function GlobalError({
 
   return (
     <div className="mx-auto max-w-xl px-4 py-20 text-center">
-      <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Something went wrong</p>
-      <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-navy">This page could not be loaded</h1>
+      <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">May problema</p>
+      <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-navy">Hindi ma-load ang page na ito</h1>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-        The problem has been logged. No fabricated data has been shown in place of the failed content.
+        Naitala na ang problema. Walang gawa-gawang data na ipinalit sa content na hindi nag-load.
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-2">
         <Button onClick={reset}>
-          <RefreshCw className="h-4 w-4" aria-hidden="true" /> Try again
+          <RefreshCw className="h-4 w-4" aria-hidden="true" /> Subukan muli
         </Button>
         <Button asChild variant="outline">
-          <Link href="/">Return to dashboard</Link>
+          <Link href="/">Bumalik sa home</Link>
         </Button>
       </div>
     </div>

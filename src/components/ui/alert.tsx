@@ -23,7 +23,7 @@ export function Alert({ className, variant = "info", title, children, ...props }
       {...props}
     >
       <Icon aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0" />
-      <div className="space-y-1">
+      <div className="min-w-0 space-y-1 break-words">
         {title ? <p className="font-semibold">{title}</p> : null}
         <div className="leading-relaxed">{children}</div>
       </div>

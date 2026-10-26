@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDay, formatPSTTime } from "@/lib/format";
+import { conditionLabel, formatDay, formatPSTTime } from "@/lib/format";
 import type { HourlyWeather } from "@/lib/weather/types";
 
 export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
@@ -8,8 +8,8 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
   if (points.length < 2) {
     return (
       <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
-        A 24-hour forecast chart is not available because the provider did not return enough
-        complete temperature and humidity values.
+        Walang 24-hour forecast chart dahil kulang ang kumpletong temperature at humidity value na naibalik ng
+        provider.
       </div>
     );
   }
@@ -42,13 +42,13 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
       <div className="mb-3 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-orange-500" aria-hidden="true" />
-          Estimated heat index
+          Tinatayang heat index
         </span>
         <span className="inline-flex items-center gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-sky-600" aria-hidden="true" />
-          Air temperature
+          Temperatura ng hangin
         </span>
-        <span className="text-muted-foreground">°C · next 24 hours · Asia/Manila</span>
+        <span className="text-muted-foreground">°C · susunod na 24 oras · Asia/Manila</span>
       </div>
       <svg
         viewBox={`0 0 ${width} ${height}`}
@@ -56,10 +56,10 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
         role="img"
         aria-labelledby="forecast-chart-title forecast-chart-desc"
       >
-        <title id="forecast-chart-title">24-hour temperature and estimated heat-index forecast</title>
+        <title id="forecast-chart-title">24-oras na temperature at estimated heat-index forecast</title>
         <desc id="forecast-chart-desc">
-          Line chart from {formatPSTTime(points[0].time)} to{" "}
-          {formatPSTTime(points[points.length - 1].time)}. The estimated heat index peaks at{" "}
+          Line chart mula {formatPSTTime(points[0].time)} hanggang{" "}
+          {formatPSTTime(points[points.length - 1].time)}. Ang estimated heat index ay pumipick sa{" "}
           {Math.max(...points.map((p) => p.heatIndexC as number)).toFixed(1)} degrees Celsius.
         </desc>
         {yTicks.map((tick) => (
@@ -112,16 +112,18 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
       </svg>
 
       <details className="mt-3 rounded-lg border border-border bg-muted/50 p-3 text-sm">
-        <summary className="cursor-pointer font-semibold text-navy">View hourly data as a table</summary>
+        <summary className="flex min-h-11 cursor-pointer items-center font-semibold text-navy">
+          Tingnan ang oras-oras na data bilang table
+        </summary>
         <div className="mt-3 max-h-64 overflow-auto">
           <table className="w-full min-w-[420px] text-left text-xs">
             <thead className="sticky top-0 bg-white">
               <tr className="border-b border-border text-muted-foreground">
-                <th scope="col" className="py-2 pr-3 font-semibold">Time</th>
+                <th scope="col" className="py-2 pr-3 font-semibold">Oras</th>
                 <th scope="col" className="py-2 pr-3 font-semibold">Temp (°C)</th>
-                <th scope="col" className="py-2 pr-3 font-semibold">Humidity</th>
+                <th scope="col" className="py-2 pr-3 font-semibold">Halumigmig</th>
                 <th scope="col" className="py-2 pr-3 font-semibold">Heat index (°C)</th>
-                <th scope="col" className="py-2 font-semibold">Condition</th>
+                <th scope="col" className="py-2 font-semibold">Kondisyon</th>
               </tr>
             </thead>
             <tbody>
@@ -131,7 +133,7 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
                   <td className="py-2 pr-3">{point.temperatureC?.toFixed(1)}</td>
                   <td className="py-2 pr-3">{point.relativeHumidity ?? "—"}%</td>
                   <td className="py-2 pr-3 font-semibold">{point.heatIndexC?.toFixed(1)}</td>
-                  <td className="py-2">{point.condition}</td>
+                  <td className="py-2">{conditionLabel(point.condition)}</td>
                 </tr>
               ))}
             </tbody>

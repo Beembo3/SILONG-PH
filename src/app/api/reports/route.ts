@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   const limit = await rateLimitAsync(clientKey(request, "report"), 5, 60 * 60 * 1000);
   if (!limit.allowed) {
     return NextResponse.json(
-      { error: "Too many reports from this connection. Please try again later." },
+      { error: "Masyadong maraming report mula sa koneksyong ito. Subukan muli mamaya." },
       { status: 429, headers: { "retry-after": String(limit.retryAfterSeconds) } },
     );
   }
@@ -23,12 +23,12 @@ export async function POST(request: Request) {
   try {
     body = await request.json();
   } catch {
-    return NextResponse.json({ error: "Request body must be valid JSON." }, { status: 400 });
+    return NextResponse.json({ error: "Dapat valid JSON ang request body." }, { status: 400 });
   }
   const parsed = reportSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Please check the report details.", issues: parsed.error.flatten().fieldErrors },
+      { error: "I-check ang detalye ng report.", issues: parsed.error.flatten().fieldErrors },
       { status: 422 },
     );
   }
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
       id: report.id,
       submittedAt: report.submittedAt,
       message:
-        "Thank you. Your report is in the moderation queue. It will not be published as verified until an authorised reviewer checks it.",
+        "Salamat. Nasa moderation queue ang report mo. Hindi ito napi-publish bilang verified hanggang suriin ng awtorisadong reviewer.",
     },
     { status: 201 },
   );

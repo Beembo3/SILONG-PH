@@ -1,4 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from "@prisma/client";
 const p = new PrismaClient();
 (async () => {
   const admin = await p.user.findFirst({ where: { email: "admin@silong.local" } });

@@ -83,8 +83,8 @@ export default async function AdminReportsPage({
             aria-current={status === tab.value ? "page" : undefined}
             className={
               status === tab.value
-                ? "rounded-full border border-orange-300 bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-900"
-                : "rounded-full border border-border bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-orange-300"
+                ? "inline-flex min-h-11 items-center rounded-full border border-orange-300 bg-orange-50 px-3 py-2 text-xs font-bold text-orange-900"
+                : "inline-flex min-h-11 items-center rounded-full border border-border bg-white px-3 py-2 text-xs font-semibold text-slate-600 hover:border-orange-300"
             }
           >
             {tab.label} ({tab.count})
@@ -148,7 +148,7 @@ export default async function AdminReportsPage({
                     </div>
                   </div>
 
-                  <p className="mt-3 whitespace-pre-line rounded-lg bg-muted/50 p-3 text-sm leading-relaxed text-slate-700">
+                  <p className="mt-3 whitespace-pre-line break-words rounded-lg bg-muted/50 p-3 text-sm leading-relaxed text-slate-700">
                     {report.description}
                   </p>
 

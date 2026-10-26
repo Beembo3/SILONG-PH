@@ -5,17 +5,18 @@ import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { LocationPicker } from "@/components/location/location-picker";
+import { InstallAppButton } from "@/components/pwa/install-app";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
 export const NAV_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/map", label: "Heat Map" },
-  { href: "/cool-places", label: "Cool Places" },
-  { href: "/preparedness", label: "Preparedness" },
-  { href: "/alerts", label: "Alerts" },
-  { href: "/about", label: "About" },
+  { href: "/map", label: "Mapa ng Init" },
+  { href: "/cool-places", label: "Preskong Lugar" },
+  { href: "/preparedness", label: "Paghahanda" },
+  { href: "/alerts", label: "Mga Babala" },
+  { href: "/about", label: "Tungkol" },
 ];
 
 function isActive(pathname: string, href: string): boolean {
@@ -28,9 +29,9 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/90">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
-        <Brand />
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6 lg:px-8">
+        <Brand hideTaglineOnMobile />
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Pangunahing navigation">
           {NAV_ITEMS.map((item) => (
             <Link
               key={item.href}
@@ -53,7 +54,7 @@ export function SiteHeader() {
           </div>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open menu">
+              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Buksan ang menu">
                 <Menu className="h-5 w-5" />
               </Button>
             </DialogTrigger>
@@ -61,7 +62,7 @@ export function SiteHeader() {
               <DialogTitle>Menu</DialogTitle>
               <div className="mt-4 space-y-3">
                 <LocationPicker />
-                <nav className="space-y-1" aria-label="Mobile navigation">
+                <nav className="space-y-1" aria-label="Navigation sa mobile">
                   {NAV_ITEMS.map((item) => (
                     <Link
                       key={item.href}
@@ -78,12 +79,15 @@ export function SiteHeader() {
                     </Link>
                   ))}
                 </nav>
+                <div className="border-t border-border pt-3">
+                  <InstallAppButton variant="outline" className="w-full justify-start" />
+                </div>
               </div>
             </DialogContent>
           </Dialog>
         </div>
       </div>
-      <div className="border-t border-border px-4 py-2 sm:hidden">
+      <div className="border-t border-border px-4 py-1.5 sm:hidden">
         <LocationPicker />
       </div>
     </header>

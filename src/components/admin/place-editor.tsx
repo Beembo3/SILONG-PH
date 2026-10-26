@@ -345,7 +345,7 @@ export function PlaceEditor({ initial }: { initial: PlaceEditorInitial }) {
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
           {isSubmitting ? (
             "Saving…"
           ) : (
@@ -355,11 +355,11 @@ export function PlaceEditor({ initial }: { initial: PlaceEditorInitial }) {
           )}
         </Button>
         {isEdit ? (
-          <Button type="button" variant="outline" onClick={archive} disabled={archiving}>
+          <Button type="button" variant="outline" onClick={archive} disabled={archiving} className="w-full sm:w-auto">
             <Archive className="h-4 w-4" aria-hidden="true" /> {archiving ? "Archiving…" : "Archive record"}
           </Button>
         ) : null}
-        <Button type="button" variant="ghost" onClick={() => router.back()}>
+        <Button type="button" variant="ghost" onClick={() => router.back()} className="w-full sm:w-auto">
           Cancel
         </Button>
       </div>

@@ -45,7 +45,7 @@ export async function GET(request: Request) {
           };
         }),
         note:
-          "Each province is represented by Open-Meteo model grid data at its capital or a representative point. This is not a province-wide measurement and must not be read as barangay-level data.",
+          "Kinakatawan ng Open-Meteo model grid data sa capital o representative point ang bawat probinsya. Hindi ito province-wide measurement at hindi dapat basahin bilang barangay-level data.",
       },
       { headers: { "cache-control": "public, max-age=300, s-maxage=600" } },
     );
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
         error:
           error instanceof WeatherUnavailableError
             ? error.message
-            : "Regional weather data is temporarily unavailable.",
+            : "Hindi available ang regional weather data sa ngayon.",
         code: "WEATHER_UNAVAILABLE",
         retryable: true,
         checkedAt: new Date().toISOString(),

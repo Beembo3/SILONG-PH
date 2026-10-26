@@ -35,20 +35,13 @@ function sharedKey(kind: "fresh" | "stale", key: string): string {
   return `silong:weather:${kind}:${key}`;
 }
 
-function staleWeather(
-  snapshot: WeatherSnapshot,
-  error: unknown,
-  ageMs: number,
-): WeatherSnapshot {
+function staleWeather(snapshot: WeatherSnapshot, ageMs: number): WeatherSnapshot {
   return {
     ...snapshot,
     stale: true,
-    staleReason:
-      error instanceof Error
-        ? `${error.message} Showing the last successful reading from ${Math.round(
-            ageMs / 60000,
-          )} minutes ago.`
-        : "Weather provider unavailable. Showing the last successful reading.",
+    staleReason: `Hindi maabot ang weather provider. Ipinapakita ang huling successful reading mula ${Math.round(
+      ageMs / 60000,
+    )} minuto ang nakalipas.`,
     cacheAgeSeconds: Math.round(ageMs / 1000),
   };
 }
@@ -307,14 +300,14 @@ export async function getWeather(lat: number, lon: number): Promise<WeatherSnaps
   } catch (error) {
     const stale = weatherCache.getStale(key, MAX_STALE_MS);
     if (stale) {
-      return staleWeather(stale.value, error, stale.ageMs);
+      return staleWeather(stale.value, stale.ageMs);
     }
     const sharedStale = await redisGetJson<WeatherSnapshot>(sharedKey("stale", key));
     if (sharedStale) {
       const ageMs = Date.now() - Date.parse(sharedStale.fetchedAt);
       if (Number.isFinite(ageMs) && ageMs >= 0 && ageMs <= MAX_STALE_MS) {
         weatherCache.set(key, sharedStale);
-        return staleWeather(sharedStale, error, ageMs);
+        return staleWeather(sharedStale, ageMs);
       }
     }
     throw error;

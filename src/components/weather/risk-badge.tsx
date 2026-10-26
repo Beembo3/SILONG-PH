@@ -29,7 +29,7 @@ export function RiskBadge({
       ) : category.tone === "orange" ? (
         <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
       ) : null}
-      {category.label}
+      <span title={`PAGASA category: ${category.label}`}>{category.taglishLabel}</span>
     </span>
   );
 }

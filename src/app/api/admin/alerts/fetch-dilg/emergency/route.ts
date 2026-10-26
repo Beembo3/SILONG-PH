@@ -29,16 +29,16 @@ export async function GET() {
     return Response.json({ ok: false, error: result.error, fetchedAt: result.fetchedAt, source: result.source }, { status: 500 });
   }
   const all = Array.isArray(result.items) ? result.items : [];
-  const emergency = all.filter((item: any) => isEmergencyRelated(item.title, item.category));
-  const others = all.filter((item: any) => !isEmergencyRelated(item.title, item.category));
+  const emergency = all.filter((item) => isEmergencyRelated(item.title, item.category));
+  const others = all.filter((item) => !isEmergencyRelated(item.title, item.category));
   return Response.json({
     ok: true,
     source: result.source,
     fetchedAt: result.fetchedAt,
     totalFromFeed: all.length,
     emergencyRelated: emergency.length,
-    emergencyItems: emergency.slice(0, 5).map((i: any) => ({ title: i.title, link: i.link, pubDate: i.pubDate, category: i.category })),
-    otherItems: others.slice(0, 3).map((i: any) => ({ title: i.title, link: i.link, pubDate: i.pubDate, category: i.category })),
+    emergencyItems: emergency.slice(0, 5).map((i) => ({ title: i.title, link: i.link, pubDate: i.pubDate, category: i.category })),
+    otherItems: others.slice(0, 3).map((i) => ({ title: i.title, link: i.link, pubDate: i.pubDate, category: i.category })),
     note: "Only items matching emergency/heat/weather keywords are shown as emergency-related. Others are regional news/events (not emergency bulletins). Manual admin review required before publishing any alert.",
   });
 }

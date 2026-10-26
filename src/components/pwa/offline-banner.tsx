@@ -21,7 +21,7 @@ export function OfflineBanner() {
   return (
     <div className="border-b border-amber-300 bg-amber-50 px-4 py-2 text-center text-sm text-amber-950" role="status">
       <WifiOff className="mr-1.5 inline h-4 w-4" aria-hidden="true" />
-      You are offline. Showing any cached pages and clearly labelled stale weather data. Check your connection and retry.
+      Wala kang internet. Ipinapakita ang mga naka-cache na page at malinaw na may label na lumang weather data. I-check ang koneksyon at subukan muli.
     </div>
   );
 }

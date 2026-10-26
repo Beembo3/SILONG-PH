@@ -27,7 +27,7 @@ interface RegionResponse {
   note: string;
 }
 
-export function RegionOverview() {
+export function RegionOverview({ compact = false }: { compact?: boolean }) {
   const [data, setData] = useState<RegionResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,11 +40,11 @@ export function RegionOverview() {
         cache: "no-store",
       });
       const body = await response.json();
-      if (!response.ok) throw new Error(body.error ?? "Regional weather is unavailable.");
+      if (!response.ok) throw new Error(body.error ?? "Hindi available ang regional weather.");
       setData(body as RegionResponse);
     } catch (err) {
       if (signal?.aborted) return;
-      setError(err instanceof Error ? err.message : "Regional weather is unavailable.");
+      setError(err instanceof Error ? err.message : "Hindi available ang regional weather.");
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
@@ -65,37 +65,131 @@ export function RegionOverview() {
     setAttempt((value) => value + 1);
   }, []);
 
+  const withWeather = (data?.provinces ?? [])
+    .filter((province): province is RegionProvince & { weather: WeatherSnapshot } => Boolean(province.weather))
+    .sort(
+      (a, b) =>
+        (b.weather.current.heatIndexC ?? Number.NEGATIVE_INFINITY) -
+        (a.weather.current.heatIndexC ?? Number.NEGATIVE_INFINITY),
+    );
+  const hottest = withWeather[0];
+  const elevatedCount = withWeather.filter((province) =>
+    ["extreme_caution", "danger", "extreme_danger"].includes(province.weather.current.heatIndexCategory.level),
+  ).length;
+
+  if (compact) {
+    return (
+      <section aria-labelledby="region-overview-heading">
+        <Card>
+          <CardContent className="p-4 sm:p-5">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Sa buong rehiyon</p>
+                <h2 id="region-overview-heading" className="mt-1 text-xl font-extrabold tracking-tight text-navy">
+                  Central Luzon ngayon
+                </h2>
+              </div>
+              <Button variant="outline" size="sm" onClick={retry} disabled={loading}>
+                <RefreshCw className="h-4 w-4" aria-hidden="true" /> I-refresh
+              </Button>
+            </div>
+
+            {error ? (
+              <Alert variant="warning" className="mt-4" title="Hindi available ang regional overview">
+                {error} Walang gawa-gawang province reading na ipinalit.{" "}
+                <button className="font-semibold underline" onClick={retry}>
+                  Subukan muli
+                </button>
+              </Alert>
+            ) : null}
+
+            {loading && !data ? (
+              <div className="mt-4 space-y-2" aria-busy="true" aria-label="Kinukuha ang regional overview">
+                <Skeleton className="h-5 w-56" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            ) : null}
+
+            {data && hottest ? (
+              <>
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-muted-foreground">Pinakamainit ngayon:</span>
+                  <Link
+                    href={`/provinces/${hottest.slug}`}
+                    className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border bg-surface px-3 text-sm font-bold text-navy hover:border-orange-300"
+                  >
+                    {hottest.name}
+                    <span className="numeric text-orange-800">
+                      {formatNumber(hottest.weather.current.heatIndexC, 1)} °C
+                    </span>
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
+                  <RiskBadge category={hottest.weather.current.heatIndexCategory} />
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {elevatedCount > 0
+                    ? `${elevatedCount} probinsya ang nasa extreme caution o mas mataas.`
+                    : "Wala pang probinsya sa extreme caution o mas mataas na category."}{" "}
+                  Model point sa capital o representative point ang bawat reading, hindi province-wide measurement.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button asChild size="sm" variant="outline">
+                    <Link href="/map">Tingnan ang mapa ng init</Link>
+                  </Button>
+                  <span className="self-center text-xs text-muted-foreground">
+                    Na-update {formatPST(data.fetchedAt)}
+                    {data.stale ? " · luma na ang data" : ""}
+                  </span>
+                </div>
+              </>
+            ) : null}
+
+            {data && !hottest ? (
+              <p className="mt-4 text-sm text-muted-foreground">
+                Walang kumpletong regional weather data sa ngayon. Subukan ang mapa o ang page ng probinsya.
+              </p>
+            ) : null}
+          </CardContent>
+        </Card>
+      </section>
+    );
+  }
+
   return (
     <section aria-labelledby="region-overview-heading">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Region III overview</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Overview ng Region III</p>
           <h2 id="region-overview-heading" className="mt-1 text-2xl font-extrabold tracking-tight text-navy">
-            Heat across Central Luzon
+            Init sa buong Central Luzon
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Model conditions at each province&apos;s capital or representative point. These are not province-wide
-            measurements and must not be read as barangay-level readings.
+            Model conditions sa capital o representative point ng bawat probinsya. Hindi ito province-wide
+            measurement at hindi dapat basahin bilang barangay-level reading.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={retry} disabled={loading}>
-          <RefreshCw className="h-4 w-4" aria-hidden="true" /> Refresh
+          <RefreshCw className="h-4 w-4" aria-hidden="true" /> I-refresh
         </Button>
       </div>
 
       {error ? (
-        <Alert variant="warning" className="mt-4" title="Regional overview unavailable">
-          {error} No synthetic province readings have been substituted.{" "}
+        <Alert variant="warning" className="mt-4" title="Hindi available ang regional overview">
+          {error} Walang gawa-gawang province reading na ipinalit.{" "}
           <button className="font-semibold underline" onClick={retry}>
-            Retry
+            Subukan muli
           </button>
         </Alert>
       ) : null}
 
       {loading && !data ? (
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <Skeleton key={i} className="h-40" />
+        <div
+          className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-2 xl:grid-cols-4"
+          aria-busy="true"
+          aria-label="Kinukuha ang regional overview"
+        >
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Skeleton key={i} className="h-32 sm:h-40" />
           ))}
         </div>
       ) : null}
@@ -144,10 +238,10 @@ export function RegionOverview() {
                           </div>
                         </>
                       ) : (
-                        <p className="mt-4 text-sm text-muted-foreground">Weather unavailable for this point.</p>
+                        <p className="mt-4 text-sm text-muted-foreground">Walang weather para sa point na ito.</p>
                       )}
                       <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary">
-                        Province details <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        Detalye ng probinsya <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                       </span>
                     </CardContent>
                   </Card>
@@ -156,8 +250,8 @@ export function RegionOverview() {
             })}
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
-            {data.stale ? "Regional data is stale. " : ""}
-            Retrieved {formatPST(data.fetchedAt)}. {data.note}
+            {data.stale ? "Luma na ang regional data. " : ""}
+            Nakuha {formatPST(data.fetchedAt)}. {data.note}
           </p>
         </>
       ) : null}

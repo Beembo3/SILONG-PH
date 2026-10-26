@@ -7,10 +7,10 @@ import { OfflineBanner } from "@/components/pwa/offline-banner";
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <LocationProvider>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-[100dvh] flex-col">
         <OfflineBanner />
         <SiteHeader />
-        <main id="main-content" className="flex-1 pb-20 lg:pb-0">
+        <main id="main-content" className="flex-1">
           {children}
         </main>
         <SiteFooter />

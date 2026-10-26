@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en-PH">
+<html lang="fil-PH">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0b1426" />
-    <title>Offline · SILONG PH</title>
+    <title>Walang koneksyon · SILONG PH</title>
     <style>
       :root {
         color-scheme: light;
@@ -19,15 +19,18 @@
       body {
         margin: 0;
         min-height: 100vh;
+        min-height: 100dvh;
         display: grid;
         place-items: center;
-        padding: 1.5rem;
+        padding: calc(1.5rem + env(safe-area-inset-top)) calc(1.5rem + env(safe-area-inset-right))
+          calc(1.5rem + env(safe-area-inset-bottom)) calc(1.5rem + env(safe-area-inset-left));
         background:
           radial-gradient(circle at 80% 0%, rgba(255, 122, 26, 0.14), transparent 32rem),
           var(--surface);
         color: var(--text);
         font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
         line-height: 1.6;
+        overflow-wrap: anywhere;
       }
       main {
         width: 100%;
@@ -37,6 +40,12 @@
         background: #fff;
         padding: 2rem;
         box-shadow: 0 12px 40px rgba(11, 20, 38, 0.08);
+      }
+      @media (max-width: 480px) {
+        main {
+          padding: 1.25rem;
+          border-radius: 0.85rem;
+        }
       }
       .badge {
         display: inline-flex;
@@ -51,12 +60,15 @@
         letter-spacing: 0.04em;
         text-transform: uppercase;
       }
-      h1 { margin: 0.9rem 0 0.4rem; font-size: 1.8rem; line-height: 1.2; color: var(--navy); }
+      h1 { margin: 0.9rem 0 0.4rem; font-size: clamp(1.5rem, 7vw, 1.8rem); line-height: 1.2; color: var(--navy); }
       p { margin: 0.6rem 0; color: var(--muted); }
       strong { color: var(--text); }
       .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
       a.button {
-        display: inline-block;
+        display: inline-flex;
+        min-height: 2.75rem;
+        align-items: center;
+        justify-content: center;
         border-radius: 0.65rem;
         padding: 0.65rem 1rem;
         font-size: 0.9rem;
@@ -90,27 +102,29 @@
   </head>
   <body>
     <main>
-      <span class="badge">Offline</span>
-      <h1>You are offline</h1>
+      <span class="badge">Walang koneksyon</span>
+      <h1>Wala kang internet sa ngayon</h1>
       <p>
-        SILONG PH cannot reach the weather provider or load a new page right now. Cached pages may still be available,
-        but any weather shown from cache is <strong>stale</strong> and must not be treated as current conditions.
+        Hindi maabot ng SILONG PH ang weather provider o makapag-load ng bagong page. May mga naka-cache na page pa
+        ring makikita, pero <strong>luma na</strong> ang anumang weather na galing sa cache. Huwag itong ituring na
+        kasalukuyang lagay ng panahon.
       </p>
       <p>
-        No synthetic reading has been substituted. Reconnect to check the latest model data and official advisories.
+        Walang gawa-gawang reading na ipinalit. Mag-reconnect para makita ang pinakabagong model data at opisyal na
+        abiso.
       </p>
       <div class="actions">
-        <a class="button" href="/">Try the dashboard</a>
-        <a class="button secondary" href="/preparedness">Preparedness guidance</a>
-        <a class="button secondary" href="/alerts">Alerts</a>
+        <a class="button" href="/">Subukang buksan ang home</a>
+        <a class="button secondary" href="/preparedness">Mga dapat gawin</a>
+        <a class="button secondary" href="/alerts">Mga babala</a>
       </div>
       <div class="emergency">
-        For suspected heat stroke or another life-threatening emergency, call <strong>911</strong> or your local
-        emergency service immediately. Do not wait for this application to come back online.
+        Kung pinaghihinalaang heat stroke o may iba pang emergency na delikado sa buhay, tumawag agad sa
+        <strong>911</strong> o sa lokal na emergency service. Huwag hintayin bumalik ang koneksyon ng app.
       </div>
       <p class="note">
-        Official sources: DOST-PAGASA (pagasa.dost.gov.ph), DOH, NDRRMC, and your local government unit. SILONG PH is
-        not an official emergency or advisory channel.
+        Opisyal na sources: DOST-PAGASA (pagasa.dost.gov.ph), DOH, NDRRMC, at ang lokal na pamahalaan. Hindi opisyal na
+        emergency o advisory channel ang SILONG PH.
       </p>
     </main>
   </body>

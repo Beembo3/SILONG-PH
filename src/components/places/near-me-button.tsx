@@ -13,11 +13,11 @@ export function NearMeButton() {
 
   function locate() {
     if (!navigator.geolocation) {
-      setStatus("Location is not supported by this browser. Use the province and locality filters instead.");
+      setStatus("Hindi sinusuportahan ng browser mo ang location. Gamitin na lang ang probinsya at lugar na filter.");
       return;
     }
     setLoading(true);
-    setStatus("Requesting your location…");
+    setStatus("Hinihiling ang lokasyon mo…");
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const next = new URLSearchParams(params.toString());
@@ -26,13 +26,13 @@ export function NearMeButton() {
         next.set("sort", "nearest");
         router.push(`/cool-places?${next.toString()}`);
         setLoading(false);
-        setStatus("Sorted by distance from your current position.");
+        setStatus("Naka-sort ayon sa layo mula sa lokasyon mo.");
       },
       (error) => {
         setStatus(
           error.code === error.PERMISSION_DENIED
-            ? "Location permission denied. Use the manual filters instead."
-            : "Could not determine your location. Use the manual filters instead.",
+            ? "Hindi pinayagan ang location access. Gamitin na lang ang manual na filter."
+            : "Hindi namin matukoy ang lokasyon mo. Gamitin na lang ang manual na filter.",
         );
         setLoading(false);
       },
@@ -42,9 +42,9 @@ export function NearMeButton() {
 
   return (
     <div>
-      <Button type="button" variant="outline" onClick={locate} disabled={loading}>
+      <Button type="button" variant="outline" onClick={locate} disabled={loading} className="w-full">
         <Crosshair className="h-4 w-4" aria-hidden="true" />
-        {loading ? "Locating…" : "Sort by distance from me"}
+        {loading ? "Hinahanap…" : "I-sort ayon sa layo mula sa akin"}
       </Button>
       {status ? (
         <p className="mt-1.5 max-w-sm text-xs text-muted-foreground" role="status">

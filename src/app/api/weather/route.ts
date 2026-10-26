@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   });
   if (!parsed.success) {
     return NextResponse.json(
-      { error: "Provide valid latitude and longitude coordinates." },
+      { error: "Magbigay ng valid na latitude at longitude." },
       { status: 400 },
     );
   }
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
     const message =
       error instanceof WeatherUnavailableError
         ? error.message
-        : "Weather data is temporarily unavailable.";
+        : "Hindi available ang weather data sa ngayon.";
     console.error("Weather API failure", error);
     return NextResponse.json(
       {

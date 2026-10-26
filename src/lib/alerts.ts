@@ -4,6 +4,18 @@ export type AlertStatus = (typeof ALERT_STATUSES)[number];
 export const ALERT_SEVERITIES = ["INFO", "WATCH", "WARNING", "DANGER", "EXTREME"] as const;
 export type AlertSeverity = (typeof ALERT_SEVERITIES)[number];
 
+export const ALERT_SEVERITY_LABELS: Record<string, string> = {
+  INFO: "Impormasyon",
+  WATCH: "Babantayan",
+  WARNING: "Babala",
+  DANGER: "Mapanganib",
+  EXTREME: "Sobrang mapanganib",
+};
+
+export function alertSeverityLabel(severity: string): string {
+  return ALERT_SEVERITY_LABELS[severity] ?? severity;
+}
+
 export interface AlertLike {
   status: string;
   expiresAt: Date | string | null;

@@ -39,11 +39,11 @@ export function HeatNotices() {
         cache: "no-store",
       });
       const body = await response.json();
-      if (!response.ok) throw new Error(body.error ?? "Regional weather is unavailable.");
+      if (!response.ok) throw new Error(body.error ?? "Hindi available ang regional weather.");
       setData(body as RegionResponse);
     } catch (err) {
       if (signal?.aborted) return;
-      setError(err instanceof Error ? err.message : "Regional weather is unavailable.");
+      setError(err instanceof Error ? err.message : "Hindi available ang regional weather.");
     } finally {
       if (!signal?.aborted) setLoading(false);
     }
@@ -75,23 +75,24 @@ export function HeatNotices() {
     <section aria-labelledby="heat-notices-heading">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Application-generated notices</p>
+          <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Heat notice ng app</p>
           <h2 id="heat-notices-heading" className="mt-1 text-2xl font-extrabold tracking-tight text-navy">
-            Current heat notices
+            Kasalukuyang heat notice
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            These notices are calculated by SILONG PH from estimated heat index at each province&apos;s model point.
-            They are <strong>not official advisories</strong> and do not replace PAGASA, DOH, NDRRMC, or LGU guidance.
+            Kinukuwenta ng SILONG PH ang mga notice na ito mula sa estimated heat index sa model point ng bawat
+            probinsya. <strong>Hindi ito official advisory</strong> at hindi kapalit ng payo ng PAGASA, DOH, NDRRMC, o
+            LGU.
           </p>
         </div>
         <Button variant="outline" size="sm" onClick={retry} disabled={loading}>
-          <RefreshCw className="h-4 w-4" aria-hidden="true" /> Refresh
+          <RefreshCw className="h-4 w-4" aria-hidden="true" /> I-refresh
         </Button>
       </div>
 
       {error ? (
-        <Alert variant="warning" className="mt-4" title="Heat notices unavailable">
-          {error} No synthetic notice has been substituted. Check official sources below.
+        <Alert variant="warning" className="mt-4" title="Hindi available ang heat notices">
+          {error} Walang gawa-gawang notice na ipinalit. Tingnan ang official sources sa ibaba.
         </Alert>
       ) : null}
 
@@ -110,11 +111,11 @@ export function HeatNotices() {
                 <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-slate-400" aria-hidden="true" />
                 <div>
                   <p className="text-sm font-bold text-navy">
-                    No province model point is currently at Extreme Caution or above
+                    Walang province model point na nasa Extreme Caution o mas mataas sa ngayon
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    This is based on the latest retrieved model data, not a guarantee that conditions are safe
-                    everywhere. Local heat can be higher, especially in dense urban areas and direct sun.
+                    Base ito sa pinakabagong model data, hindi garantiya na ligtas ang lahat ng lugar. Puwedeng mas
+                    mainit sa aktwal na lokasyon, lalo na sa matataong urban area at direktang araw.
                   </p>
                 </div>
               </CardContent>
@@ -130,7 +131,7 @@ export function HeatNotices() {
                       <div className="flex items-start justify-between gap-2">
                         <div>
                           <p className="text-[10px] font-bold uppercase tracking-wider text-orange-700">
-                            Application heat notice · not official
+                            Heat notice ng app · hindi official
                           </p>
                           <h3 className="mt-1 text-base font-bold text-navy">{province.name}</h3>
                           <p className="text-xs text-muted-foreground">Model point: {province.capitalName}</p>
@@ -138,16 +139,16 @@ export function HeatNotices() {
                         <RiskBadge category={current.heatIndexCategory} />
                       </div>
                       <p className="mt-3 text-sm text-slate-700">
-                        Estimated heat index{" "}
-                        <strong>{current.heatIndexC != null ? `${current.heatIndexC.toFixed(1)} °C` : "unavailable"}</strong>
-                        . {current.heatIndexCategory.description}
+                        Tinatayang heat index{" "}
+                        <strong>{current.heatIndexC != null ? `${current.heatIndexC.toFixed(1)} °C` : "hindi available"}</strong>
+                        . {current.heatIndexCategory.taglishDescription}
                       </p>
                       <div className="mt-3 flex flex-wrap items-center gap-3 text-xs font-semibold">
-                        <Link href={`/provinces/${province.slug}`} className="text-primary hover:underline">
-                          Province details
+                        <Link href={`/provinces/${province.slug}`} className="inline-flex min-h-11 items-center text-primary hover:underline">
+                          Detalye ng probinsya
                         </Link>
-                        <Link href="/preparedness" className="text-slate-600 hover:underline">
-                          What to do
+                        <Link href="/preparedness" className="inline-flex min-h-11 items-center text-slate-600 hover:underline">
+                          Ano ang dapat gawin
                         </Link>
                       </div>
                     </CardContent>
@@ -158,7 +159,7 @@ export function HeatNotices() {
           )}
           <p className="mt-3 flex items-start gap-1.5 text-xs text-muted-foreground">
             <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-            Retrieved {formatPST(data.fetchedAt)}. {data.stale ? "The regional snapshot is stale. " : ""}
+            Nakuha {formatPST(data.fetchedAt)}. {data.stale ? "Luma na ang regional snapshot. " : ""}
             {data.note}
           </p>
         </>

@@ -39,6 +39,11 @@ export interface HeatRiskCategory {
   description: string;
   guidance: string[];
   taglish: string;
+  /** Plain-language labels used in the public Taglish interface. */
+  taglishLabel: string;
+  taglishRangeLabel: string;
+  taglishDescription: string;
+  taglishGuidance: string[];
   tone: "neutral" | "yellow" | "orange" | "red" | "critical";
 }
 
@@ -62,6 +67,15 @@ export const HEAT_RISK_CATEGORIES: Record<HeatRiskLevel, HeatRiskCategory> = {
       "Watch for changes in official weather advisories.",
     ],
     taglish: "Hindi pa nasa hazard band ng PAGASA, pero uminom pa rin ng tubig at magpahinga sa lilim.",
+    taglishLabel: "Mababa pa sa alert level",
+    taglishRangeLabel: "Mababa sa 27 °C ang heat index",
+    taglishDescription:
+      "Mababa pa sa pinakamababang hazard band ng PAGASA ang estimated heat index. Pero puwedeng makaramdam pa rin ng init ang mga sensitibo, lalo na sa direktang araw o mabigat na gawain.",
+    taglishGuidance: [
+      "Uminom ng tubig nang regular at magpahinga sa lilim.",
+      "Kamustahin ang matatanda, bata, at mga may sakit.",
+      "Abangan ang opisyal na babala sa panahon.",
+    ],
     tone: "neutral",
   },
   caution: {
@@ -77,6 +91,15 @@ export const HEAT_RISK_CATEGORIES: Record<HeatRiskLevel, HeatRiskCategory> = {
       "Watch for weakness, dizziness, or excessive sweating.",
     ],
     taglish: "Posibleng makaramdam ng pagod. Magpahinga at uminom ng tubig nang madalas.",
+    taglishLabel: "Mag-ingat",
+    taglishRangeLabel: "27–32 °C ang heat index",
+    taglishDescription:
+      "Posibleng makaramdam ng pagod kapag matagal na nasa init o gumagawa ng mabigat na gawain. Payo ng PAGASA: mag-ingat.",
+    taglishGuidance: [
+      "Magpahinga nang regular at uminom ng tubig.",
+      "Bawasan ang matagal na pagbibilad sa araw, lalo na sa tanghali.",
+      "Abangan ang panghihina, pagkahilo, o sobrang pagpapawis.",
+    ],
     tone: "yellow",
   },
   extreme_caution: {
@@ -94,6 +117,16 @@ export const HEAT_RISK_CATEGORIES: Record<HeatRiskLevel, HeatRiskCategory> = {
     ],
     taglish:
       "Posible ang heat cramps at pagkahapo. Bawasan ang mabigat na gawain sa labas at humanap ng malamig na lugar.",
+    taglishLabel: "Sobrang mag-ingat",
+    taglishRangeLabel: "33–41 °C ang heat index",
+    taglishDescription:
+      "Posible ang heat cramps at pagkahapo. Kung ipagpapatuloy ang mabigat na gawain, puwedeng mauwi sa heat stroke.",
+    taglishGuidance: [
+      "Bawasan ang mabigat na gawain sa labas, lalo na mula late morning hanggang hapon.",
+      "Pumunta sa malamig o may lilim na lugar at uminom ng tubig nang regular.",
+      "Kamustahin ang mga matatanda, bata, at mga may sakit.",
+      "Sundin ang payo ng paaralan, trabaho, at LGU tungkol sa init.",
+    ],
     tone: "orange",
   },
   danger: {
@@ -112,6 +145,17 @@ export const HEAT_RISK_CATEGORIES: Record<HeatRiskLevel, HeatRiskCategory> = {
     ],
     taglish:
       "Mataas ang panganib. Iwasan ang mabigat na gawain sa labas. Kung may sintomas ng heat stroke, tumawag agad ng emergency help.",
+    taglishLabel: "Mapanganib",
+    taglishRangeLabel: "42–51 °C ang heat index",
+    taglishDescription:
+      "Malamang na magkaroon ng heat cramps at pagkahapo. Posible ang heat stroke kapag patuloy ang pagbibilad o mabigat na gawain.",
+    taglishGuidance: [
+      "Iwasan ang mabigat na gawain sa labas kung maaari.",
+      "Manatili sa malamig at may bentilasyong lugar; gamitin ang cooling place kung mayroon.",
+      "Uminom ng tubig nang regular maliban kung pinagbawalan ng doktor.",
+      "Huwag iwanan ang bata o alagang hayop sa nakaparadang sasakyan.",
+      "Alamin ang sintomas ng heat stroke at tumawag agad ng emergency help.",
+    ],
     tone: "red",
   },
   extreme_danger: {
@@ -129,6 +173,16 @@ export const HEAT_RISK_CATEGORIES: Record<HeatRiskLevel, HeatRiskCategory> = {
     ],
     taglish:
       "Emergency-level ang init. Manatili sa malamig na lugar. Kung may pagkahilo, pagkawala ng malay, o sobrang init ng balat, tumawag agad ng tulong.",
+    taglishLabel: "Sobrang mapanganib",
+    taglishRangeLabel: "52 °C pataas ang heat index",
+    taglishDescription:
+      "Emergency-level ang init. Kapag patuloy ang pagbibilad, malapit nang mangyari ang heat stroke.",
+    taglishGuidance: [
+      "Manatili sa loob ng malamig na lugar at iwasan ang lahat ng hindi kailangang gawain sa labas.",
+      "Kamustahin at tulungan ang mga matatanda, bata, at may sakit na makarating sa malamig na lugar.",
+      "Tumawag agad ng emergency help kung may pagkalito, pagkawala ng malay, tuyong mainit na balat, o pagbagsak.",
+      "Huwag hintayin lumala ang sintomas bago humingi ng tulong.",
+    ],
     tone: "critical",
   },
 };

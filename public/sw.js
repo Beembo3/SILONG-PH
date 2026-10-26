@@ -2,13 +2,19 @@
  *
  * Design rules:
  *  - Never cache API responses. Weather must stay explicitly fresh/stale.
+ *  - Never cache admin pages or authentication responses.
  *  - Network-first for navigations so pages are not silently outdated.
  *  - Cache-first for immutable static assets.
  *  - A standalone offline.html is precached with inline CSS so it works
  *    without any Next.js runtime chunks.
+ *
+ * Cache versioning:
+ *  - Bump VERSION whenever the caching strategy changes or a deployment
+ *    needs to invalidate previously cached pages. The activate handler
+ *    removes every older silong-* cache.
  */
 
-const VERSION = "silong-v2";
+const VERSION = "silong-v3";
 const STATIC_CACHE = `${VERSION}-static`;
 const PAGE_CACHE = `${VERSION}-pages`;
 const OFFLINE_URL = "/offline.html";
@@ -18,16 +24,30 @@ const PRECACHE = [
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
+  "/icons/icon-192-maskable.png",
+  "/icons/icon-512-maskable.png",
   "/icons/apple-touch-icon.png",
   "/favicon.ico",
 ];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(STATIC_CACHE)
-      .then((cache) => cache.addAll(PRECACHE))
-      .then(() => self.skipWaiting()),
+    (async () => {
+      const cache = await caches.open(STATIC_CACHE);
+      // A missing optional asset must not prevent the worker from installing.
+      await Promise.all(
+        PRECACHE.map(async (url) => {
+          try {
+            await cache.add(url);
+          } catch {
+            // The offline page and core icons are best-effort. The worker can
+            // still serve the network and the remaining cached assets.
+          }
+        }),
+      );
+      // Do not skipWaiting automatically. A waiting worker activates after the
+      // existing tabs close, so an open page never loses its old JS chunks.
+    })(),
   );
 });
 
@@ -56,12 +76,24 @@ function isStaticAsset(url) {
   );
 }
 
+function isPrivatePath(url) {
+  return (
+    url.pathname === "/admin" ||
+    url.pathname.startsWith("/admin/") ||
+    url.pathname.startsWith("/api/")
+  );
+}
+
 async function networkFirstPage(request) {
   const cache = await caches.open(PAGE_CACHE);
   try {
     const response = await fetch(request);
     if (response.ok && response.type === "basic") {
-      cache.put(request, response.clone());
+      try {
+        await cache.put(request, response.clone());
+      } catch {
+        // Storage quota or a transient cache failure must not block the page.
+      }
     }
     return response;
   } catch {
@@ -82,7 +114,13 @@ async function cacheFirst(request) {
   const cached = await cache.match(request);
   if (cached) return cached;
   const response = await fetch(request);
-  if (response.ok) cache.put(request, response.clone());
+  if (response.ok) {
+    try {
+      await cache.put(request, response.clone());
+    } catch {
+      // A full or unavailable cache should not turn a valid asset into an error.
+    }
+  }
   return response;
 }
 
@@ -92,9 +130,8 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/api/")) return;
   if (url.pathname === "/sw.js") return;
-  if (url.pathname.startsWith("/admin/")) return;
+  if (isPrivatePath(url)) return;
 
   if (request.mode === "navigate") {
     event.respondWith(networkFirstPage(request));
@@ -102,7 +139,9 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (isStaticAsset(url)) {
-    event.respondWith(cacheFirst(request).catch(() => caches.match(OFFLINE_URL)));
+    // A failed chunk request must not return the offline HTML document:
+    // that would be parsed as JavaScript and break the application.
+    event.respondWith(cacheFirst(request).catch(() => new Response("", { status: 504, statusText: "Offline" })));
     return;
   }
 
@@ -111,7 +150,10 @@ self.addEventListener("fetch", (event) => {
       .then((response) => {
         if (response.ok && response.type === "basic") {
           const copy = response.clone();
-          caches.open(PAGE_CACHE).then((cache) => cache.put(request, copy));
+          caches
+            .open(PAGE_CACHE)
+            .then((cache) => cache.put(request, copy))
+            .catch(() => undefined);
         }
         return response;
       })

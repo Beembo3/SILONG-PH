@@ -105,8 +105,8 @@ describe("getWeather stale-data handling", () => {
 
     const stale = await getWeather(15.03, 120.69);
     expect(stale.stale).toBe(true);
-    expect(stale.staleReason).toContain("Could not reach the weather provider.");
-    expect(stale.staleReason).toContain("11 minutes ago");
+    expect(stale.staleReason).toContain("Hindi maabot ang weather provider.");
+    expect(stale.staleReason).toContain("11 minuto ang nakalipas");
     expect(stale.cacheAgeSeconds).toBe(11 * 60);
     expect(stale.fetchedAt).toBe(fresh.fetchedAt);
     expect(stale.current.heatIndexC).toBe(fresh.current.heatIndexC);

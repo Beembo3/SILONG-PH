@@ -35,7 +35,7 @@ export default async function AdminAlertsPage() {
             {active.length} active · {history.length} in history. Every record must have a verifiable source.
           </p>
         </div>
-        <Link href="/alerts" className="text-xs font-semibold text-primary hover:underline">
+        <Link href="/alerts" className="inline-flex min-h-11 items-center text-xs font-semibold text-primary hover:underline">
           View public alerts page
         </Link>
       </div>
@@ -90,7 +90,7 @@ export default async function AdminAlertsPage() {
                       <p>{alert.expiresAt ? `Expires ${formatPST(alert.expiresAt)}` : "No expiry"}</p>
                     </div>
                   </div>
-                  <p className="mt-2 whitespace-pre-line text-sm text-slate-700">{alert.description}</p>
+                  <p className="mt-2 whitespace-pre-line break-words text-sm text-slate-700">{alert.description}</p>
                   <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
                     <a
                       href={alert.sourceUrl}
@@ -143,7 +143,7 @@ export default async function AdminAlertsPage() {
                           href={alert.sourceUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                          className="inline-flex min-h-11 items-center gap-1 text-xs font-semibold text-primary hover:underline"
                         >
                           Open <ExternalLink className="h-3 w-3" aria-hidden="true" />
                         </a>

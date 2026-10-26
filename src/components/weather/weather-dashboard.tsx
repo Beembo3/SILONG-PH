@@ -133,7 +133,7 @@ export function WeatherDashboard() {
                         <span className="ml-1 align-top text-2xl text-slate-300">°C</span>
                       </p>
                     </div>
-                    <div className="h-16 w-px bg-white/15" aria-hidden="true" />
+                    <div className="hidden h-16 w-px bg-white/15 sm:block" aria-hidden="true" />
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                         Estimated heat index
@@ -202,7 +202,7 @@ export function WeatherDashboard() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:space-y-8 sm:px-6 sm:py-8 lg:px-8">
         {weather?.stale ? (
           <Alert variant="warning" title="Showing stale weather data">
             {weather.staleReason ?? "The provider is unavailable."} Data was last retrieved{" "}
@@ -402,7 +402,7 @@ function Metric({
         {icon}
         {label}
       </p>
-      <p className="mt-1.5 text-sm font-semibold text-white">{value}</p>
+      <p className="mt-1.5 break-words text-xs font-semibold text-white sm:text-sm">{value}</p>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 {
-  "name": "SILONG PH — Heat Awareness for Central Luzon",
+  "name": "SILONG PH — Kaligtasan sa Init sa Central Luzon",
   "short_name": "SILONG PH",
-  "description": "Model weather, estimated heat index, cool-place discovery, and heat preparedness for Central Luzon, Philippines.",
+  "description": "Alamin ang estimated heat index, opisyal na babala, preskong lugar, at mga dapat gawin para manatiling ligtas sa init.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
@@ -10,9 +10,10 @@
   "orientation": "portrait-primary",
   "background_color": "#f7f9fc",
   "theme_color": "#0b1426",
-  "lang": "en-PH",
+  "lang": "fil-PH",
   "dir": "ltr",
   "categories": ["weather", "health", "utilities", "education"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/icons/icon-192.png",
@@ -27,6 +28,18 @@
       "purpose": "any"
     },
     {
+      "src": "/icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/icons/apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
@@ -35,30 +48,30 @@
   ],
   "shortcuts": [
     {
-      "name": "Heat dashboard",
-      "short_name": "Dashboard",
-      "description": "Current model conditions and estimated heat index",
+      "name": "Ngayon",
+      "short_name": "Ngayon",
+      "description": "Kasalukuyang lagay ng panahon at estimated heat index",
       "url": "/",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Cool places",
-      "short_name": "Cool places",
-      "description": "Search public-facility records with verification labels",
+      "name": "Preskong lugar",
+      "short_name": "Preskong lugar",
+      "description": "Hanapin ang mga lugar na may beripikasyon",
       "url": "/cool-places",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Preparedness",
-      "short_name": "Preparedness",
-      "description": "Before, during, and after extreme-heat guidance",
+      "name": "Paghahanda",
+      "short_name": "Paghahanda",
+      "description": "Bago, habang, at pagkatapos ng matinding init",
       "url": "/preparedness",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Alerts",
-      "short_name": "Alerts",
-      "description": "Official advisories and application heat notices",
+      "name": "Mga babala",
+      "short_name": "Babala",
+      "description": "Opisyal na abiso at heat notice ng app",
       "url": "/alerts",
       "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }

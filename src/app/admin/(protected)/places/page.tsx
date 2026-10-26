@@ -162,7 +162,7 @@ export default async function AdminPlacesPage({
       </Card>
 
       <Card>
-        <CardContent className="overflow-x-auto p-0">
+        <CardContent className="p-0">
           {places.length === 0 ? (
             <div className="px-5 py-12 text-center">
               <Building2 className="mx-auto h-8 w-8 text-slate-300" aria-hidden="true" />
@@ -170,66 +170,129 @@ export default async function AdminPlacesPage({
               <p className="mt-1 text-sm text-muted-foreground">Try a different search, status, or archive view.</p>
             </div>
           ) : (
-            <table className="w-full min-w-[52rem] text-left text-sm">
-              <caption className="sr-only">Cooling-place records</caption>
-              <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
-                <tr>
-                  <th scope="col" className="px-4 py-3">Facility</th>
-                  <th scope="col" className="px-4 py-3">Locality</th>
-                  <th scope="col" className="px-4 py-3">Status</th>
-                  <th scope="col" className="px-4 py-3">Last reviewed</th>
-                  <th scope="col" className="px-4 py-3">Source</th>
-                  <th scope="col" className="px-4 py-3 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody>
+            <>
+              <div className="divide-y divide-border md:hidden">
                 {places.map((place) => {
                   const locality = getLocality(place.localityCode);
                   const province = getProvince(place.provinceCode);
                   return (
-                    <tr key={place.id} className="border-t border-border align-top">
-                      <td className="px-4 py-3">
-                        <p className="font-semibold text-navy">{place.name}</p>
-                        <p className="text-xs text-muted-foreground">{place.category}</p>
-                        <p className="mt-0.5 max-w-xs text-xs text-muted-foreground">{place.address}</p>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-slate-700">
-                        {locality?.name ?? place.localityCode}
-                        <span className="block text-muted-foreground">{province?.name ?? place.provinceCode}</span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <Badge variant={verificationVariant(place.verificationStatus)}>
-                          {VERIFICATION_LABELS[place.verificationStatus as VerificationStatus] ?? place.verificationStatus}
-                        </Badge>
-                        {place.archivedAt ? (
-                          <Badge variant="danger" className="mt-1 block w-fit">
-                            Archived
-                          </Badge>
-                        ) : null}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-slate-600">
-                        {place.lastReviewedAt ? formatPSTDate(place.lastReviewedAt) : "Not reviewed"}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-slate-600">
-                        {place.osmId ? `OSM ${place.osmId}` : "Admin-created"}
-                      </td>
-                      <td className="px-4 py-3 text-right">
-                        <div className="flex flex-col items-end gap-1">
-                          <Link href={`/cool-places/${place.id}`} className="text-xs font-semibold text-primary hover:underline">
-                            View public
-                          </Link>
-                          {canEdit && !place.archivedAt ? (
-                            <Link href={`/admin/places/${place.id}`} className="text-xs font-semibold text-primary hover:underline">
-                              Edit
-                            </Link>
-                          ) : null}
+                    <div key={place.id} className="space-y-2 p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="break-words font-semibold text-navy">{place.name}</p>
+                          <p className="text-xs text-muted-foreground">{place.category}</p>
                         </div>
-                      </td>
-                    </tr>
+                        <div className="flex shrink-0 flex-col items-end gap-1">
+                          <Badge variant={verificationVariant(place.verificationStatus)}>
+                            {VERIFICATION_LABELS[place.verificationStatus as VerificationStatus] ?? place.verificationStatus}
+                          </Badge>
+                          {place.archivedAt ? <Badge variant="danger">Archived</Badge> : null}
+                        </div>
+                      </div>
+                      <p className="break-words text-xs text-muted-foreground">{place.address}</p>
+                      <dl className="grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                          <dt className="text-muted-foreground">Locality</dt>
+                          <dd className="text-slate-700">
+                            {locality?.name ?? place.localityCode}
+                            <span className="block text-muted-foreground">{province?.name ?? place.provinceCode}</span>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground">Last reviewed</dt>
+                          <dd className="text-slate-700">
+                            {place.lastReviewedAt ? formatPSTDate(place.lastReviewedAt) : "Not reviewed"}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-muted-foreground">Source</dt>
+                          <dd className="text-slate-700">{place.osmId ? `OSM ${place.osmId}` : "Admin-created"}</dd>
+                        </div>
+                      </dl>
+                      <div className="flex flex-wrap gap-3 border-t border-border pt-2">
+                        <Link
+                          href={`/cool-places/${place.id}`}
+                          className="inline-flex min-h-11 items-center rounded-md px-2 text-xs font-semibold text-primary hover:bg-muted hover:underline"
+                        >
+                          View public
+                        </Link>
+                        {canEdit && !place.archivedAt ? (
+                          <Link
+                            href={`/admin/places/${place.id}`}
+                            className="inline-flex min-h-11 items-center rounded-md px-2 text-xs font-semibold text-primary hover:bg-muted hover:underline"
+                          >
+                            Edit
+                          </Link>
+                        ) : null}
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
+              </div>
+
+              <div className="hidden overflow-x-auto md:block">
+                <table className="w-full min-w-[52rem] text-left text-sm">
+                  <caption className="sr-only">Cooling-place records</caption>
+                  <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
+                    <tr>
+                      <th scope="col" className="px-4 py-3">Facility</th>
+                      <th scope="col" className="px-4 py-3">Locality</th>
+                      <th scope="col" className="px-4 py-3">Status</th>
+                      <th scope="col" className="px-4 py-3">Last reviewed</th>
+                      <th scope="col" className="px-4 py-3">Source</th>
+                      <th scope="col" className="px-4 py-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {places.map((place) => {
+                      const locality = getLocality(place.localityCode);
+                      const province = getProvince(place.provinceCode);
+                      return (
+                        <tr key={place.id} className="border-t border-border align-top">
+                          <td className="px-4 py-3">
+                            <p className="font-semibold text-navy">{place.name}</p>
+                            <p className="text-xs text-muted-foreground">{place.category}</p>
+                            <p className="mt-0.5 max-w-xs text-xs text-muted-foreground">{place.address}</p>
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-700">
+                            {locality?.name ?? place.localityCode}
+                            <span className="block text-muted-foreground">{province?.name ?? place.provinceCode}</span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <Badge variant={verificationVariant(place.verificationStatus)}>
+                              {VERIFICATION_LABELS[place.verificationStatus as VerificationStatus] ?? place.verificationStatus}
+                            </Badge>
+                            {place.archivedAt ? (
+                              <Badge variant="danger" className="mt-1 block w-fit">
+                                Archived
+                              </Badge>
+                            ) : null}
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-600">
+                            {place.lastReviewedAt ? formatPSTDate(place.lastReviewedAt) : "Not reviewed"}
+                          </td>
+                          <td className="px-4 py-3 text-xs text-slate-600">
+                            {place.osmId ? `OSM ${place.osmId}` : "Admin-created"}
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <div className="flex flex-col items-end gap-1">
+                              <Link href={`/cool-places/${place.id}`} className="text-xs font-semibold text-primary hover:underline">
+                                View public
+                              </Link>
+                              {canEdit && !place.archivedAt ? (
+                                <Link href={`/admin/places/${place.id}`} className="text-xs font-semibold text-primary hover:underline">
+                                  Edit
+                                </Link>
+                              ) : null}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
