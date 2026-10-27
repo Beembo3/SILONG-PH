@@ -49,7 +49,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-white pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border/80 bg-ivory/96 pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)] shadow-[0_-12px_32px_-26px_rgba(18,59,46,0.55)] backdrop-blur-xl lg:hidden"
       aria-label="Mabilisang navigation"
     >
       <ul className="grid grid-cols-5">
@@ -61,11 +61,21 @@ export function MobileBottomNav() {
                 href={href}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex min-h-14 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[11px] font-semibold leading-tight",
-                  active ? "text-orange-700" : "text-slate-500",
+                  "relative flex min-h-15 flex-col items-center justify-center gap-1 px-1 pb-1 pt-2 text-[10px] font-extrabold leading-tight tracking-[0.01em]",
+                  active ? "text-forest" : "text-[#536258]",
                 )}
               >
-                <Icon className={cn("h-5 w-5", active && "text-orange-700")} aria-hidden="true" />
+                {active ? (
+                  <span className="absolute inset-x-5 top-0 h-[3px] rounded-b-full bg-sun" aria-hidden="true" />
+                ) : null}
+                <span
+                  className={cn(
+                    "flex h-8 w-9 items-center justify-center rounded-full transition-colors",
+                    active ? "bg-[#e5eee3]" : "bg-transparent",
+                  )}
+                >
+                  <Icon className={cn("h-[19px] w-[19px]", active && "text-canopy")} aria-hidden="true" />
+                </span>
                 {label}
               </Link>
             </li>

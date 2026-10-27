@@ -130,9 +130,9 @@ export function InstallAppButton({
           </DialogDescription>
 
           {platform === "ios" ? (
-            <ol className="mt-5 space-y-4 text-sm text-slate-700">
+            <ol className="mt-5 space-y-4 text-sm leading-7 text-[#3f5146]">
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-800">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f3eadb] text-xs font-bold text-[#7a4300]">
                   1
                 </span>
                 <span>
@@ -142,7 +142,7 @@ export function InstallAppButton({
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-800">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f3eadb] text-xs font-bold text-[#7a4300]">
                   2
                 </span>
                 <span>
@@ -150,7 +150,7 @@ export function InstallAppButton({
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-800">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f3eadb] text-xs font-bold text-[#7a4300]">
                   3
                 </span>
                 <span>
@@ -159,9 +159,9 @@ export function InstallAppButton({
               </li>
             </ol>
           ) : (
-            <ol className="mt-5 space-y-4 text-sm text-slate-700">
+            <ol className="mt-5 space-y-4 text-sm leading-7 text-[#3f5146]">
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-800">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f3eadb] text-xs font-bold text-[#7a4300]">
                   1
                 </span>
                 <span>
@@ -171,7 +171,7 @@ export function InstallAppButton({
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-800">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f3eadb] text-xs font-bold text-[#7a4300]">
                   2
                 </span>
                 <span>
@@ -180,7 +180,7 @@ export function InstallAppButton({
                 </span>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-orange-50 text-xs font-bold text-orange-800">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#f3eadb] text-xs font-bold text-[#7a4300]">
                   3
                 </span>
                 <span>Kumpirmahin ang installation.</span>
@@ -188,7 +188,7 @@ export function InstallAppButton({
             </ol>
           )}
 
-          <div className="mt-5 flex items-start gap-2 rounded-lg border border-border bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
+          <div className="mt-5 flex items-start gap-2 rounded-2xl border border-border/80 bg-[#f8f3e9] p-3 text-xs leading-relaxed text-muted-foreground">
             <Smartphone className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             <p>
               Available ang installation kapag sinusuportahan ito ng browser mo. Kung walang install option, gamitin
@@ -196,7 +196,7 @@ export function InstallAppButton({
             </p>
           </div>
 
-          <div className="mt-5 flex items-center gap-2 text-xs text-success">
+          <div className="mt-5 flex items-center gap-2 text-xs font-semibold text-[#24563c]">
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             Tuloy pa ring magagamit ang buong website kahit hindi i-install.
           </div>

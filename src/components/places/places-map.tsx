@@ -69,7 +69,7 @@ export function PlacesMap({ places }: { places: PlaceMapItem[] }) {
           radius: 8,
           color: "#ffffff",
           weight: 2,
-          fillColor: verified ? "#16865b" : "#94a3b8",
+          fillColor: verified ? "#2c6a4b" : "#9aa79d",
           fillOpacity: 1,
         })
           .bindPopup(
@@ -114,25 +114,25 @@ export function PlacesMap({ places }: { places: PlaceMapItem[] }) {
   }, [places]);
 
   return (
-    <div className="relative isolate z-0 overflow-hidden rounded-xl border border-border">
+    <div className="relative isolate z-0 overflow-hidden border-t border-border/70">
       <div
         ref={container}
-        className="h-56 w-full sm:h-[22rem]"
+        className="h-64 w-full sm:h-[24rem]"
         role="application"
         aria-label="Mapa ng mga nakalistang pampublikong lugar. Gamitin ang listahan bilang accessible na alternatibo."
       />
       {!ready ? (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-ivory/75">
           <Skeleton className="h-6 w-40" />
         </div>
       ) : null}
       {needsTap ? (
-        <p className="pointer-events-none absolute inset-x-3 top-3 z-10 rounded-lg bg-white/90 px-3 py-2 text-center text-xs font-semibold text-slate-700 shadow-sm">
+        <p className="pointer-events-none absolute inset-x-3 top-3 z-10 rounded-xl bg-card/95 px-3 py-2 text-center text-xs font-bold text-forest shadow-sm">
           I-tap ang mapa para i-pan. Normal pa ring nag-scroll ang page hanggang doon.
         </p>
       ) : null}
       {failed ? (
-        <p className="absolute inset-x-3 bottom-3 z-10 rounded-lg bg-amber-50 p-2 text-xs text-amber-950">
+        <p className="absolute inset-x-3 bottom-3 z-10 rounded-xl border border-[#e2c48e] bg-[#fbf1dc] p-2 text-xs font-semibold text-[#5d3a08]">
           Hindi nag-load ang base map tiles. Available pa rin ang listahan sa ibaba.
         </p>
       ) : null}

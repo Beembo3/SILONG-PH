@@ -1,4 +1,4 @@
-import { AlertTriangle, ShieldAlert } from "lucide-react";
+import { AlertTriangle, ShieldAlert, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { HeatRiskCategory } from "@/lib/heat-index";
 
@@ -10,25 +10,23 @@ export function RiskBadge({
   className?: string;
 }) {
   const styles: Record<HeatRiskCategory["tone"], string> = {
-    neutral: "border-slate-300 bg-slate-100 text-slate-800",
-    yellow: "border-amber-300 bg-amber-100 text-amber-900",
-    orange: "border-orange-300 bg-orange-100 text-orange-900",
-    red: "border-red-300 bg-red-100 text-red-900",
-    critical: "border-red-700 bg-red-700 text-white",
+    neutral: "border-[#bfcbbf] bg-[#edf1e9] text-[#2d4c3b]",
+    yellow: "border-[#e2c48e] bg-[#fbf1dc] text-[#6f3d00]",
+    orange: "border-[#e4b27d] bg-[#fbe9d6] text-[#71330d]",
+    red: "border-[#dfb1ac] bg-[#fbeceb] text-[#8f1f18]",
+    critical: "border-[#8f2018] bg-[#8f2018] text-white",
   };
+  const Icon = category.tone === "critical" || category.tone === "red" ? ShieldAlert : category.tone === "orange" ? AlertTriangle : Sun;
+
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold",
+        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-extrabold leading-none",
         styles[category.tone],
         className,
       )}
     >
-      {category.tone === "red" || category.tone === "critical" ? (
-        <ShieldAlert className="h-3.5 w-3.5" aria-hidden="true" />
-      ) : category.tone === "orange" ? (
-        <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" />
-      ) : null}
+      <Icon className="h-3.5 w-3.5" aria-hidden="true" />
       <span title={`PAGASA category: ${category.label}`}>{category.taglishLabel}</span>
     </span>
   );

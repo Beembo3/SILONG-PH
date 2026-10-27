@@ -44,14 +44,14 @@ const DialogContent = React.forwardRef<
 
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-navy/50 backdrop-blur-[2px] data-[state=open]:animate-in" />
+      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-forest/55 backdrop-blur-[3px] data-[state=open]:animate-in" />
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
           // On phones, dialogs become bottom sheets so they stay inside the
           // visual viewport, clear the virtual keyboard, and respect safe areas.
-          "fixed inset-x-0 bottom-0 top-auto z-50 max-h-[85dvh] w-full max-w-none overflow-y-auto overscroll-contain rounded-t-2xl border border-border bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-xl",
-          "sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-xl sm:p-6",
+          "fixed inset-x-0 bottom-0 top-auto z-50 max-h-[85dvh] w-full max-w-none overflow-y-auto overscroll-contain rounded-t-[1.75rem] border border-border bg-card p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl",
+          "sm:inset-x-auto sm:bottom-auto sm:left-1/2 sm:top-1/2 sm:max-h-[90vh] sm:w-[calc(100%-2rem)] sm:max-w-lg sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-[1.5rem] sm:p-6",
           className,
         )}
         style={{
@@ -84,7 +84,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DialogPrimitive.Title
     ref={ref}
-    className={cn("text-lg font-bold text-navy", className)}
+    className={cn("font-display text-xl font-bold tracking-[-0.03em] text-forest", className)}
     {...props}
   />
 ));

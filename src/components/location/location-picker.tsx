@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Check, Crosshair, LocateFixed, MapPin, Search } from "lucide-react";
+import { Check, ChevronDown, Crosshair, LocateFixed, MapPin, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -82,9 +82,13 @@ export function LocationPicker() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="max-w-[15rem] justify-start gap-2 px-3 font-semibold">
-          <MapPin className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-          <span className="truncate">{locality.name}</span>
+        <Button
+          variant="outline"
+          className="max-w-[calc(100vw-4rem)] min-w-0 justify-start gap-2 border-border/90 bg-card/80 px-3.5 font-bold shadow-none hover:bg-card sm:max-w-[14rem]"
+        >
+          <MapPin className="h-4 w-4 shrink-0 text-canopy" aria-hidden="true" />
+          <span className="min-w-0 truncate">{locality.name}</span>
+          <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-xl">
@@ -127,7 +131,7 @@ export function LocationPicker() {
             </div>
           </div>
 
-          <div className="max-h-64 overflow-y-auto rounded-lg border border-border" role="listbox" aria-label="Mga lungsod at munisipyo">
+          <div className="max-h-64 overflow-y-auto rounded-2xl border border-border bg-card" role="listbox" aria-label="Mga lungsod at munisipyo">
             {results.length === 0 ? (
               <p className="p-4 text-sm text-muted-foreground">Walang tugmang lugar. Subukan ang ibang spelling o probinsya.</p>
             ) : (
@@ -140,10 +144,10 @@ export function LocationPicker() {
                     role="option"
                     aria-selected={selected}
                     onClick={() => choose(item.code)}
-                    className="flex min-h-12 w-full items-center justify-between gap-3 border-b border-border px-4 py-2.5 text-left text-sm last:border-b-0 hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                    className="flex min-h-12 w-full items-center justify-between gap-3 border-b border-border/70 px-4 py-2.5 text-left text-sm last:border-b-0 hover:bg-[#f8f3e9] focus-visible:bg-[#f8f3e9] focus-visible:outline-none aria-selected:bg-[#e8efe5]"
                   >
                     <span>
-                      <span className="font-semibold text-foreground">{item.name}</span>
+                      <span className="font-bold text-forest">{item.name}</span>
                       <span className="block text-xs text-muted-foreground">
                         {item.provinceName} · {item.type === "City" ? "Lungsod" : "Munisipyo"}
                         {item.isIndependent ? " · independent city" : ""}
@@ -156,9 +160,9 @@ export function LocationPicker() {
             )}
           </div>
 
-          <div className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
+          <div className="rounded-2xl border border-border/80 bg-[#f8f3e9] p-3 text-xs leading-relaxed text-muted-foreground">
             <p className="flex items-start gap-2">
-              <Crosshair className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <Crosshair className="mt-0.5 h-4 w-4 shrink-0 text-canopy" aria-hidden="true" />
               Ang weather ay kinukuha sa geometric center ng lugar. Model data ito, hindi barangay-level na
               measurement. Wala pang barangay observations sa release na ito.
             </p>

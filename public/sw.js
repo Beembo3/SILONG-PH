@@ -14,7 +14,7 @@
  *    removes every older silong-* cache.
  */
 
-const VERSION = "silong-v3";
+const VERSION = "silong-v4";
 const STATIC_CACHE = `${VERSION}-static`;
 const PAGE_CACHE = `${VERSION}-pages`;
 const OFFLINE_URL = "/offline.html";

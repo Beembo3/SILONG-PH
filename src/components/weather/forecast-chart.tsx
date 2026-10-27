@@ -7,7 +7,7 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
   const points = hourly.filter((h) => h.heatIndexC != null && h.temperatureC != null);
   if (points.length < 2) {
     return (
-      <div className="rounded-lg border border-dashed border-border p-6 text-center text-sm text-muted-foreground">
+      <div className="rounded-2xl border border-dashed border-border p-6 text-center text-sm leading-7 text-muted-foreground">
         Walang 24-hour forecast chart dahil kulang ang kumpletong temperature at humidity value na naibalik ng
         provider.
       </div>
@@ -39,13 +39,13 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
 
   return (
     <div>
-      <div className="mb-3 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-600">
+      <div className="mb-3 flex flex-wrap items-center gap-4 text-xs font-bold text-[#536258]">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-orange-500" aria-hidden="true" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#c47a1e]" aria-hidden="true" />
           Tinatayang heat index
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-sky-600" aria-hidden="true" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#175e68]" aria-hidden="true" />
           Temperatura ng hangin
         </span>
         <span className="text-muted-foreground">°C · susunod na 24 oras · Asia/Manila</span>
@@ -69,17 +69,17 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
               x2={width - padding.right}
               y1={y(tick)}
               y2={y(tick)}
-              stroke="#e2e8f0"
+              stroke="#e7dfcf"
               strokeWidth="1"
             />
-            <text x={padding.left - 8} y={y(tick) + 4} textAnchor="end" fontSize="11" fill="#667085">
+            <text x={padding.left - 8} y={y(tick) + 4} textAnchor="end" fontSize="11" fill="#5b6a60">
               {Math.round(tick)}°
             </text>
           </g>
         ))}
-        <path d={areaPath} fill="#ff7a1a" opacity="0.08" />
-        <path d={heatPath} fill="none" stroke="#ff7a1a" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <path d={tempPath} fill="none" stroke="#0284c7" strokeWidth="2" strokeDasharray="5 4" strokeLinecap="round" />
+        <path d={areaPath} fill="#c47a1e" opacity="0.09" />
+        <path d={heatPath} fill="none" stroke="#c47a1e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        <path d={tempPath} fill="none" stroke="#175e68" strokeWidth="2" strokeDasharray="5 4" strokeLinecap="round" />
         {points.map((point, index) => {
           if (index % labelEvery !== 0 && index !== points.length - 1) return null;
           return (
@@ -89,7 +89,7 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
                 y={height - 16}
                 textAnchor={index === 0 ? "start" : index === points.length - 1 ? "end" : "middle"}
                 fontSize="11"
-                fill="#667085"
+                fill="#5b6a60"
               >
                 {formatPSTTime(point.time)}
               </text>
@@ -103,21 +103,21 @@ export function ForecastChart({ hourly }: { hourly: HourlyWeather[] }) {
               cx={x(index)}
               cy={y(point.heatIndexC as number)}
               r="4"
-              fill="#fff"
-              stroke="#ff7a1a"
+              fill="#fffcf5"
+              stroke="#c47a1e"
               strokeWidth="3"
             />
           ) : null,
         )}
       </svg>
 
-      <details className="mt-3 rounded-lg border border-border bg-muted/50 p-3 text-sm">
-        <summary className="flex min-h-11 cursor-pointer items-center font-semibold text-navy">
+      <details className="mt-3 rounded-2xl border border-border bg-[#f8f3e9] p-3 text-sm">
+        <summary className="flex min-h-11 cursor-pointer items-center font-bold text-forest">
           Tingnan ang oras-oras na data bilang table
         </summary>
-        <div className="mt-3 max-h-64 overflow-auto">
+        <div className="mt-3 min-w-0 max-h-64 overflow-auto">
           <table className="w-full min-w-[420px] text-left text-xs">
-            <thead className="sticky top-0 bg-white">
+            <thead className="sticky top-0 bg-card">
               <tr className="border-b border-border text-muted-foreground">
                 <th scope="col" className="py-2 pr-3 font-semibold">Oras</th>
                 <th scope="col" className="py-2 pr-3 font-semibold">Temp (°C)</th>

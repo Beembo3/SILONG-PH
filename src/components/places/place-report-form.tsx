@@ -158,7 +158,7 @@ export function PlaceReportForm({ coolingPlaceId, placeName }: PlaceReportFormPr
           ))}
         </Select>
         {errors.reportType ? (
-          <p className="text-xs text-red-700" role="alert">
+          <p className="text-xs font-semibold text-danger" role="alert">
             {errors.reportType.message}
           </p>
         ) : null}
@@ -176,7 +176,7 @@ export function PlaceReportForm({ coolingPlaceId, placeName }: PlaceReportFormPr
               placeholder="Hal. multi-purpose room ng barangay hall"
             />
             {errors.proposedName ? (
-              <p id="proposed-name-error" className="text-xs text-red-700" role="alert">
+              <p id="proposed-name-error" className="text-xs font-semibold text-danger" role="alert">
                 {errors.proposedName.message}
               </p>
             ) : null}
@@ -191,7 +191,7 @@ export function PlaceReportForm({ coolingPlaceId, placeName }: PlaceReportFormPr
               placeholder="Street, barangay, lungsod o munisipyo"
             />
             {errors.proposedAddress ? (
-              <p id="proposed-address-error" className="text-xs text-red-700" role="alert">
+              <p id="proposed-address-error" className="text-xs font-semibold text-danger" role="alert">
                 {errors.proposedAddress.message}
               </p>
             ) : null}
@@ -215,7 +215,7 @@ export function PlaceReportForm({ coolingPlaceId, placeName }: PlaceReportFormPr
               ))}
             </Select>
             {errors.proposedLocalityCode ? (
-              <p className="text-xs text-red-700" role="alert">
+              <p className="text-xs font-semibold text-danger" role="alert">
                 {errors.proposedLocalityCode.message}
               </p>
             ) : null}
@@ -238,13 +238,13 @@ export function PlaceReportForm({ coolingPlaceId, placeName }: PlaceReportFormPr
           napi-publish bilang verified fact.
         </p>
         {errors.description ? (
-          <p id="report-description-error" className="text-xs text-red-700" role="alert">
+          <p id="report-description-error" className="text-xs font-semibold text-danger" role="alert">
             {errors.description.message}
           </p>
         ) : null}
       </div>
 
-      <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-xs leading-relaxed text-amber-950">
+      <div className="rounded-2xl border border-[#e2c48e] bg-[#fbf1dc] p-3 text-xs leading-relaxed text-[#5d3a08]">
         <p className="flex items-start gap-2">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>

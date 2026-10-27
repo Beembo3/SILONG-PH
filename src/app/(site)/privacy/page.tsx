@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { PageMasthead } from "@/components/layout/page-masthead";
 import { Alert } from "@/components/ui/alert";
-import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 export const metadata: Metadata = {
   title: "Patakaran sa privacy",
@@ -14,18 +15,20 @@ const updated = "25 October 2026";
 
 export default function PrivacyPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
-      <div className="max-w-3xl">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Privacy</p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">Patakaran sa privacy</h1>
-        <p className="mt-2 text-sm text-muted-foreground">Huling na-update: {updated}</p>
-        <p className="mt-3 text-base leading-relaxed text-slate-600">
-          Dinisenyo ang SILONG PH para gumana nang walang account. Ipinapaliwanag ng policy na ito kung ano ang
-          pinoproseso kapag nagba-browse ka, pumili ng lugar, nagpadala ng correction, o nag-sign in bilang admin.
-        </p>
-      </div>
+    <div>
+      <PageMasthead
+        eyebrow="Privacy"
+        title="Patakaran sa privacy"
+        description="Dinisenyo ang SILONG PH para gumana nang walang account. Ipinapaliwanag ng policy na ito kung ano ang pinoproseso kapag nagba-browse ka, pumili ng lugar, nagpadala ng correction, o nag-sign in bilang admin."
+        actions={
+          <Badge variant="outline" className="border-white/25 bg-white/5 text-white">
+            Huling na-update: {updated}
+          </Badge>
+        }
+      />
 
-      <Alert variant="info" className="mt-6" title="Maikling bersyon">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <Alert variant="info" title="Maikling bersyon">
         Walang advertising o analytics tracker na naka-install. Nasa browser mo ang napiling lugar. Hihingin lang ang
         precise geolocation kapag pinindot mo ang location button. Iniimbak ang reports para sa moderation. Hindi
         iniimbak ng app ang raw IP address; keyed at truncated hash ang ginagamit para sa abuse prevention.
@@ -172,22 +175,21 @@ export default function PrivacyPage() {
         </p>
       </div>
 
-      <Card className="mt-8">
-        <CardContent className="pt-5 sm:pt-6">
-          <h2 className="text-base font-bold text-navy">Kaugnay na mga page</h2>
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
-            <Link href="/about" className="inline-flex min-h-11 items-center text-primary hover:underline">
-              Tungkol sa proyekto
-            </Link>
-            <Link href="/methodology" className="inline-flex min-h-11 items-center text-primary hover:underline">
-              Saan galing ang datos
-            </Link>
-            <Link href="/preparedness" className="inline-flex min-h-11 items-center text-primary hover:underline">
-              Paghahanda sa init
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="paper-panel mt-8 rounded-[1.6rem] p-5 sm:p-6">
+        <h2 className="font-display text-lg font-bold text-forest">Kaugnay na mga page</h2>
+        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
+          <Link href="/about" className="inline-flex min-h-11 items-center text-primary hover:underline">
+            Tungkol sa proyekto
+          </Link>
+          <Link href="/methodology" className="inline-flex min-h-11 items-center text-primary hover:underline">
+            Saan galing ang datos
+          </Link>
+          <Link href="/preparedness" className="inline-flex min-h-11 items-center text-primary hover:underline">
+            Paghahanda sa init
+          </Link>
+        </div>
+      </div>
+      </div>
     </div>
   );
 }

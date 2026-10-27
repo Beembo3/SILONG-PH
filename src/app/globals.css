@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-bricolage), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -11,29 +13,80 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-  --color-navy: #0b1426;
-  --color-deep-blue: #111c33;
-  --color-amber: #f5b544;
-  --color-success: #16865b;
-  --color-danger: #c62828;
-  --color-surface: #f7f9fc;
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-forest: var(--forest);
+  --color-canopy: var(--canopy);
+  --color-leaf: var(--leaf);
+  --color-sage: var(--sage);
+  --color-sun: var(--sun);
+  --color-sun-ink: var(--sun-ink);
+  --color-clay: var(--clay);
+  --color-ivory: var(--ivory);
+  --color-sand: var(--sand);
+  --color-navy: var(--navy);
+  --color-deep-blue: var(--deep-blue);
+  --color-amber: var(--amber);
+  --color-surface: var(--surface);
+
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.35rem;
+  --radius-2xl: 1.75rem;
 }
 
 :root {
-  --background: #f7f9fc;
-  --foreground: #182338;
-  --card: #ffffff;
-  --card-foreground: #182338;
-  --muted: #eef2f7;
-  --muted-foreground: #667085;
-  --border: #dde4ee;
-  --input: #ffffff;
-  --ring: #1558ad;
-  --primary: #1558ad;
-  --primary-foreground: #ffffff;
-  --radius: 0.6rem;
+  --background: #f4efe4;
+  --foreground: #15251d;
+  --card: #fffcf5;
+  --card-foreground: #15251d;
+  --muted: #eae4d7;
+  --muted-foreground: #5b6a60;
+  --border: #d8d1c1;
+  --input: #fffcf5;
+  --ring: #1d5b45;
+
+  --primary: #174b38;
+  --primary-foreground: #fff9ec;
+  --secondary: #e7dfcf;
+  --secondary-foreground: #22362b;
+  --accent: #f0b24a;
+  --accent-foreground: #2b1b04;
+
+  --forest: #123b2e;
+  --canopy: #1f5c45;
+  --leaf: #4e8a68;
+  --sage: #9bb3a3;
+  --sun: #f0b24a;
+  --sun-ink: #8a4b00;
+  --clay: #b94f2d;
+  --ivory: #f4efe4;
+  --sand: #e7dfcf;
+  --navy: #102a22;
+  --deep-blue: #0b201a;
+  --amber: #f0b24a;
+  --surface: #fbf7ee;
+
+  --success: #2c6a4b;
+  --danger: #b3261e;
+  --warning: #8a4b00;
+  --info: #175e68;
+
+  --radius: 0.75rem;
+  --shadow-soft: 0 1px 2px rgba(21, 37, 29, 0.04), 0 12px 32px -24px rgba(21, 37, 29, 0.28);
+  --shadow-lift: 0 2px 4px rgba(21, 37, 29, 0.05), 0 22px 48px -28px rgba(21, 37, 29, 0.34);
 }
 
 * {
@@ -53,11 +106,25 @@ body {
   overflow-x: clip;
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(ellipse 46rem 26rem at 6% -6%, rgba(240, 178, 74, 0.13), transparent 62%),
+    radial-gradient(ellipse 38rem 24rem at 104% 12%, rgba(78, 138, 104, 0.1), transparent 60%);
+  background-attachment: fixed;
   color: var(--foreground);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  overflow-wrap: anywhere;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-display {
+  font-family: var(--font-bricolage), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.03em;
 }
 
 img,
@@ -90,13 +157,13 @@ video {
 }
 
 ::selection {
-  background: #ffd6b0;
-  color: #0b1426;
+  background: #f7cf86;
+  color: #102a22;
 }
 
 :focus-visible {
   outline: 3px solid var(--ring);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -115,8 +182,8 @@ video {
   left: 1rem;
   top: -100px;
   z-index: 100;
-  background: #0b1426;
-  color: #fff;
+  background: var(--forest);
+  color: var(--primary-foreground);
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
 }
@@ -125,9 +192,137 @@ video {
   top: 1rem;
 }
 
+/* -------------------------------------------------------------------------- */
+/* SILONG PH visual language                                                   */
+/* -------------------------------------------------------------------------- */
+
+/* Fine contour rings echo shade, airflow and topographic maps. */
+.contour-lines {
+  background-image: repeating-radial-gradient(
+    ellipse 120% 90% at 12% 112%,
+    transparent 0 15px,
+    rgba(255, 255, 255, 0.055) 16px,
+    transparent 17px 31px
+  );
+}
+
+.contour-lines-dark {
+  background-image: repeating-radial-gradient(
+    ellipse 120% 90% at 12% 112%,
+    transparent 0 15px,
+    rgba(18, 59, 46, 0.09) 16px,
+    transparent 17px 31px
+  );
+}
+
+.shade-grid {
+  background-image:
+    linear-gradient(to right, rgba(21, 37, 29, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(21, 37, 29, 0.045) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.sun-glow {
+  background-image: radial-gradient(circle at 50% 50%, rgba(240, 178, 74, 0.3), transparent 68%);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section-rule::before {
+  content: "";
+  display: block;
+  width: 2rem;
+  height: 2px;
+  flex: none;
+  background: var(--accent);
+}
+
+.arch-top {
+  border-radius: 2rem 2rem 0.9rem 0.9rem;
+}
+
+.arch-top-sm {
+  border-radius: 1.25rem 1.25rem 0.65rem 0.65rem;
+}
+
+.editorial-card {
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+}
+
+.paper-panel {
+  border: 1px solid color-mix(in srgb, var(--border) 82%, transparent);
+  background:
+    linear-gradient(180deg, rgba(255, 252, 245, 0.92), rgba(251, 247, 238, 0.96)),
+    var(--card);
+  box-shadow: var(--shadow-soft);
+}
+
+.dark-panel {
+  background:
+    radial-gradient(ellipse 38rem 24rem at 88% -8%, rgba(240, 178, 74, 0.2), transparent 62%),
+    radial-gradient(ellipse 30rem 26rem at -6% 110%, rgba(78, 138, 104, 0.26), transparent 64%),
+    var(--forest);
+  color: var(--primary-foreground);
+}
+
+.dark-panel .eyebrow {
+  color: #f7cf86;
+}
+
+.text-pretty {
+  text-wrap: pretty;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+  white-space: nowrap;
+}
+
+.hairline {
+  border-top: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-weight: 800;
+  text-underline-offset: 0.2em;
+}
+
+.link-arrow:hover {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Leaflet                                                                     */
+/* -------------------------------------------------------------------------- */
+
 .leaflet-container {
   font-family: inherit;
-  background: #dfe8f3;
+  background: #dfe7dc;
   /*
    * Leaflet's panes and controls use internal z-indexes (400-1000). Without a
    * stacking context they escape the map container and paint above the sticky
@@ -149,6 +344,7 @@ video {
 
 .leaflet-popup-content-wrapper {
   max-width: calc(100vw - 3rem);
+  border-radius: 0.75rem;
 }
 
 /* Leaflet's default controls are 30px; give touch users a larger target. */
@@ -161,39 +357,63 @@ video {
   }
 }
 
-.weather-grid {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
+/* -------------------------------------------------------------------------- */
+/* Long-form pages                                                             */
+/* -------------------------------------------------------------------------- */
 
-.numeric {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.03em;
+.prose-silong {
+  color: var(--foreground);
 }
 
 .prose-silong h2 {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  font-family: var(--font-bricolage), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+  line-height: 1.2;
   font-weight: 700;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-  color: #0b1426;
+  letter-spacing: -0.03em;
+  margin-top: 2.75rem;
+  margin-bottom: 0.85rem;
+  color: var(--forest);
 }
 
 .prose-silong h3 {
-  font-size: 1.05rem;
+  font-family: var(--font-bricolage), var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.08rem;
   font-weight: 700;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #0b1426;
+  line-height: 1.35;
+  margin-top: 1.75rem;
+  margin-bottom: 0.45rem;
+  color: var(--forest);
 }
 
 .prose-silong p,
 .prose-silong li {
-  color: #475467;
-  line-height: 1.7;
+  color: #3f5146;
+  line-height: 1.75;
 }
 
-/* dark mode variables — appended at end */
+.prose-silong a {
+  color: var(--primary);
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+.prose-silong a:hover {
+  text-decoration-color: var(--primary);
+}
+
+.prose-silong ul,
+.prose-silong ol {
+  padding-left: 1.25rem;
+}
+
+.prose-silong li + li {
+  margin-top: 0.4rem;
+}
+
+.prose-silong strong {
+  color: var(--foreground);
+  font-weight: 750;
+}

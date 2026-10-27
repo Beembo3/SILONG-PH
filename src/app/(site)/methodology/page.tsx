@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink, Info, ShieldCheck } from "lucide-react";
+import { PageMasthead } from "@/components/layout/page-masthead";
 import { Alert } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { geographyProvenance, region } from "@/lib/geography";
 import { HEAT_RISK_CATEGORIES, PAGASA_SOURCE } from "@/lib/heat-index";
 
@@ -23,26 +23,31 @@ const categories = [
 
 export default function MethodologyPage() {
   return (
-    <div className="mx-auto max-w-4xl px-4 py-7 sm:px-6 sm:py-9 lg:px-8">
-      <div className="max-w-3xl">
-        <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Transparency</p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight text-navy sm:text-4xl">
-          Saan galing ang datos?
-        </h1>
-        <p className="mt-2 text-base leading-relaxed text-slate-600">
-          Ipinapaliwanag ng page na ito kung ano ang natatanggap ng app, ano ang kinukuwenta nito, ano ang iniimbak, at
-          saan ang mga limitasyon. Para ito sa residente, journalist, planner, at reviewer na kailangang malaman kung
-          angkop ang isang numero sa gamit nila.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Badge variant="outline">Open-Meteo model data</Badge>
-          <Badge variant="outline">PAGASA categories</Badge>
-          <Badge variant="outline">PSGC geography</Badge>
-          <Badge variant="outline">OpenStreetMap facilities</Badge>
-        </div>
-      </div>
+    <div>
+      <PageMasthead
+        eyebrow="Transparency"
+        title="Saan galing ang datos?"
+        description="Ipinapaliwanag ng page na ito kung ano ang natatanggap ng app, ano ang kinukuwenta nito, ano ang iniimbak, at saan ang mga limitasyon. Para ito sa residente, journalist, planner, at reviewer na kailangang malaman kung angkop ang isang numero sa gamit nila."
+        actions={
+          <>
+            <Badge variant="outline" className="border-white/25 bg-white/5 text-white">
+              Open-Meteo model data
+            </Badge>
+            <Badge variant="outline" className="border-white/25 bg-white/5 text-white">
+              PAGASA categories
+            </Badge>
+            <Badge variant="outline" className="border-white/25 bg-white/5 text-white">
+              PSGC geography
+            </Badge>
+            <Badge variant="outline" className="border-white/25 bg-white/5 text-white">
+              OpenStreetMap facilities
+            </Badge>
+          </>
+        }
+      />
 
-      <Alert variant="warning" className="mt-6" title="Ang pinakamahalagang pagkakaiba">
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+      <Alert variant="warning" title="Ang pinakamahalagang pagkakaiba">
         Ang <strong>official observation</strong> ay value na inilathala ng official authority tulad ng PAGASA. Ang{" "}
         <strong>forecast</strong> ay prediction. Ang <strong>application estimate</strong> ay value na kinukuwenta ng app
         mula sa model temperature at humidity. Hindi kailanman nilalagyan ng SILONG PH ng label na official PAGASA
@@ -98,10 +103,10 @@ export default function MethodologyPage() {
           PAGASA; ginagamit ng app ang lower bound ng bawat band para sa continuous values. Halimbawa, 32.5 °C ay
           itinuturing na Caution at 33.0 °C ay Extreme Caution.
         </p>
-        <div className="not-prose mt-4 overflow-x-auto rounded-xl border border-border bg-white" tabIndex={0} role="region" aria-label="Talaan ng PAGASA heat-index categories">
+        <div className="not-prose mt-4 overflow-x-auto rounded-[1.3rem] border border-border bg-card shadow-[var(--shadow-soft)]" tabIndex={0} role="region" aria-label="Talaan ng PAGASA heat-index categories">
           <table className="w-full min-w-[34rem] text-left text-sm">
             <caption className="sr-only">Mga PAGASA heat-index category na ginagamit ng SILONG PH</caption>
-            <thead className="bg-muted text-xs uppercase tracking-wide text-muted-foreground">
+            <thead className="bg-[#f8f3e9] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
               <tr>
                 <th scope="col" className="px-4 py-3">Kategorya</th>
                 <th scope="col" className="px-4 py-3">Heat index</th>
@@ -111,14 +116,14 @@ export default function MethodologyPage() {
             <tbody>
               {categories.map((category) => (
                 <tr key={category.level} className="border-t border-border align-top">
-                  <td className="px-4 py-3 font-semibold text-navy">
+                  <td className="px-4 py-3 font-bold text-forest">
                     {category.taglishLabel}
                     <span className="mt-0.5 block text-[11px] font-normal text-muted-foreground">
                       Official: {category.label}
                     </span>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-slate-700">{category.taglishRangeLabel}</td>
-                  <td className="px-4 py-3 text-slate-600">{category.taglishDescription}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-[#536258]">{category.taglishRangeLabel}</td>
+                  <td className="px-4 py-3 text-[#536258]">{category.taglishDescription}</td>
                 </tr>
               ))}
             </tbody>
@@ -258,37 +263,36 @@ export default function MethodologyPage() {
         </ul>
       </div>
 
-      <Card className="mt-8">
-        <CardContent className="pt-5 sm:pt-6">
-          <h2 className="flex items-center gap-2 text-base font-bold text-navy">
-            <ShieldCheck className="h-4 w-4 text-success" aria-hidden="true" /> Malugod ang mga correction
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            Kung mali ang facility record, gamitin ang report form sa page nito. Kung sa tingin mo ay mali ang
-            representasyon ng data source o method, makipag-ugnayan sa operator sa channel na nakalista sa Tungkol page.
-            Isama ang specific page at official source na sumusuporta sa correction.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm font-semibold">
-            <Link href="/about" className="inline-flex min-h-11 items-center text-primary hover:underline">
-              Tungkol at contact
-            </Link>
-            <Link href="/privacy" className="inline-flex min-h-11 items-center text-primary hover:underline">
-              Patakaran sa privacy
-            </Link>
-            <Link href="/cool-places" className="inline-flex min-h-11 items-center text-primary hover:underline">
-              Directory ng preskong lugar
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="paper-panel mt-8 rounded-[1.6rem] p-5 sm:p-6">
+        <h2 className="flex items-center gap-2 font-display text-lg font-bold text-forest">
+          <ShieldCheck className="h-4 w-4 text-canopy" aria-hidden="true" /> Malugod ang mga correction
+        </h2>
+        <p className="mt-2 text-sm leading-7 text-[#3f5146]">
+          Kung mali ang facility record, gamitin ang report form sa page nito. Kung sa tingin mo ay mali ang
+          representasyon ng data source o method, makipag-ugnayan sa operator sa channel na nakalista sa Tungkol page.
+          Isama ang specific page at official source na sumusuporta sa correction.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
+          <Link href="/about" className="inline-flex min-h-11 items-center text-primary hover:underline">
+            Tungkol at contact
+          </Link>
+          <Link href="/privacy" className="inline-flex min-h-11 items-center text-primary hover:underline">
+            Patakaran sa privacy
+          </Link>
+          <Link href="/cool-places" className="inline-flex min-h-11 items-center text-primary hover:underline">
+            Directory ng preskong lugar
+          </Link>
+        </div>
+      </div>
 
-      <div className="mt-6 flex items-start gap-2 rounded-lg border border-border bg-muted/60 p-3 text-xs leading-relaxed text-muted-foreground">
-        <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      <div className="mt-6 flex items-start gap-2 rounded-2xl border border-border/80 bg-[#f8f3e9] p-4 text-xs leading-relaxed text-muted-foreground">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-canopy" aria-hidden="true" />
         <p>
           Huling sinuri ang methodology noong 25 October 2026. Inilalarawan ng page na ito ang behavior ng codebase na
           ito; puwedeng iba ang data, configuration, o operator contact ng isang deployment. Tingnan ang About page para
           sa deployment-specific information.
         </p>
+      </div>
       </div>
     </div>
   );

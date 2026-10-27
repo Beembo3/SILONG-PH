@@ -1,12 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Bricolage_Grotesque, Manrope } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 import { ServiceWorkerRegistration } from "@/components/pwa/service-worker-registration";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
+const bricolage = Bricolage_Grotesque({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-bricolage",
+  display: "swap",
+});
+
+const manrope = Manrope({
+  subsets: ["latin", "latin-ext"],
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -49,7 +55,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0B1426",
+  themeColor: "#123B2E",
   colorScheme: "light",
   width: "device-width",
   initialScale: 1,
@@ -59,7 +65,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fil-PH" className={inter.variable} data-scroll-behavior="smooth">
+    <html
+      lang="fil-PH"
+      className={`${bricolage.variable} ${manrope.variable}`}
+      data-scroll-behavior="smooth"
+    >
       <body>
         <a href="#main-content" className="skip-link">
           Laktawan papunta sa pangunahing nilalaman

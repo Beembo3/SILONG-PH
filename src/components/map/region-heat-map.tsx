@@ -14,10 +14,12 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { Alert } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { HeatMeter } from "@/components/weather/heat-meter";
 import { RiskBadge } from "@/components/weather/risk-badge";
 import { provinces as allProvinces, getProvince } from "@/lib/geography";
 import { conditionLabel, formatNumber, formatPST } from "@/lib/format";
@@ -56,11 +58,11 @@ interface PlaceResult {
 }
 
 const RISK_COLORS: Record<string, string> = {
-  below_caution: "#94a3b8",
-  caution: "#f5b544",
-  extreme_caution: "#f97316",
-  danger: "#dc2626",
-  extreme_danger: "#7f1d1d",
+  below_caution: "#b9c9bb",
+  caution: "#e3b24f",
+  extreme_caution: "#d27a32",
+  danger: "#bd4b36",
+  extreme_danger: "#8f2018",
 };
 
 function riskColor(weather: WeatherSnapshot | null | undefined): string {
@@ -211,7 +213,7 @@ export function RegionHeatMap() {
           const weather = weatherByProvince.get(code);
           const isSelected = code === selectedCode;
           return {
-            color: isSelected ? "#0b1426" : "#ffffff",
+            color: isSelected ? "#123b2e" : "#fffcf5",
             weight: isSelected ? 3 : 1.5,
             fillColor: riskColor(weather),
             fillOpacity: isSelected ? 0.62 : 0.45,
@@ -224,7 +226,7 @@ export function RegionHeatMap() {
           layer.bindTooltip(
             `<strong>${escapeHtml(name)}</strong><br/>Est. heat index: ${
               weather?.current.heatIndexC != null ? `${formatNumber(weather.current.heatIndexC, 1)} °C` : "hindi available"
-            }<br/><span style="font-size:11px;color:#667085">Model point: ${
+            }<br/><span style="font-size:11px;color:#5b6a60">Model point: ${
               weather ? escapeHtml(conditionLabel(weather.current.condition)) : "—"
             }</span>`,
             { sticky: true },
@@ -260,7 +262,7 @@ export function RegionHeatMap() {
         L.geoJSON(municipalityGeo as FeatureCollection, {
           filter: (feature) => String(feature.properties?.provinceCode ?? "") === selectedCode,
           style: {
-            color: "#0b1426",
+            color: "#123b2e",
             weight: 1,
             fillColor: "#ffffff",
             fillOpacity: 0.03,
@@ -322,89 +324,87 @@ export function RegionHeatMap() {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[22rem_1fr]">
-      <div className="order-2 min-w-0 space-y-4 lg:order-1">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Search className="h-4 w-4 text-primary" aria-hidden="true" /> Hanapin ang probinsya
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <label htmlFor="province-search" className="sr-only">
-              Hanapin ang probinsya
-            </label>
-            <Input
-              id="province-search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Pangalan ng probinsya"
-            />
-            <ul className="space-y-1.5" aria-label="Mga probinsya sa Central Luzon">
-              {filteredProvinces.map((province) => {
-                const weather = weatherByProvince.get(province.code);
-                const active = selectedCode === province.code;
-                return (
-                  <li key={province.code}>
-                    <button
-                      type="button"
-                      onClick={() => focusProvince(province.code)}
-                      aria-pressed={active}
-                      className={cn(
-                        "min-h-11 w-full rounded-lg border px-3 py-2.5 text-left transition-colors",
-                        active
-                          ? "border-orange-300 bg-orange-50"
-                          : "border-border bg-white hover:bg-muted",
-                      )}
-                    >
-                      <span className="flex items-center justify-between gap-2">
-                        <span className="text-sm font-semibold text-navy">{province.name}</span>
-                        <span className="text-xs font-bold text-orange-700">
-                          {weather?.current.heatIndexC != null
-                            ? `${formatNumber(weather.current.heatIndexC, 1)}°`
-                            : "—"}
-                        </span>
+    <div className="grid gap-5 lg:grid-cols-[21rem_minmax(0,1fr)]">
+      <aside className="order-2 min-w-0 space-y-4 lg:order-1">
+        <div className="paper-panel rounded-[1.6rem] p-5">
+          <h2 className="flex items-center gap-2 font-display text-lg font-bold text-forest">
+            <Search className="h-4 w-4 text-canopy" aria-hidden="true" /> Hanapin ang probinsya
+          </h2>
+          <label htmlFor="province-search" className="sr-only">
+            Hanapin ang probinsya
+          </label>
+          <Input
+            id="province-search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Pangalan ng probinsya"
+            className="mt-3"
+          />
+          <ul className="mt-3 divide-y divide-border/60" aria-label="Mga probinsya sa Central Luzon">
+            {filteredProvinces.map((province) => {
+              const weather = weatherByProvince.get(province.code);
+              const active = selectedCode === province.code;
+              return (
+                <li key={province.code}>
+                  <button
+                    type="button"
+                    onClick={() => focusProvince(province.code)}
+                    aria-pressed={active}
+                    className={cn(
+                      "group flex min-h-14 w-full items-center justify-between gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
+                      active
+                        ? "border-sage/60 bg-[#e8efe5]"
+                        : "border-transparent hover:bg-[#f8f3e9]",
+                    )}
+                  >
+                    <span className="min-w-0">
+                      <span className="flex items-center gap-1.5 text-sm font-bold text-forest">
+                        {province.name}
+                        {active ? <span className="h-1.5 w-1.5 rounded-full bg-sun" aria-hidden="true" /> : null}
                       </span>
-                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                      <span className="mt-0.5 block text-[11px] text-muted-foreground">
                         {weather?.current.heatIndexCategory.taglishLabel ?? "Walang weather"} · {province.capitalName}
                       </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </CardContent>
-        </Card>
+                    </span>
+                    <span className="numeric shrink-0 text-sm font-bold text-sun-ink">
+                      {weather?.current.heatIndexC != null ? `${formatNumber(weather.current.heatIndexC, 1)}°` : "—"}
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Layers className="h-4 w-4 text-primary" aria-hidden="true" /> Mga layer
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <label className="flex items-center justify-between gap-3">
+        <div className="paper-panel rounded-[1.6rem] p-5">
+          <h2 className="flex items-center gap-2 font-display text-lg font-bold text-forest">
+            <Layers className="h-4 w-4 text-canopy" aria-hidden="true" /> Mga layer
+          </h2>
+          <div className="mt-3 space-y-3 text-sm">
+            <div className="flex min-h-12 items-center justify-between gap-3">
               <span>
-                <span className="font-semibold">Layer ng init sa probinsya</span>
+                <span className="font-bold text-forest">Layer ng init sa probinsya</span>
                 <span className="block text-xs text-muted-foreground">Tinatayang heat index, model point</span>
               </span>
-              <span className="rounded-full bg-orange-100 px-2 py-0.5 text-[10px] font-bold text-orange-800">Naka-on</span>
-            </label>
-            <label className="flex items-center justify-between gap-3">
+              <span className="shrink-0 rounded-full bg-[#e8efe5] px-2.5 py-1 text-[10px] font-bold text-[#24563c]">
+                Naka-on
+              </span>
+            </div>
+            <label className="flex min-h-12 cursor-pointer items-center justify-between gap-3 border-t border-border/60 pt-3">
               <span>
-                <span className="font-semibold">Hangganan ng lungsod o munisipyo</span>
+                <span className="font-bold text-forest">Hangganan ng lungsod o munisipyo</span>
                 <span className="block text-xs text-muted-foreground">Lalabas pagkatapos pumili ng probinsya</span>
               </span>
               <input
                 type="checkbox"
                 checked={showMunicipalities}
                 onChange={(event) => setShowMunicipalities(event.target.checked)}
-                className="h-5 w-5 accent-orange-600"
+                className="h-5 w-5 shrink-0 accent-[#174b38]"
               />
             </label>
-            <label className="flex items-center justify-between gap-3">
+            <label className="flex min-h-12 cursor-pointer items-center justify-between gap-3 border-t border-border/60 pt-3">
               <span>
-                <span className="font-semibold">Beripikadong preskong lugar</span>
+                <span className="font-bold text-forest">Beripikadong preskong lugar</span>
                 <span className="block text-xs text-muted-foreground">
                   {coolPlaces == null ? "Naglo-load…" : `${coolPlaces.length} beripikado`}
                 </span>
@@ -413,19 +413,19 @@ export function RegionHeatMap() {
                 type="checkbox"
                 checked={showCoolPlaces}
                 onChange={(event) => setShowCoolPlaces(event.target.checked)}
-                className="h-5 w-5 accent-orange-600"
+                className="h-5 w-5 shrink-0 accent-[#174b38]"
               />
             </label>
-            <div className="rounded-lg border border-dashed border-border p-3 text-xs leading-relaxed text-muted-foreground">
-              <p className="font-semibold text-slate-700">Walang official observation layer</p>
+            <div className="rounded-2xl border border-dashed border-border p-3 text-xs leading-relaxed text-muted-foreground">
+              <p className="font-bold text-forest">Walang official observation layer</p>
               <p className="mt-1">
                 Walang documented public PAGASA heat-index API na naka-integrate. Hindi nilalagyan ng label na official
                 observation ang model estimates sa mapa.
               </p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </div>
+      </aside>
 
       <div className="contents min-w-0 lg:order-2 lg:block lg:space-y-4">
         {tilesFailed ? (
@@ -437,13 +437,42 @@ export function RegionHeatMap() {
         {error ? (
           <Alert variant="danger" className="order-0" title="Hindi available ang heat map">
             {error}{" "}
-            <button className="font-semibold underline" onClick={retry}>
+            <button className="font-bold underline" onClick={retry}>
               Subukan muli
             </button>
           </Alert>
         ) : null}
 
-        <Card className="order-1 overflow-hidden">
+        <div className="order-1 overflow-hidden rounded-[1.7rem] border border-border bg-card shadow-[var(--shadow-soft)]">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/75 px-4 py-3 sm:px-5">
+            <div>
+              <p className="eyebrow text-sun-ink">
+                <span className="h-1.5 w-1.5 rounded-full bg-sun" aria-hidden="true" /> Model estimate
+              </p>
+              <h2 className="mt-1 font-display text-lg font-bold tracking-[-0.03em] text-forest">
+                Heat index sa probinsya
+              </h2>
+            </div>
+            <Badge variant="outline">Hindi official observation</Badge>
+          </div>
+          <div className="border-b border-border/75 bg-[#f8f3e9] px-4 py-3 lg:hidden">
+            <label htmlFor="mobile-province-picker" className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-muted-foreground">
+              Pumili ng probinsya
+            </label>
+            <Select
+              id="mobile-province-picker"
+              value={selectedCode ?? ""}
+              onChange={(event) => setSelectedCode(event.target.value || null)}
+              className="mt-1.5 bg-card"
+            >
+              <option value="">Lahat ng probinsya</option>
+              {allProvinces.map((province) => (
+                <option key={province.code} value={province.code}>
+                  {province.name}
+                </option>
+              ))}
+            </Select>
+          </div>
           <div className="relative isolate">
             <div
               ref={mapContainer}
@@ -452,7 +481,7 @@ export function RegionHeatMap() {
               aria-label="Interactive na mapa ng mga probinsya sa Central Luzon, may kulay ayon sa estimated heat index"
             />
             {loading ? (
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-ivory/75 backdrop-blur-[1px]">
                 <div className="space-y-2 text-center">
                   <Skeleton className="mx-auto h-6 w-40" />
                   <p className="text-sm text-muted-foreground">Naglo-load ang mapa at model weather…</p>
@@ -460,9 +489,9 @@ export function RegionHeatMap() {
               </div>
             ) : null}
           </div>
-          <div className="border-t border-border bg-white p-3">
+          <div className="border-t border-border/75 bg-card p-4 sm:p-5">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs">
-              <span className="font-semibold text-slate-700">Legend (tinatayang heat index):</span>
+              <span className="font-bold text-forest">Legend (tinatayang heat index):</span>
               {[
                 ["Mababa sa 27°C", "below_caution"],
                 ["27–32°C Mag-ingat", "caution"],
@@ -470,7 +499,7 @@ export function RegionHeatMap() {
                 ["42–51°C Mapanganib", "danger"],
                 ["52°C+ Sobrang mapanganib", "extreme_danger"],
               ].map(([label, level]) => (
-                <span key={level} className="inline-flex items-center gap-1.5 text-slate-600">
+                <span key={level} className="inline-flex items-center gap-1.5 text-[#536258]">
                   <span
                     className="h-3 w-3 rounded-sm border border-white"
                     style={{ backgroundColor: RISK_COLORS[level] }}
@@ -480,12 +509,12 @@ export function RegionHeatMap() {
                 </span>
               ))}
             </div>
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
               Ang kulay ng probinsya ay overview mula sa model grid point sa capital, hindi measurement ng buong
               probinsya. Map tiles © OpenStreetMap contributors. Weather mula sa Open-Meteo.
             </p>
           </div>
-        </Card>
+        </div>
 
         <Alert variant="info" className="order-3" title="Paano basahin ang mapa">
           Overview aid lang ang province layer. Administrative geography ang hangganan ng lungsod at munisipyo, hindi
@@ -494,41 +523,48 @@ export function RegionHeatMap() {
         </Alert>
 
         {selectedProvince ? (
-          <Card className="order-4">
-            <CardHeader>
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.16em] text-primary">Napiling probinsya</p>
-                  <CardTitle className="mt-1 text-xl">{selectedProvince.name}</CardTitle>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Model point: {selectedProvince.capitalName} · {formatPST(region?.fetchedAt)}
-                  </p>
-                </div>
-                {selectedWeather ? <RiskBadge category={selectedWeather.current.heatIndexCategory} /> : null}
+          <div className="order-4 paper-panel rounded-[1.7rem] p-5 sm:p-6">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div>
+                <p className="eyebrow text-sun-ink">Napiling probinsya</p>
+                <h2 className="mt-1 font-display text-2xl font-bold tracking-[-0.04em] text-forest">
+                  {selectedProvince.name}
+                </h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Model point: {selectedProvince.capitalName} · {formatPST(region?.fetchedAt)}
+                </p>
               </div>
-            </CardHeader>
-            <CardContent>
-              {selectedWeather ? (
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <div>
-                    <p className="text-xs text-muted-foreground">Tinatayang heat index</p>
-                    <p className="numeric text-3xl font-extrabold text-orange-700">
-                      {formatNumber(selectedWeather.current.heatIndexC, 1)} °C
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Temperatura ng hangin</p>
-                    <p className="numeric text-3xl font-extrabold text-navy">
-                      {formatNumber(selectedWeather.current.temperatureC, 1)} °C
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">Halumigmig</p>
-                    <p className="numeric text-3xl font-extrabold text-navy">
-                      {selectedWeather.current.relativeHumidity ?? "—"}%
-                    </p>
-                  </div>
-                  <div className="sm:col-span-3 flex flex-wrap gap-2">
+              {selectedWeather ? <RiskBadge category={selectedWeather.current.heatIndexCategory} /> : null}
+            </div>
+            {selectedWeather ? (
+              <div className="mt-4 grid gap-5 sm:grid-cols-[15rem_minmax(0,1fr)] sm:items-center">
+                <div className="rounded-[1.3rem] bg-[#f8f1e3] px-3 py-2">
+                  <HeatMeter
+                    compact
+                    category={selectedWeather.current.heatIndexCategory}
+                    valueC={selectedWeather.current.heatIndexC}
+                  />
+                </div>
+                <div>
+                  <dl className="grid grid-cols-2 gap-x-5 gap-y-3">
+                    <div className="border-b border-border/60 pb-2">
+                      <dt className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-muted-foreground">
+                        Temperatura ng hangin
+                      </dt>
+                      <dd className="numeric mt-1 text-2xl font-bold text-forest">
+                        {formatNumber(selectedWeather.current.temperatureC, 1)} °C
+                      </dd>
+                    </div>
+                    <div className="border-b border-border/60 pb-2">
+                      <dt className="text-[10px] font-extrabold uppercase tracking-[0.11em] text-muted-foreground">
+                        Halumigmig
+                      </dt>
+                      <dd className="numeric mt-1 text-2xl font-bold text-forest">
+                        {selectedWeather.current.relativeHumidity ?? "—"}%
+                      </dd>
+                    </div>
+                  </dl>
+                  <div className="mt-4 flex flex-wrap gap-2">
                     <Button asChild size="sm">
                       <Link href={`/provinces/${selectedProvince.slug}`}>
                         Detalye ng probinsya <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -541,36 +577,39 @@ export function RegionHeatMap() {
                     </Button>
                   </div>
                 </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  Walang weather para sa model point na ito. Available pa rin ang hangganan ng probinsya.
-                </p>
-              )}
-            </CardContent>
-          </Card>
-        ) : (
-          <Card className="order-4">
-            <CardContent className="flex items-start gap-3 pt-5 sm:pt-6">
-              <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden="true" />
-              <div className="text-sm">
-                <p className="font-semibold text-navy">Pumili ng probinsya</p>
-                <p className="mt-1 text-muted-foreground">
-                  I-click ang probinsya sa mapa o gamitin ang searchable na listahan. Visual aid lang ang mapa; nasa
-                  text din ang lahat ng mahalagang impormasyon.
-                </p>
               </div>
-            </CardContent>
-          </Card>
+            ) : (
+              <p className="mt-4 text-sm text-muted-foreground">
+                Walang weather para sa model point na ito. Available pa rin ang hangganan ng probinsya.
+              </p>
+            )}
+          </div>
+        ) : (
+          <div className="order-4 flex gap-3 rounded-[1.6rem] border border-border bg-card p-5 shadow-[var(--shadow-soft)]">
+            <TriangleAlert className="mt-0.5 h-5 w-5 shrink-0 text-sun-ink" aria-hidden="true" />
+            <div className="text-sm">
+              <p className="font-display text-base font-bold text-forest">Pumili ng probinsya</p>
+              <p className="mt-1 leading-7 text-muted-foreground">
+                I-click ang probinsya sa mapa o gamitin ang searchable na listahan. Visual aid lang ang mapa; nasa
+                text din ang lahat ng mahalagang impormasyon.
+              </p>
+            </div>
+          </div>
         )}
 
-        <details className="order-5 rounded-xl border border-border bg-white p-4">
-          <summary className="flex min-h-11 cursor-pointer items-center text-sm font-bold text-navy">
+        <details className="order-5 paper-panel rounded-[1.6rem] p-4 sm:p-5">
+          <summary className="flex min-h-11 cursor-pointer items-center font-display text-sm font-bold text-forest">
             Accessible na data table ng probinsya
           </summary>
-          <div className="mt-3 overflow-x-auto" tabIndex={0} role="region" aria-label="Data table ng probinsya, i-scroll pakanan para sa iba pang column">
+          <div
+            className="mt-3 overflow-x-auto"
+            tabIndex={0}
+            role="region"
+            aria-label="Data table ng probinsya, i-scroll pakanan para sa iba pang column"
+          >
             <table className="w-full min-w-[560px] text-left text-sm">
               <thead>
-                <tr className="border-b border-border text-xs text-muted-foreground">
+                <tr className="border-b border-border text-[10px] uppercase tracking-[0.1em] text-muted-foreground">
                   <th scope="col" className="py-2 pr-3">Probinsya</th>
                   <th scope="col" className="py-2 pr-3">Model point</th>
                   <th scope="col" className="py-2 pr-3">Est. heat index</th>
@@ -582,15 +621,22 @@ export function RegionHeatMap() {
                 {allProvinces.map((province) => {
                   const weather = weatherByProvince.get(province.code);
                   return (
-                    <tr key={province.code} className="border-b border-border/60">
-                      <td className="py-2 pr-3 font-semibold">{province.name}</td>
-                      <td className="py-2 pr-3">{province.capitalName}</td>
-                      <td className="py-2 pr-3">
-                        {weather?.current.heatIndexC != null ? `${formatNumber(weather.current.heatIndexC, 1)} °C` : "Hindi available"}
+                    <tr key={province.code} className="border-b border-border/60 last:border-b-0">
+                      <td className="py-2.5 pr-3 font-bold text-forest">{province.name}</td>
+                      <td className="py-2.5 pr-3">{province.capitalName}</td>
+                      <td className="py-2.5 pr-3">
+                        {weather?.current.heatIndexC != null
+                          ? `${formatNumber(weather.current.heatIndexC, 1)} °C`
+                          : "Hindi available"}
                       </td>
-                      <td className="py-2 pr-3">{weather?.current.heatIndexCategory.taglishLabel ?? "Hindi available"}</td>
-                      <td className="py-2">
-                        <Link href={`/provinces/${province.slug}`} className="inline-flex min-h-11 items-center font-semibold text-primary hover:underline">
+                      <td className="py-2.5 pr-3">
+                        {weather?.current.heatIndexCategory.taglishLabel ?? "Hindi available"}
+                      </td>
+                      <td className="py-2.5">
+                        <Link
+                          href={`/provinces/${province.slug}`}
+                          className="inline-flex min-h-11 items-center font-bold text-primary hover:underline"
+                        >
                           Buksan
                         </Link>
                       </td>
@@ -602,7 +648,7 @@ export function RegionHeatMap() {
           </div>
         </details>
 
-        <p className="order-6 text-xs text-muted-foreground">
+        <p className="order-6 text-xs leading-relaxed text-muted-foreground">
           <RefreshCw className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" />
           Nire-refresh ang data mula sa server cache mga kada 10 minuto. Gamitin ang refresh button para humiling ng
           bagong server check.{" "}
@@ -610,14 +656,19 @@ export function RegionHeatMap() {
             href="https://www.pagasa.dost.gov.ph/weather/heat-index"
             target="_blank"
             rel="noreferrer"
-            className="font-semibold text-primary hover:underline"
+            className="font-bold text-primary hover:underline"
           >
             Opisyal na PAGASA <ExternalLink className="inline h-3 w-3" aria-hidden="true" />
           </a>
         </p>
-        <div className="order-7 flex gap-2">
+        <div className="order-7 flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={retry}>
             <RefreshCw className="h-4 w-4" aria-hidden="true" /> I-refresh ang mapa
+          </Button>
+          <Button asChild size="sm" variant="ghost">
+            <Link href="/cool-places">
+              Preskong lugar <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
           </Button>
         </div>
       </div>

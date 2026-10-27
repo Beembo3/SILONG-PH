@@ -3,17 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#0b1426" />
+    <meta name="theme-color" content="#123b2e" />
     <title>Walang koneksyon · SILONG PH</title>
     <style>
       :root {
         color-scheme: light;
-        --navy: #0b1426;
-        --orange: #ff7a1a;
-        --surface: #f7f9fc;
-        --text: #182338;
-        --muted: #667085;
-        --border: #dce3ec;
+        --forest: #123b2e;
+        --canopy: #1f5c45;
+        --sun: #f0b24a;
+        --sun-ink: #8a4b00;
+        --surface: #f4efe4;
+        --card: #fffcf5;
+        --text: #15251d;
+        --muted: #5b6a60;
+        --border: #d8d1c1;
       }
       * { box-sizing: border-box; }
       body {
@@ -25,7 +28,8 @@
         padding: calc(1.5rem + env(safe-area-inset-top)) calc(1.5rem + env(safe-area-inset-right))
           calc(1.5rem + env(safe-area-inset-bottom)) calc(1.5rem + env(safe-area-inset-left));
         background:
-          radial-gradient(circle at 80% 0%, rgba(255, 122, 26, 0.14), transparent 32rem),
+          radial-gradient(ellipse 40rem 24rem at 90% -10%, rgba(240, 178, 74, 0.18), transparent 60%),
+          radial-gradient(ellipse 34rem 24rem at -10% 110%, rgba(78, 138, 104, 0.16), transparent 60%),
           var(--surface);
         color: var(--text);
         font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -36,32 +40,33 @@
         width: 100%;
         max-width: 34rem;
         border: 1px solid var(--border);
-        border-radius: 1rem;
-        background: #fff;
+        border-radius: 1.6rem;
+        background: var(--card);
         padding: 2rem;
-        box-shadow: 0 12px 40px rgba(11, 20, 38, 0.08);
+        box-shadow: 0 1px 2px rgba(21, 37, 29, 0.04), 0 22px 48px -28px rgba(21, 37, 29, 0.34);
       }
       @media (max-width: 480px) {
         main {
           padding: 1.25rem;
-          border-radius: 0.85rem;
+          border-radius: 1.3rem;
         }
       }
+      .mark { display: block; width: 3.5rem; height: 3.5rem; border-radius: 1rem; }
       .badge {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
         border-radius: 999px;
-        background: #fff1e6;
-        color: #9a3412;
-        padding: 0.25rem 0.7rem;
-        font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.04em;
+        background: #fbf1dc;
+        color: var(--sun-ink);
+        padding: 0.3rem 0.75rem;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.12em;
         text-transform: uppercase;
       }
-      h1 { margin: 0.9rem 0 0.4rem; font-size: clamp(1.5rem, 7vw, 1.8rem); line-height: 1.2; color: var(--navy); }
-      p { margin: 0.6rem 0; color: var(--muted); }
+      h1 { margin: 1rem 0 0.4rem; font-size: clamp(1.7rem, 7vw, 2.15rem); line-height: 1.05; letter-spacing: -0.04em; color: var(--forest); }
+      p { margin: 0.7rem 0; color: var(--muted); }
       strong { color: var(--text); }
       .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.4rem; }
       a.button {
@@ -69,16 +74,16 @@
         min-height: 2.75rem;
         align-items: center;
         justify-content: center;
-        border-radius: 0.65rem;
-        padding: 0.65rem 1rem;
+        border-radius: 999px;
+        padding: 0.65rem 1.1rem;
         font-size: 0.9rem;
-        font-weight: 700;
+        font-weight: 800;
         text-decoration: none;
-        background: var(--orange);
-        color: #fff;
+        background: var(--forest);
+        color: #fff9ec;
       }
       a.secondary {
-        background: #fff;
+        background: var(--card);
         color: var(--text);
         border: 1px solid var(--border);
       }
@@ -91,18 +96,30 @@
       }
       .emergency {
         margin-top: 1.2rem;
-        border-radius: 0.75rem;
-        border: 1px solid #fecaca;
-        background: #fef2f2;
+        border-radius: 1rem;
+        border: 1px solid #dfb1ac;
+        background: #fbeceb;
         padding: 0.85rem 1rem;
-        color: #7f1d1d;
+        color: #6b2d28;
         font-size: 0.85rem;
       }
     </style>
   </head>
   <body>
     <main>
-      <span class="badge">Walang koneksyon</span>
+      <svg class="mark" viewBox="0 0 48 48" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <rect width="48" height="48" rx="14" fill="#123b2e" />
+        <circle cx="33.5" cy="14.5" r="6" fill="#f0b24a" />
+        <g stroke="#f0b24a" stroke-width="1.8" stroke-linecap="round">
+          <path d="M33.5 3.8v3.1" />
+          <path d="M41.2 6.8l-2.2 2.2" />
+          <path d="M44.4 14.5h-3.1" />
+        </g>
+        <path d="M4.8 28.2C9.8 18.1 16.5 13 24 13s14.2 5.1 19.2 15.2l-2.3 7.2C36.5 27.1 30.7 23.1 24 23.1S11.5 27.1 7.1 35.4L4.8 28.2Z" fill="#f4efe4" />
+        <path d="M8.1 37.2c5.2-5.2 10.5-7.7 15.9-7.7s10.7 2.5 15.9 7.7" stroke="#4e8a68" stroke-width="2.2" stroke-linecap="round" fill="none" />
+        <path d="M15.8 41.4h16.4" stroke="#f4efe4" stroke-width="2.2" stroke-linecap="round" opacity=".72" />
+      </svg>
+      <p class="badge">Walang koneksyon</p>
       <h1>Wala kang internet sa ngayon</h1>
       <p>
         Hindi maabot ng SILONG PH ang weather provider o makapag-load ng bagong page. May mga naka-cache na page pa
